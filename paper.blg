@@ -4,66 +4,52 @@ The top-level auxiliary file: paper.aux
 The style file: ACM-Reference-Format.bst
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-Database file #1: sample-base.bib
+Database file #1: references.bib
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=20001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-Warning--empty chapter and pages in Editor00
-Warning--page numbers missing in Editor00a
-Warning--empty author in 2004:ITE:1009386.1010128
-Warning--empty address in Knuth97
-Warning--articleno or eid field, but no numpages field, in Lee05
-Warning--page numbers missing in both pages and numpages fields in Lee05
-Warning--articleno or eid, but no pages or numpages field in Lee05
-Warning--unrecognized DOI value [99.9999/woot07-S422]
-Warning--articleno or eid field, but no numpages field, in rous08
-Warning--page numbers missing in both pages and numpages fields in rous08
-Warning--articleno or eid, but no pages or numpages field in rous08
-Warning--page numbers missing in both pages and numpages fields in SaeediJETC10
-Warning--unrecognized DOI value [99.9999/woot07-S422]
-Warning--empty author in TUGInstmem
-Warning--empty year in CTANacmart
-You've used 32 entries,
+Warning--empty address in goodfellow
+You've used 1 entry,
             5719 wiz_defined-function locations,
-            1696 strings with 21746 characters,
-and the built_in function-call counts, 30565 in all, are:
-= -- 3815
-> -- 790
-< -- 4
-+ -- 249
-- -- 314
-* -- 2051
-:= -- 3148
-add.period$ -- 177
-call.type$ -- 32
-change.case$ -- 178
-chr.to.int$ -- 30
-cite$ -- 45
-duplicate$ -- 2859
-empty$ -- 2029
-format.name$ -- 323
-if$ -- 7081
-int.to.chr$ -- 4
+            1452 strings with 16629 characters,
+and the built_in function-call counts, 988 in all, are:
+= -- 82
+> -- 41
+< -- 0
++ -- 13
+- -- 12
+* -- 80
+:= -- 119
+add.period$ -- 6
+call.type$ -- 1
+change.case$ -- 7
+chr.to.int$ -- 1
+cite$ -- 2
+duplicate$ -- 79
+empty$ -- 56
+format.name$ -- 16
+if$ -- 189
+int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 63
-newline$ -- 366
-num.names$ -- 247
-pop$ -- 905
+missing$ -- 2
+newline$ -- 53
+num.names$ -- 8
+pop$ -- 31
 preamble$ -- 1
-purify$ -- 452
+purify$ -- 16
 quote$ -- 0
-skip$ -- 971
+skip$ -- 27
 stack$ -- 0
-substring$ -- 2419
-swap$ -- 271
-text.length$ -- 47
+substring$ -- 55
+swap$ -- 7
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 747
-warning$ -- 15
-while$ -- 251
+type$ -- 15
+warning$ -- 1
+while$ -- 4
 width$ -- 0
-write$ -- 680
-(There were 15 warnings)
+write$ -- 61
+(There was 1 warning)
