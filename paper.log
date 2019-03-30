@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2019.2.15)  29 MAR 2019 21:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2019.2.15)  29 MAR 2019 22:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -842,20 +842,20 @@ Package microtype Info: Loading generic protrusion settings for font family
 \AtBeginShipoutBox=\box34
 Package hyperref Info: Link coloring OFF on input line 14.
  (/usr/local/texlive/2018/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2016/05/21 v2.44 Cross-referen2016/05/16 v1.5 Cleanup title references (HO)
+Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
+ (/usr/local/texlive/2018/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count137
 )
 LaTeX Info: Redefining \ref on input line 14.
 LaTeX Info: Redefining \pageref on input line 14.
 LaTeX Info: Redefining \nameref on input line 14.
-
-(./paper.out) (./paper.out)
+ (/Users/fredguth/Unb/IA/trab1/acm/paper.out) (/Users/fredguth/Unb/IA/trab1/acm/paper.out)
 \@outlinefile=\write5
 \openout5 = `paper.out'.
 
-
-(/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+ (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count138
 \scratchdimen=\dimen158
@@ -870,20 +870,15 @@ LaTeX Info: Redefining \nameref on input line 14.
 \everyMPtoPDFconversion=\toks33
 ) (/usr/local/texlive/2018/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
-
-(/usr/local/texlive/2018/texmf-dist/tex/latex/oberdiek/grfext.sty
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/oberdiek/grfext.sty
 Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
 )
-Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
-38.
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 438.
 Package grfext Info: Graphics extension search list:
-(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
-
-(/usr/local/texlive/2018/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -922,57 +917,39 @@ e
 \c@mv@tabular=\count144
 \c@mv@boldtabular=\count145
 (/usr/local/texlive/2018/texmf-dist/tex/latex/upquote/upquote.sty
-Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
-tim
+Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verbatim
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-
-Excluding 'CCSXML' comment.)
-Runaway argument?
-! File ended while scanning use of \next.
-<inserted text> 
-                \par 
-<*> paper.tex
-             
-? q
-OK, entering \batchmode...
-! Emergency stop.
-<*> paper.tex
-             
-*** (job aborted, no legal \end found)
-
- 
-Here is how much of TeX's memory you used:
- 17977 strings out of 492649
- 266292 string characters out of 6129622
- 394289 words of memory out of 5000000
- 21408 multiletter control sequences out of 15000+600000
- 23812 words of font info for 40 fonts, out of 8000000 for 9000
- 1302 hyphenation exceptions out of 8191
- 60i,3n,94p,1266b,153s stack positions out of 5000i,500n,10000p,200000b,80000s
-!  ==> Fatal error occurred, no output PDF file produced!
- input line 103.
+ Excluding 'CCSXML' comment.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 17.28pt on input line 87.
+LaTeX Font Info:    Try loading font information for T1+LinuxBiolinumT-TLF on input line 87.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/libertine/T1LinuxBiolinumT-TLF.fd
+File: T1LinuxBiolinumT-TLF.fd 2017/03/20 (autoinst) Font definitions for T1/LinuxBiolinumT-TLF.
+)
+LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
+(Font)              scaled to size 17.28pt on input line 87.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `LinuxBiolinumT-TLF' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/b/n' will be
-(Font)              scaled to size 17.28pt on input line 103.
+(Font)              scaled to size 17.28pt on input line 87.
 
 
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
+Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 87.
 
 
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
+Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 87.
 
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 12.0pt on input line 103.
+(Font)              scaled to size 12.0pt on input line 87.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 103.
+(Font)              scaled to size 10.0pt on input line 87.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 103.
+(Font)              scaled to size 10.0pt on input line 87.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `LinuxLibertineT-TLF' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
@@ -983,107 +960,54 @@ File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
-
-<imgs/sampleteaser.pdf, id=119, 2055.68pt x 511.9125pt>
-File: imgs/sampleteaser.pdf Graphic file (type pdf)
-<use imgs/sampleteaser.pdf>
-Package pdftex.def Info: imgs/sampleteaser.pdf  used on input line 103.
-(pdftex.def)             Requested size: 506.295pt x 126.0797pt.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 9.0pt on input line 103.
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
+Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 87.
 
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.95pt on input line 103.
+(Font)              scaled to size 9.0pt on input line 87.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 10.95pt on input line 87.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 103.
+(Font)              scaled to size 9.0pt on input line 87.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 7.3pt on input line 103.
-LaTeX Font Info:    Try loading font information for TS1+LinuxLibertineT-TLF on input line 103.
+(Font)              scaled to size 7.3pt on input line 87.
+LaTeX Font Info:    Try loading font information for TS1+LinuxLibertineT-TLF on input line 87.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/libertine/TS1LinuxLibertineT-TLF.fd
 File: TS1LinuxLibertineT-TLF.fd 2017/03/20 (autoinst) Font definitions for TS1/LinuxLibertineT-TLF.
 )
 LaTeX Font Info:    Font shape `TS1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 103.
+(Font)              scaled to size 9.0pt on input line 87.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `LinuxLibertineT-TLF' (encoding: TS1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 103.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 103.
+(hyperref)                removing `\\' on input line 87.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\global' on input line 103.
+(hyperref)                removing `\global' on input line 87.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\advance' on input line 103.
+(hyperref)                removing `\advance' on input line 87.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\c@@concepts' on input line 103.
+(hyperref)                removing `\c@@concepts' on input line 87.
 
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\global' on input line 103.
+Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 87.
 
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\advance' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\c@@concepts' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\global' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\advance' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\c@@concepts' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\global' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\advance' on input line 103.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\c@@concepts' on input line 103.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 103.
-
-LaTeX Font Info:    Try loading font information for T1+zi4 on input line 110.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
+(Font)              scaled to size 9.0pt on input line 109.
+LaTeX Font Info:    Try loading font information for T1+zi4 on input line 111.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 9.0pt on input line 110.
+(Font)              scaled to size 9.0pt on input line 111.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zi4' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
@@ -1094,109 +1018,55 @@ Package microtype Info: Character `textendash ' is missing
 Package microtype Info: Character `textemdash ' is missing
 (microtype)             in font `T1/zi4/m/n/9'.
 (microtype)             Ignoring protrusion settings for this character.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 115.
-
-Underfull \vbox (badness 3872) has occurred while \output is active []
-
- [1.1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
-
- </Users/fredguth/Unb/IA/trab1/acm/imgs/sampleteaser.pdf>]
-Overfull \hbox (2.79185pt too wide) in paragraph at lines 218--219
-\T1/LinuxLibertineT-TLF/m/n/9 (-20) Your work should use stan-dard L[]T[]X sec-ti-o-ning com-mands: [][]\T1/zi4/m/n/9 section[]\T1/LinuxLibertineT-TLF/m/n/9 (-20) ,
- []
-
-
-Overfull \hbox (1.26605pt too wide) in paragraph at lines 218--219
-[][]\T1/zi4/m/n/9 subsection[]\T1/LinuxLibertineT-TLF/m/n/9 (-20) , [][]\T1/zi4/m/n/9 subsubsection[]\T1/LinuxLibertineT-TLF/m/n/9 (-20) , and [][]\T1/zi4/m/n/9 paragraph[]\T1/LinuxLibertineT-TLF/m/n/9 (-20) . They should be num-
- []
-
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 6.0pt on input line 226.
-[2.2]
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 233.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 233.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 250.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 250.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 313.
-
-
-Class acmart Warning: \vspace should only be used to provide space above/below surrounding objects on input line 313.
-
-<imgs/sample-franklin.png, id=157, 411.5375pt x 323.2075pt>
-File: imgs/sample-franklin.png Graphic file (type png)
-<use imgs/sample-franklin.png>
-Package pdftex.def Info: imgs/sample-franklin.png  used on input line 315.
-(pdftex.def)             Requested size: 241.14749pt x 189.3888pt.
-[3.3 </Users/fredguth/Unb/IA/trab1/acm/imgs/sample-franklin.png>]
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
-(Font)              scaled to size 9.0pt on input line 337.
-
-Underfull \vbox (badness 7667) has occurred while \output is active []
-
- Processing 'acks' comment.
-\openout4 = `comment.cut'.
-
- Comment 'acks' writing to comment.cut. Straight input of comment.cut. (/Users/fredguth/Unb/IA/trab1/acm/comment.cut) (/Users/fredguth/Unb/IA/trab1/acm/paper.bbl
+ (/Users/fredguth/Unb/IA/trab1/acm/paper.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 7.0pt on input line 60.
 LaTeX Info: Redefining \tempurl on input line 65.
 LaTeX Info: Redefining \tempurl on input line 80.
- [4.4]
 LaTeX Info: Redefining \tempurl on input line 127.
+ [1.1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+]
 LaTeX Info: Redefining \tempurl on input line 147.
 LaTeX Info: Redefining \tempurl on input line 162.
 LaTeX Info: Redefining \tempurl on input line 176.
 LaTeX Info: Redefining \tempurl on input line 218.
 LaTeX Info: Redefining \tempurl on input line 265.
 LaTeX Info: Redefining \tempurl on input line 282.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 311.
-LaTeX Info: Redefining \tempurl on input line 327.
-LaTeX Info: Redefining \tempurl on input line 341.
-LaTeX Info: Redefining \tempurl on input line 353.
-LaTeX Info: Redefining \tempurl on input line 366.
-LaTeX Info: Redefining \tempurl on input line 437.
-LaTeX Info: Redefining \tempurl on input line 452.
-LaTeX Info: Redefining \tempurl on input line 464.
-LaTeX Info: Redefining \tempurl on input line 476.
-LaTeX Info: Redefining \tempurl on input line 490.
+LaTeX Info: Redefining \tempurl on input line 317.
+LaTeX Info: Redefining \tempurl on input line 331.
+LaTeX Info: Redefining \tempurl on input line 343.
+LaTeX Info: Redefining \tempurl on input line 356.
+LaTeX Info: Redefining \tempurl on input line 427.
+LaTeX Info: Redefining \tempurl on input line 442.
+LaTeX Info: Redefining \tempurl on input line 454.
+LaTeX Info: Redefining \tempurl on input line 466.
+LaTeX Info: Redefining \tempurl on input line 480.
 )
-
-Package balance Warning: You have called \balance in second column
-(balance)                Columns might not be balanced.
-
-[5.5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 420.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 420.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 6.0pt on input line 133.
+ [2.2]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 133.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 133.
  (/Users/fredguth/Unb/IA/trab1/acm/paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 420.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 420.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 133.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 133.
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 7D545AAA1A27A96D9E315A3FF480E52C;4135.
+(rerunfilecheck)             Checksum: 31DEDA197FEB9F38FF9F6BBD3D6FB17A;3505.
  ) 
 Here is how much of TeX's memory you used:
- 18814 strings out of 492649
- 284464 string characters out of 6129622
- 419409 words of memory out of 5000000
- 21783 multiletter control sequences out of 15000+600000
- 144859 words of font info for 298 fonts, out of 8000000 for 9000
+ 18620 strings out of 492649
+ 280877 string characters out of 6129622
+ 428184 words of memory out of 5000000
+ 21744 multiletter control sequences out of 15000+600000
+ 106890 words of font info for 195 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 60i,11n,94p,1322b,586s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/newtx/libertinealt.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_oexx6f.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_naooyc.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/newtx/fxlri-7letters.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/newtx/txexs.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/newtx/zxlr.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
-Output written on /Users/fredguth/Unb/IA/trab1/acm/paper.pdf (5 pages, 1047590 bytes).
+ 60i,11n,94p,1322b,597s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_naooyc.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb>
+Output written on /Users/fredguth/Unb/IA/trab1/acm/paper.pdf (2 pages, 355184 bytes).
 PDF statistics:
- 366 PDF objects out of 1000 (max. 8388607)
- 319 compressed objects within 4 object streams
- 78 named destinations out of 1000 (max. 500000)
- 38135 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 246 PDF objects out of 1000 (max. 8388607)
+ 224 compressed objects within 3 object streams
+ 59 named destinations out of 1000 (max. 500000)
+ 30893 words of extra memory for PDF output out of 35830 (max. 10000000)
 

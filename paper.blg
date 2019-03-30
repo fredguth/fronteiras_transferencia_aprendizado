@@ -25,45 +25,45 @@ Warning--page numbers missing in both pages and numpages fields in SaeediJETC10
 Warning--unrecognized DOI value [99.9999/woot07-S422]
 Warning--empty author in TUGInstmem
 Warning--empty year in CTANacmart
-You've used 33 entries,
+You've used 32 entries,
             5719 wiz_defined-function locations,
-            1702 strings with 21845 characters,
-and the built_in function-call counts, 31310 in all, are:
-= -- 3888
-> -- 810
+            1696 strings with 21746 characters,
+and the built_in function-call counts, 30565 in all, are:
+= -- 3815
+> -- 790
 < -- 4
-+ -- 254
-- -- 322
-* -- 2099
-:= -- 3238
-add.period$ -- 183
-call.type$ -- 33
-change.case$ -- 183
-chr.to.int$ -- 31
-cite$ -- 46
-duplicate$ -- 2936
-empty$ -- 2083
-format.name$ -- 331
-if$ -- 7241
++ -- 249
+- -- 314
+* -- 2051
+:= -- 3148
+add.period$ -- 177
+call.type$ -- 32
+change.case$ -- 178
+chr.to.int$ -- 30
+cite$ -- 45
+duplicate$ -- 2859
+empty$ -- 2029
+format.name$ -- 323
+if$ -- 7081
 int.to.chr$ -- 4
 int.to.str$ -- 1
-missing$ -- 65
-newline$ -- 374
-num.names$ -- 255
-pop$ -- 932
+missing$ -- 63
+newline$ -- 366
+num.names$ -- 247
+pop$ -- 905
 preamble$ -- 1
-purify$ -- 466
+purify$ -- 452
 quote$ -- 0
-skip$ -- 997
+skip$ -- 971
 stack$ -- 0
-substring$ -- 2473
-swap$ -- 279
+substring$ -- 2419
+swap$ -- 271
 text.length$ -- 47
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 762
+type$ -- 747
 warning$ -- 15
-while$ -- 259
+while$ -- 251
 width$ -- 0
-write$ -- 698
+write$ -- 680
 (There were 15 warnings)
