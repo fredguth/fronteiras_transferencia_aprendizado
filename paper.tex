@@ -2,6 +2,7 @@
 \documentclass[sigconf]{acmart}
 \usepackage{graphicx, wrapfig}
 \graphicspath{{imgs/}}
+\usepackage[para]{footmisc} %  footnotes na mesma linha
 \usepackage{lipsum}
 \usepackage{stfloats}
 \usepackage{enumerate}
@@ -46,7 +47,7 @@ uma revisão sistemática com enfoque meta-analítico}
 \renewcommand{\shortauthors}{Guth, F.}
 
 \begin{abstract}
-  Humanos e animais conseguem aprender com poucas amostras \cite{goodfellow} e apresentam extraordinária capacidade de generalização que os algoritmos de aprendizagem de máquina ainda estão longe de alcançar. Os modelos mais bem sucedidos da atualidade exigem uma enormidade de dados bem rotulados que são caros e difíceis de obter, tornando-se hoje um dos maiores empecilhos para aplicações práticas. Tais fatos apontam para o grande potencial da área de Transferência de Aprendizado, que tem por objetivo aproveitar o conhecimento obtido em uma atividade para aprender mais eficientemente outras, que guardem alguma relação com a primeira. O presente estudo visa apresentar uma revisão sistemática da literatura e identificar, com embasamento quantitativo, as principais contribuições para a área. Além disso, usamos medidas de acoplamento bibliográfico para identificar trabalhos na fronteira do conhecimento e fizemos uma análise textual, em resumos e palavras-chave, comparando estes com os "clássicos" da área de forma a mapear para que direção a pesquisa avança.  
+  Humanos e animais conseguem aprender com poucas amostras e apresentam extraordinária capacidade de generalização que os algoritmos de aprendizagem de máquina ainda estão longe de alcançar~\cite{goodfellow}. Os modelos mais bem sucedidos da atualidade exigem uma enormidade de dados bem rotulados que são caros e difíceis de obter, tornando-se hoje um dos maiores empecilhos para aplicações práticas. Tais fatos apontam para o grande potencial da área de Transferência de Aprendizado, que tem por objetivo aproveitar o conhecimento obtido em uma atividade para aprender mais eficientemente outras, que guardem alguma relação com a primeira. O presente estudo visa apresentar uma revisão sistemática da literatura e identificar, com embasamento quantitativo, as principais contribuições para a área. Além disso, usamos medidas de acoplamento bibliográfico para identificar trabalhos na fronteira do conhecimento e fizemos uma análise textual, em resumos e palavras-chave, comparando estes com os "clássicos" da área de forma a mapear para que direção a pesquisa avança.  
 \end{abstract}
 
 
@@ -68,38 +69,38 @@ uma revisão sistemática com enfoque meta-analítico}
 
 
 \section{Introdução} 
-  Recentes avanços em Aprendizagem de Máquina tornam possíveis aplicações que são capazes de reconhecer pessoas, lugares e objetos com acurácia super-humana\cite{fei}, diagnosticar câncer de pele tão bem quanto dermatologistas\cite{skin_cancer},  ver através de paredes usando sinais de rádio\cite{wifi}, entre tantas outras. Apesar de tanto sucesso, os modelos mais bem sucedidos da atualidade exigem uma enormidade de dados bem rotulados que são caros e difíceis de obter, pois, em geral, o jeito padrão de se treinar modelos é sempre começar \emph{tabula rasa}, ou seja, com uma inicialização aleatória dos parâmetros. 
+  Recentes avanços em Aprendizagem de Máquina tornam possíveis aplicações que são capazes de reconhecer pessoas, lugares e objetos com acurácia super-humana\cite{fei}, diagnosticar câncer de pele tão bem quanto dermatologistas\cite{skin_cancer},  ver através de paredes usando sinais de rádio\cite{wifi}, entre tantas outras. Apesar de tanto sucesso, os modelos mais bem sucedidos da atualidade exigem uma enormidade de dados bem rotulados que são caros e difíceis de obter, pois, em geral, o jeito padrão de se treinar modelos é sempre começar \emph{tabula rasa}, ou seja, com uma inicialização aleatória dos parâmetros~\cite{Ruder2019Neural}. 
   
-  Aprender assim, a partir do nada, é contrário à forma como os humanos o fazem. Em nosso dia a dia, transferimos conhecimento a todo momento. Saber tocar piano, facilita aprender tocar órgão. Reconhecer maçãs talvez ajude a reconhecer peras. Pessoas conseguem inteligentemente aplicar conhecimento prévio para resolver novos problemas com maior eficácia e eficiência\cite{PanYang}. Algoritmos de aprendizagem de máquina ainda estão longe de alcançar essa extraordinária capacidade de generalização\cite{goodfellow}. Estudos recentes~\cite{DBLP:journals/corr/JiaL17}, mostram que os algoritmos atuais não generalizam bem além de dados vistos durante o treinamento.
+  Aprender assim, a partir do nada, é contrário à forma como os humanos o fazem. Em nosso dia a dia, transferimos conhecimento a todo momento. Saber tocar piano, facilita aprender tocar órgão. Saber português ajuda a aprender espanhol. Pessoas conseguem inteligentemente aplicar conhecimento prévio para resolver novos problemas com maior eficácia e eficiência\cite{PanYang}. Algoritmos de aprendizagem de máquina ainda estão longe de alcançar essa extraordinária capacidade de generalização\cite{goodfellow}. Estudos recentes~\cite{DBLP:journals/corr/JiaL17}, mostram que os algoritmos atuais não generalizam bem além de dados vistos durante o treinamento. 
   \begin{figure}[h]
-    \includegraphics[width=\columnwidth]{citacoes_por_ano2.pdf}
+    \includegraphics[width=\columnwidth]{citacoes_por_ano}
     \source{Web of Science (março/2019)}{Excel}
-    \caption{Evolução dos número de citações de artigos em Tranferência de Aprendizagem nos últimos 10 anos.}
+    \caption{Evolução do número de citações aos artigos em Tranferência de Aprendizado nos últimos 10 anos. Até 2020, o número de citações aos artigos na área deverá dobrar.}
     \label{fig:citacoes_por_ano}
   \end{figure}
-  
-  Tais fatos apontam  o grande potencial ainda inalcançado da área de Transferência de Aprendizado (TL\footnote{Do inglês \emph{Transfer Learning}}), que tem por objetivo aproveitar o conhecimento obtido em uma atividade para aprender mais eficientemente outras, que guardem alguma relação com a primeira.
+
+  Tais fatos apontam  o grande potencial ainda inalcançado da área de Transferência de Aprendizado (TL\footnote{Do inglês, \emph{Transfer Learning}.}), que tem por objetivo aproveitar o conhecimento obtido em uma atividade para aprender mais eficientemente outras, que guardem alguma relação com a primeira.
   
   Na prática, entretanto, TL ainda é tratada de uma forma \textit{ad hoc}, sendo os métodos de transferências meras extensões dos algoritmos de aprendizado utilizados \cite{torrey}. Essa dicotomia entre a importância do problema e a inexistência de práticas e teorias consolidadas, tornam TL um campo promissor e interessante para pesquisa. 
   
   \begin{quote} "Transferência de Aprendizado será o próximo motor do sucesso comercial com Aprendizado de Máquinas." \hfill ---Andrew Ng, Tutorial NIPS 2016 \cite{ANg}
   \end{quote}
 
-  Portanto, não é de se estranhar o crescente interesse pelo assunto (vide \S\ref{sec:panorama} e figura \ref{fig:citacoes_por_ano}).  
+  Portanto, não é de se estranhar o crescente interesse pelo assunto (vide figura \ref{fig:citacoes_por_ano} e \S\ref{sec:panorama}).  
 
   \subsection{Objetivo}
    Esta pesquisa quer responder duas perguntas:
     \begin{enumerate}
-      \item{Quais são as fronteiras do conhecimento em Transferência de Aprendizagem?}
+      \item{Quais são as fronteiras do conhecimento em Transferência de Aprendizado?}
       \item {É possível embasar essa avaliação em dados bibliométricos?}
     \end{enumerate}
-    Para responder estas perguntas é preciso, antes, analisar a literatura do tema, revelar as principais contribuições e como se relacionam.
+    Para responder estas perguntas é preciso, antes, analisar a literatura do tema, revelar as principais contribuições na área e como se relacionam.
   
   \subsection{Contribuições}
 
     \begin{enumerate}[C1.]
       \item Apresentamos uma revisão sistemática atualizada da literatura em Transferência de Aprendizagem, usando a abordagem TEMAC (\S \ref{TEMAC}). Esse método nos permite focar nas contribuições de alto impacto. 
-      \item Estendemos o TEMAC com uma análise textual de resumos (\S \ref{analiseTextual}), utilizando o ScatterText, até onde sabemos, é uma aplicação original desta ferramenta de visualização.
+      \item Estendemos o TEMAC com uma análise textual de resumos (\S \ref{analiseTextual}), utilizando o \emph{ScatterText}~\cite{kessler2017scattertext}, o que até onde sabemos, é uma aplicação original desta ferramenta de visualização.
       \item Apontamos com embasamento quantitativo as direções das frentes de pesquisa da área e apontamos lacunas e problemas em aberto.
     \end{enumerate}
   
@@ -118,30 +119,33 @@ A abordagem TEMAC é dividida em 3 etapas:
 \end{enumerate}
 
 \subsection{Preparação da Pesquisa}
-Foi realizada uma busca na base de dados \emph{Clarivate Analyticis Web of Science (WoS)}, conforme especificado na figura \ref{card:wos}, no dia 31 de março de 2019, que resultou em 1.289 artigos encontrados. Nota-se que o tema é de crescente interesse (figura \ref{fig:citacoes_por_ano}) e projeta-se que em 2 anos o número de citações irá praticamente dobrar (crescimento cubico com R-quadrado 0,9993).
+Foi realizada uma busca na base de dados \emph{Clarivate Analyticis Web of Science (WoS)}, conforme especificado na figura \ref{card:wos}, no dia 31 de março de 2019, que resultou em 1.289 artigos encontrados. Nota-se que o tema é de crescente interesse (figura \ref{fig:citacoes_por_ano}) e projeta-se que em 2 anos o número de citações irá praticamente dobrar (crescimento cubico com R-quadrado 0,9993). 
 \begin{figure}[htp]
 
 \begin{tcolorbox}[colback=yellow!5!white,colframe=gray!75!black,title={Results: 1,289 (from Web of Science Core Collection)}]
-  \begin{verbatim}
-  You searched for: 
-  TOPIC: ("transfer learning")
-  Refined by: 
-  WEB OF SCIENCE CATEGORIES: 
-    ( COMPUTER SCIENCE ARTIFICIAL INTELLIGENCE )
-  AND LANGUAGES: ( ENGLISH ) 
-  AND RESEARCH AREAS: ( COMPUTER SCIENCE )
-  Timespan: 2009-2019. 
-  Indexes: SCI-EXPANDED, CPCI-S, ESCI.
-  \end{verbatim}
+  \footnotesize{
+    \begin{verbatim}
+    You searched for: 
+    TOPIC: ("transfer learning")
+    Refined by: 
+    WEB OF SCIENCE CATEGORIES: 
+      ( COMPUTER SCIENCE ARTIFICIAL INTELLIGENCE )
+    AND LANGUAGES: ( ENGLISH ) 
+    AND RESEARCH AREAS: ( COMPUTER SCIENCE )
+    Timespan: 2009-2019. 
+    Indexes: SCI-EXPANDED, CPCI-S, ESCI.
+    \end{verbatim}
+  }
 
 \end{tcolorbox}
-\caption{Parâmetros de busca na base \emph{Web of Science}.}
+\caption{"Busca10anos": Parâmetros de busca na base \emph{Web of Science}.}
 \label{card:wos}
 \end{figure}
 
-Também fizemos uma busca mais restrita (figura \ref{card:sota}) aos trabalhos mais recentes para a análise da Fronteira de pesquisa (\S \ref{fronteira}).
+Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref{card:sota}) para a análise da \emph{Fronteira de Pesquisa} (\S \ref{fronteira}).
 \begin{figure}[htp]
-  \begin{tcolorbox}[colback=yellow!5!white,colframe=gray!75!black,title={Results: 161 (from Web of Science Core Collection)}]
+  \begin{tcolorbox}[colback=yellow!5!white,colframe=gray!75!black,title={Results: 384 (from Web of Science Core Collection)}]
+    \footnotesize{
   \begin{verbatim}
   You searched for: 
   TOPIC: ("transfer learning")
@@ -150,29 +154,29 @@ Também fizemos uma busca mais restrita (figura \ref{card:sota}) aos trabalhos m
     ( COMPUTER SCIENCE ARTIFICIAL INTELLIGENCE )
   AND LANGUAGES: ( ENGLISH ) 
   AND RESEARCH AREAS: ( COMPUTER SCIENCE )
-  AND PUBLICATION YEARS: ( 2019 OR 2018 )
+  AND PUBLICATION YEARS: ( 2019 OR 2018 OR 2017 )
   AND DOCUMENT TYPES: ( PROCEEDINGS PAPER )
   Timespan: 2009-2019. 
   Indexes: SCI-EXPANDED, CPCI-S, ESCI.
   \end{verbatim}
-
+    }
   
   \end{tcolorbox}
-  \caption{Parâmetros de busca para análise de Fronteira.}
+  \caption{"Busca2anos"Parâmetros de busca para análise de Fronteira.}
   \label{card:sota}
 \end{figure}
 
 \subsection{Apresentação e Inter-relação dos Dados}
-O software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer} foi utilizado para as análises bibliográficas. Ele permite analisar co-citação e acoplamento bibliográfico de documentos e autores. Para análise textual de resumos utilizamos a ferramenta \emph{ScatterText}~\cite{kessler2017scattertext}.
+
+% O software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer} foi utilizado para as análises bibliográficas. Ele permite analisar co-citação e acoplamento bibliográfico de documentos e autores. Para análise textual de resumos utilizamos a ferramenta \emph{ScatterText}~\cite{kessler2017scattertext}.
 
 \begin{enumerate}[a)]
-  \item{\textbf{Análise de Co-citações}: Co-citação é definida como a frequência em que dois documentos são citados em uma mesma lista de referências. Assume-se que são "peças"~que compõem uma mesma "estrutura de conhecimento".  A análise de co-citações, portanto, é útil para mapear a herança intelectual de um determinado campo de estudos sob a ótica das publicações de alto-impacto, mas tende a negligenciar a dinâmica na fronteira de pesquisa\cite{Vogel2012}, justamente porque os trabalhos na fronteira não tiveram tempo para serem citados e pontuar nas métricas de impacto. }
-    
-    
-  \item{\textbf{Análise de Acoplamento Bibliográfico}: Acoplamento bibliográfico ocorre quando dois documentos tem pelo menos um documento em comum, ou seja, documentos acoplam se suas bibliografias se sobrepõem. Como existe uma ordem cronológica entre o documento que cita e o que é citado, o acoplamento bibliográfico permite traçar gerações de pesquisas e com isso identificar as que estão na fronteira do conhecimento.  É importante ressaltar que, neste contexto, estar na fronteira não é necessariamente ser promissor. Essa é uma limitação da abordagem quantitativa, por isso é preciso complementá-la com uma análise qualitativa para propor, ainda que com certo grau de subjetividade, os trabalhos promissores a se tornar os "clássicos de amanhã".
-  Pelo TEMAC, a análise de acoplamento bibliográfico deve ser feita para o período um período não superior aos últimos 3 anos. Em nossa análise, usamos uma busca mais restrita (figura \ref{card:sota}) com período entre 2018 e março de 2019.
+  \item{\textbf{Análise de Co-citações}: Co-citação é definida como a frequência em que dois documentos são citados em uma mesma lista de referências. Assume-se que são "peças"~que compõem uma mesma "estrutura de conhecimento".  A análise de co-citações, portanto, é útil para mapear a herança intelectual de um determinado campo de estudos sob a ótica das publicações de alto-impacto, mas tende a negligenciar a dinâmica na fronteira de pesquisa\cite{Vogel2012}, justamente porque os trabalhos na fronteira não tiveram tempo para serem citados e pontuar nas métricas de impacto.\\Para a análise de co-citações, utilizamos o software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer}, que \emph{clusterizou} citações das listas de referências dos artigos da "Busca10anos" (o que abrange artigos que não fazem parte do resultado da busca). Foram identificados 3 núcleos de conhecimento (figura \ref{fig:classicos}).
   }
-  \item{\textbf{Análise tf-idf}: neste trabalho, usamos o conceito de \textbf{tf-idf} para definir as palavras que melhor identificam determinados documentos. Por exemplo, quais palavras melhor explicam trabalhos de fronteira vis à vis o todos os documentos resultantes da busca na base \emph{Web of Science} (vide figura \ref{fig:scatterText}). A métrica \textbf{tf-idf} pode ser definida como:
+
+  \item{\textbf{Análise de Acoplamento Bibliográfico}: Acoplamento bibliográfico ocorre quando dois documentos tem pelo menos um documento em comum, ou seja, documentos acoplam se suas bibliografias se sobrepõem. Como existe uma ordem cronológica entre o documento que cita e o que é citado, o acoplamento bibliográfico permite traçar gerações de pesquisas e com isso identificar as que estão na fronteira do conhecimento.  É importante ressaltar que, neste contexto, estar na fronteira não é necessariamente ser promissor. Essa é uma limitação da abordagem quantitativa, por isso é preciso complementá-la com uma análise qualitativa para propor, ainda que com certo grau de subjetividade, os trabalhos promissores a se tornar os "clássicos de amanhã". \\Pelo TEMAC, a análise de acoplamento bibliográfico deve ser feita para o período um período não superior aos últimos 3 anos. Em nossa análise, usamos uma busca mais restrita (figura \ref{card:sota}) com período entre 2018 e março de 2019.
+  }
+  \item{\textbf{Análise Textual (\emph{bag-of-words}  com tf-idf)}: nesta análise, tratamos os artigos como \emph{bag-of-words} e usamos o conceito de \textbf{tf-idf} para definir as palavras (termos) que melhor identificam determinados artigos (documentos). Por exemplo, quais palavras melhor explicam trabalhos de fronteira vis à vis o todos os documentos resultantes da busca na base \emph{Web of Science} (vide figura \ref{fig:scatterText}. A métrica \textbf{tf-idf} pode ser definida como:
   \begin{equation}
     \mathrm{tfidf}(t,d,D) = \mathrm{tf}(t,d) \cdot \mathrm{idf}(t, D)
   \end{equation}
@@ -187,56 +191,154 @@ O software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer} foi utilizado para as 
   \begin{description}
     \item $N$: número de documentos do corpus $N = {|D|}$
    \item$ |\{d \in D: t \in d\}| $ : número de documentos onde o termo  $ t $ aparece (i.e., $ \mathrm{tf}(t,d) \neq 0$). Para evitar uma divisão por zero caso o termo não esteja no corpus, é como fazer um ajuste no denominador para: $1 + |\{d \in D: t \in d\}|$.
-   
-   
   \end{description}
+  
+  A métrica \textbf{tf-idf} é a base da ferramenta visual \emph{ScatterText}~\cite{kessler2017scattertext} que foi utilizada para gerar as figuras \ref{fig:scatterText_documentbased} e \ref{fig:scatterText}.
+
   }\label{analiseTextual}
 \end{enumerate}
 
 
-\begin{figure*}[b]
-  \centering
-  \fbox{\includegraphics[width=\textwidth]{listas.pdf}}
-  \source{Web of Science (março/2019)}{Excel}
-  \caption{Panorama da produção científica sobre Transferência de Aprendizagem.} \label{fig:toptop}
-\end{figure*}
+
 \section{Revisão da Literatura}
-  \subsection{Transferência de Aprendizagem}
-  \lipsum[3]
   \subsection{Um breve histórico}
-  Pesquisa em transferência de aprendizagem tem atraído mais e mais atenção desde 1995, quando foi tema de  um workshop na NIPS-95 que discutiu a necessidade de métodos de aprendizado de máquina que retém e reusam conhecimento previamente obtido~\cite{PanYang}. 
+  Pesquisa em transferência de aprendizado tem atraído mais e mais atenção desde 1995, quando foi tema de  um workshop na NIPS-95 que discutiu a necessidade de métodos de aprendizado de máquina que retém e reusam conhecimento previamente obtido~\cite{PanYang}. 
   
-  ImageNet’s impact on the course of machine learning research can hardly be overstated. The dataset was originally published in 2009 and quickly evolved into the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). In 2012, the deep neural network submitted by Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton performed 41% better than the next best competitor, demonstrating that deep learning was a viable strategy for machine learning and arguably triggering the explosion of deep learning in ML research.
+  Desde então, ainda que com diferentes nomes (\emph{learning to learn, life-long learning, knowledge transfer} entre outros), a área vem recebendo cada vez mais atenção (figura \ref{fig:artigos_por_ano}). Em 2005 um anúncio de um projeto da DARPA foi a primeira menção que definia o termo \emph{transfer learning} como o objetivo de extrair conhecimento de um ou mais \emph{tarefas fonte} e aplicá-lo a \emph{tarefas alvo}~\cite{PanYang}. Se removermos a restrição de data de início da "Busca10Anos"(figure \ref{card:wos}), confirmamos que os primeiros artigos com o termo "transfer learning" são de 2005.
 
-The success of ImageNet highlighted that in the era of deep learning, data was at least as important as algorithms. Not only did the ImageNet dataset enable that very important 2012 demonstration of the power of deep learning, but it also allowed a breakthrough of similar importance in transfer learning: researchers soon realized that the weights learned in state of the art models for ImageNet could be used to initialize models for completely other datasets and improve performance significantly. This "fine-tuning" approach allowed achieving good performance with as little as one positive example per category (Donahue et al., 2014)
-
-  \subsection{O panorama da produção científica na área}\label{sec:panorama}
- 
-  \lipsum[1]
-  
-  
-
- 
-  \subsection{Os Clássicos}
   \begin{figure}[h]
-    \fbox{\includegraphics[width=\columnwidth]{completo-4clusters}}
+    \includegraphics[width=\columnwidth]{artigos_por_ano}
+    \source{Web of Science (março/2019)}{Excel}
+    \caption{Evolução do número de artigos em Tranferência de Aprendizado nos últimos 10 anos. Até 2021, o número de artigos na área deverá dobrar.}
+    \label{fig:artigos_por_ano}
+  \end{figure}
+
+  Em 2012, a rede neural profunda\footnote{deep neural network} submetida pelo time de Alex Krizhevsky et. al. para o desafio Imagenet (ILSVRC) performou 41\% melhor que o segundo melhor colocado, dando início ao crescimento explosivo de \emph{deep learning"} na pesquisa de Aprendizado de Máquinas. Tal sucesso ressaltou a importância dos dados para o avança de inteligência artificial, mas também permitiu uma igual quebra de paradigma em transferência de aprendizado: percebeu-se que modelos treinados na ImageNet podiam facilmente ser usados para inicializar outros modelos e reduzir em muito a necessidade de amostras~\cite{Ruder2019Neural}.   Essa abordagem de "sintonia fina"\footnote{\emph{fine-tuning}} permitiu resultados bons em diversas tarefas com ordens de magnitude a menos de dados. 
+
+  Atualmente, \emph{transferência de aprendizado} é um tópico comum em prestigiadas conferências como CVPR, ICCV, ICPR e NeurIPS (vide figura \ref{fig:toptop}, \emph{Top 10 encontros}).
+  \subsection{Notações e definições}
+  \subsection{O panorama da produção científica na área}\label{sec:panorama}
+  \begin{figure*}[t]
+    \centering
+    \fbox{\includegraphics[width=\textwidth]{listas.pdf}}
+    \source{Web of Science (março/2019)}{Excel}
+    \caption{Panorama da produção científica sobre Transferência de Aprendizado.} \label{fig:toptop}
+  \end{figure*}
+  Na figura \ref{fig:toptop}, é possível notar que o autor com mais citações é Pan, S., com 2706 citações. Tal impacto deve-se, sobretudo ao artigo \emph{A Survey on Transfer Learning}, que é o artigo mais citado da área com 2240 citações. O mérito deste trabalho é apresentar notações e uma taxonomia para TL. Saiu na revista \emph{IEEE Transactions on Knowledge an Data Engineering}, de 2,775 de fator de impacto, e ocupa a 33\textordfeminine ~posição no ranking de publicações InCite JCR para a categoria \emph{Computer Science, Artificial Intelligence}, ou seja, uma publicação cujo foco não é o tipo de pesquisa que menciona \emph{transferência de aprendizado}. 
+
+  A China é o país com o maior número de artigos publicados, seguido pelos Estados Unidos. O Brazil está na 11\textordfeminine colocação, junto com a Índia, mas a frente de países como Espanha, Coreia do Sul e Israel.
+
+  A maior parte dos artigos são publicados em \emph{proceeding} de conferências, 63\%. A conferência com mais artigos sobre TL é a CVPR\footnote{Conference on Computer Vision and Pattern Recognition}, mas apesar de ser somente a 4\textordfeminine em artigos a ECCV\footnote{European Conference on Computer Vision} é a conferência com o maior número agregado de citações. É digno de nota que as conferências de visão computacional tem sido o espaço onde artigos de TL mais são divulgados. Ao mesmo tempo, estranha a falta de alguma conferência com maior foco em NLP. Também não há entre os 20 artigos mais citados, nenhum que seja especializado em linguagem.
+  \subsection{Os Clássicos}\label{classicos}
+  \begin{figure}[htp]
+    \fbox{\includegraphics[width=\columnwidth]{completo_21.pdf}}
     \source{Web of Science (março/2019)}{VosViewer\protect{~\cite{VOSviewer}}}
     \caption{Núcleos de conhecimento obtidos pela análise de co-citações. Os diferentes grupos representam autores que normalmente são co-citados nos 1268 artigos resultantes da busca realizada.}
     \label{fig:classicos}
   \end{figure}
-  
 
-  \lipsum[3]
-  \begin{figure}
-    \fbox{\includegraphics[width=\columnwidth]{top20_scatter.pdf}}
-    \caption{} \label{fig:studysite}
-  \end{figure}
+
+
+  Girshick, 2016 - R-CNN / Fast R-CNN -> multi-task learning
+  Krizhevsky, 2012 -> Alexnet 2012
+  He km, 2016
+  simonian, 2014
+
+  cluster 1 - amarelo
+  mediana e moda 2006
+
+  pan sj (2010) - surey----- cluster:1
+dai w. (2007) - boosting -> domain adaptation ----- cluster:1
+caruana r (1997) - MTL introduces an inductive bias provided by the auxiliary tasks ->chapter on multitask learning - hard parameter sharing----- cluster:1
+blitzer j. (2006) - wightning ->domain adaptation----- cluster:1
+raina r. (2007) - self-thaught learning----- cluster:1
+chang cc (2011) - LIBSVM: A library for support vector machines----- cluster:1
+taylor me (2009) - survey TL in RL----- cluster:1
+ando rk (2005) - project data into low-dimension space to make domains more similar - SVD----- cluster:1
+daume h (2006) - DA for statistica lassifiers ----- cluster:1
+yao y (2010) - boosting -> domain adaptation ----- cluster:1
+evgeniou t. (2004) - regularized multi task learning----- cluster:1
+vapnik v. n. (1998) - Learning Theory = livro----- cluster:1
+thrun s (1996) - lifelong learning ----- cluster:1
+chapelle o. (2006) - semi-supervised learning -> overview----- cluster:1
+
+  cluster 2 - vermelho
+  moda 2012
+  mediana 2011,5
+  pan sj (2011) - DA with TCA -> feature represenation ----- cluster:2
+gong bq (2012) - unsupervised domain adaptation----- cluster:2
+duan lx (2012) - SVM classifiers DA - cross domain learning----- cluster:2
+bruzzone l (2010) - DA SVM -> accuracy assessment for validating learning when no labels of target domain----- cluster:2
+si s (2010) - minimize divergence -> domain adaptation----- cluster:2
+yang j. (2007) - DA for video using adaptive SVMs----- cluster:2
+long ms (2014) - adaptaion regularization - adaptive classifier----- cluster:2
+fernando b (2013) - unsupervised domain adaptation----- cluster:2
+long ms (2013) - adaptive classifier----- cluster:2
+ben-david s (2010) - distribution similarity----- cluster:2
+
+cluster 3 - verde
+  moda ano de 2014
+  mediana 2013,5
+  he km (2016) - He, 2017 = object detection----- cluster:3
+  krizhevsky a (2012) - alexnet----- cluster:3
+  simonyan k. (2014) - Human tracking using CNN----- cluster:3
+  russakovsky o (2015) - Imagenet----- cluster:3
+  lecun y (2015) - deep learning----- cluster:3
+  oquab m (2014) - Transfer learning -> sequential learning -> fine tunning----- cluster:3
+  donahue j. (2014) - parametros aprendidos servem como representacoes universais que permitem aprender com poucos exemplos na tarefa alvo.----- cluster:3
+  jia y. (2014) - Caffe framework----- cluster:3
+  girshick r (2014) - RCNN - object detection----- cluster:3
+  deng j (2009) - Imagenet----- cluster:3
+  bengio y (2009) - curriculum learning -> simple to complex representations----- cluster:3
+  jia y. (2014) - Adam----- cluster:3
+  everingham m (2010) - Pascal VOC----- cluster:3
+  long j (2015) - FCN for semantic segmentation----- cluster:3
+  bengio y (2013) - review representation learning----- cluster:3
+  dalal n (2005) - human detection----- cluster:3
+  glorot x. (2011) - proposed first approach that applied a deep neural netwok to learn a common representaiton for domain adaptation  SDA----- cluster:3
+  hinton ge (2006) - deep learning----- cluster:3
+  kingma d. (2014) - alexnet----- cluster:3
+  felzenszwalb pf (2010) - Object Detection----- cluster:3
+
+
+  Sequential Transfer Learning became ubiquituous -> not using is considered foolhardy mahajan, 2018 ->descuidado
+  squential learning is commonly as pretraining ImageNEt -> Deng, 2009
+  Donahue, 2014 -> parametros aprendidos servem como representacoes universais que permitem aprender com poucos exemplos na tarefa alvo.
+
+  pre-treained -> sota results in several tasks -> He, 2017 = object detection -> Zhao, 2017 semantic segmentation, Papandreaou , 2017 human pose esimation.
+  Deng et al, 2013 -> MTL for speech Recognition
+  Caruana, MTL introduces an inductive bias provided by the auxiliary tasks ->chapter on multitask learning - hard parameter sharing
+  Taylor -> survey of tL in RL
+  Duong 2015, MTL soft parameter sharing
+  wang and zheng 2015, Sequential transfer leanring => model transfer
+networks.
+
+
+  Domain adaptation
+  Jiang, 2008 - survey
+  zhou 2014, 2015 -> different feature spaces 
+  weightning approaches Huang, 2007, Sugiama 2008
+      
+
+
   
+  \begin{figure}
+    \fbox{\includegraphics[width=\columnwidth]{top20_abstracts.pdf}}
+    \caption{} \label{fig:scatterText_documentbased}
+  \end{figure}
+  \begin{figure}
+    \fbox{\includegraphics[width=\columnwidth]{keyword_clouds}}
+    \caption{} \label{fig:clouds}
+  \end{figure}
   \subsection{A Fronteira}\label{fronteira}
   \lipsum[2]
   \begin{figure}
     \includegraphics[width=\columnwidth]{frontier3.pdf}
     \caption{} \label{fig:scatterText}
+  \end{figure}
+  \begin{figure}
+    \fbox{\includegraphics[width=\columnwidth]{frontier_heat}}
+    \caption{} \label{fig:bicoupling}
   \end{figure}
 
 \section{Problemas em Aberto}
