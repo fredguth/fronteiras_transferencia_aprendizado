@@ -100,7 +100,7 @@ uma revisão sistemática com enfoque meta-analítico}
 
     \begin{enumerate}[C1.]
       \item Apresentamos uma revisão sistemática atualizada da literatura em Transferência de Aprendizagem, usando a abordagem TEMAC (\S \ref{TEMAC}). Esse método nos permite focar nas contribuições de alto impacto. 
-      \item Estendemos o TEMAC com uma análise textual de resumos (\S \ref{analiseTextual}), utilizando o \emph{ScatterText}~\cite{kessler2017scattertext}, o que até onde sabemos, é uma aplicação original desta ferramenta de visualização.
+      \item Estendemos o TEMAC com uma análise textual de resumos (\S \ref{inter}\ref{analiseTextual}), utilizando o \emph{ScatterText}~\cite{kessler2017scattertext}, o que até onde sabemos, é uma aplicação original desta ferramenta de visualização.
       \item Apontamos com embasamento quantitativo as direções das frentes de pesquisa da área e apontamos lacunas e problemas em aberto.
     \end{enumerate}
   
@@ -119,7 +119,7 @@ A abordagem TEMAC é dividida em 3 etapas:
 \end{enumerate}
 
 \subsection{Preparação da Pesquisa}
-Foi realizada uma busca na base de dados \emph{Clarivate Analyticis Web of Science (WoS)}, conforme especificado na figura \ref{card:wos}, no dia 31 de março de 2019, que resultou em 1.289 artigos encontrados. Nota-se que o tema é de crescente interesse (figura \ref{fig:citacoes_por_ano}) e projeta-se que em 2 anos o número de citações irá praticamente dobrar (crescimento cubico com R-quadrado 0,9993). 
+Foi realizada uma busca na base de dados \emph{Clarivate Analyticis Web of Science (WoS)}, conforme especificado na figura \ref{card:wos}, no dia 31 de março de 2019, que resultou em 1.289 artigos encontrados. Nota-se que o tema é de crescente interesse (figura \ref{fig:artigos_por_ano}) e projeta-se que em 3 anos o número de artigos irá praticamente dobrar (crescimento exponencial com $R^2=0,9789$). 
 \begin{figure}[htp]
 
 \begin{tcolorbox}[colback=yellow!5!white,colframe=gray!75!black,title={Results: 1,289 (from Web of Science Core Collection)}]
@@ -166,7 +166,7 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
   \label{card:sota}
 \end{figure}
 
-\subsection{Apresentação e Inter-relação dos Dados}
+\subsection{Apresentação e Inter-relação dos Dados}\label{inter}
 
 % O software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer} foi utilizado para as análises bibliográficas. Ele permite analisar co-citação e acoplamento bibliográfico de documentos e autores. Para análise textual de resumos utilizamos a ferramenta \emph{ScatterText}~\cite{kessler2017scattertext}.
 
@@ -174,9 +174,9 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
   \item{\textbf{Análise de Co-citações}: Co-citação é definida como a frequência em que dois documentos são citados em uma mesma lista de referências. Assume-se que são "peças"~que compõem uma mesma "estrutura de conhecimento".  A análise de co-citações, portanto, é útil para mapear a herança intelectual de um determinado campo de estudos sob a ótica das publicações de alto-impacto, mas tende a negligenciar a dinâmica na fronteira de pesquisa\cite{Vogel2012}, justamente porque os trabalhos na fronteira não tiveram tempo para serem citados e pontuar nas métricas de impacto.\\Para a análise de co-citações, utilizamos o software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer}, que \emph{clusterizou} citações das listas de referências dos artigos da "Busca10anos" (o que abrange artigos que não fazem parte do resultado da busca). Foram identificados 3 núcleos de conhecimento (figura \ref{fig:classicos}).
   }
 
-  \item{\textbf{Análise de Acoplamento Bibliográfico}: Acoplamento bibliográfico ocorre quando dois documentos tem pelo menos um documento em comum, ou seja, documentos acoplam se suas bibliografias se sobrepõem. Como existe uma ordem cronológica entre o documento que cita e o que é citado, o acoplamento bibliográfico permite traçar gerações de pesquisas e com isso identificar as que estão na fronteira do conhecimento.  É importante ressaltar que, neste contexto, estar na fronteira não é necessariamente ser promissor. Essa é uma limitação da abordagem quantitativa, por isso é preciso complementá-la com uma análise qualitativa para propor, ainda que com certo grau de subjetividade, os trabalhos promissores a se tornar os "clássicos de amanhã". \\Pelo TEMAC, a análise de acoplamento bibliográfico deve ser feita para o período um período não superior aos últimos 3 anos. Em nossa análise, usamos uma busca mais restrita (figura \ref{card:sota}) com período entre 2018 e março de 2019.
+  \item{\textbf{Análise de Acoplamento Bibliográfico}: Acoplamento bibliográfico ocorre quando dois documentos tem pelo menos um documento em comum, ou seja, documentos acoplam se suas bibliografias se sobrepõem. Como existe uma ordem cronológica entre o documento que cita e o que é citado, o acoplamento bibliográfico permite traçar gerações de pesquisas e com isso identificar as que estão na fronteira do conhecimento.  É importante ressaltar que, neste contexto, estar na fronteira não é necessariamente ser promissor. Essa é uma limitação da abordagem quantitativa, por isso é preciso complementá-la com uma análise qualitativa para propor, ainda que com certo grau de subjetividade, os trabalhos promissores a se tornar os "clássicos de amanhã". \\Pelo TEMAC, a análise de acoplamento bibliográfico deve ser feita para o período um período não superior aos últimos 3 anos. Em nossa análise, usamos uma busca mais restrita (figura \ref{card:sota}) com período entre 2017 e março de 2019 e nos restringimos também aos artigos de conferência, assumindo que publicação em revista têm uma maior tempo de revisão, portanto, artigos em conferências são publicados mais proximamente ao momento de sua confecção. 
   }
-  \item{\textbf{Análise Textual (\emph{bag-of-words}  com tf-idf)}: nesta análise, tratamos os artigos como \emph{bag-of-words} e usamos o conceito de \textbf{tf-idf} para definir as palavras (termos) que melhor identificam determinados artigos (documentos). Por exemplo, quais palavras melhor explicam trabalhos de fronteira vis à vis o todos os documentos resultantes da busca na base \emph{Web of Science} (vide figura \ref{fig:scatterText}. A métrica \textbf{tf-idf} pode ser definida como:
+  \item{\textbf{Análise Textual (\emph{bag-of-words}  com tf-idf)}: nesta análise, tratamos os artigos como \emph{bag-of-words} e usamos o conceito de \textbf{tf-idf} para definir as palavras (termos) que melhor identificam determinados artigos (documentos). Por exemplo, quais palavras melhor explicam trabalhos de fronteira vis à vis o todos os documentos resultantes da busca na base \emph{Web of Science} (vide figura \ref{fig:scatterText}). A métrica \textbf{tf-idf} pode ser definida como:
   \begin{equation}
     \mathrm{tfidf}(t,d,D) = \mathrm{tf}(t,d) \cdot \mathrm{idf}(t, D)
   \end{equation}
@@ -204,7 +204,7 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
   \subsection{Um breve histórico}
   Pesquisa em transferência de aprendizado tem atraído mais e mais atenção desde 1995, quando foi tema de  um workshop na NIPS-95 que discutiu a necessidade de métodos de aprendizado de máquina que retém e reusam conhecimento previamente obtido~\cite{PanYang}. 
   
-  Desde então, ainda que com diferentes nomes (\emph{learning to learn, life-long learning, knowledge transfer} entre outros), a área vem recebendo cada vez mais atenção (figura \ref{fig:artigos_por_ano}). Em 2005 um anúncio de um projeto da DARPA foi a primeira menção que definia o termo \emph{transfer learning} como o objetivo de extrair conhecimento de um ou mais \emph{tarefas fonte} e aplicá-lo a \emph{tarefas alvo}~\cite{PanYang}. Se removermos a restrição de data de início da "Busca10Anos"(figure \ref{card:wos}), confirmamos que os primeiros artigos com o termo "transfer learning" são de 2005.
+  Desde então, ainda que com diferentes nomes (\emph{learning to learn, life-long learning, knowledge transfer} entre outros), a área vem recebendo cada vez mais atenção (figuras \ref{fig:artigos_por_ano} e \ref{fig:citacoes_por_ano}). Em 2005 um anúncio de um projeto da DARPA foi talvez a primeira menção que ao termo \emph{transfer learning}, definindo-o como o objetivo de extrair conhecimento de um ou mais \emph{tarefas fonte} e aplicá-lo a \emph{tarefas alvo}~\cite{PanYang}. Se removermos a restrição de data de início da "Busca10Anos"(figure \ref{card:wos}), confirmamos que os primeiros artigos com o termo "transfer learning" são de 2005.
 
   \begin{figure}[h]
     \includegraphics[width=\columnwidth]{artigos_por_ano}
@@ -213,7 +213,7 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
     \label{fig:artigos_por_ano}
   \end{figure}
 
-  Em 2012, a rede neural profunda\footnote{deep neural network} submetida pelo time de Alex Krizhevsky et. al. para o desafio Imagenet (ILSVRC) performou 41\% melhor que o segundo melhor colocado, dando início ao crescimento explosivo de \emph{deep learning"} na pesquisa de Aprendizado de Máquinas. Tal sucesso ressaltou a importância dos dados para o avança de inteligência artificial, mas também permitiu uma igual quebra de paradigma em transferência de aprendizado: percebeu-se que modelos treinados na ImageNet podiam facilmente ser usados para inicializar outros modelos e reduzir em muito a necessidade de amostras~\cite{Ruder2019Neural}.   Essa abordagem de "sintonia fina"\footnote{\emph{fine-tuning}} permitiu resultados bons em diversas tarefas com ordens de magnitude a menos de dados. 
+  Em 2012, a rede neural profunda\footnote{deep neural network} submetida pelo time de Alex Krizhevsky et. al. para o desafio Imagenet (ILSVRC) performou 41\% melhor que o segundo melhor colocado, dando início ao crescimento explosivo de \emph{deep learning} na pesquisa de Aprendizado de Máquinas. Tal sucesso ressaltou a importância dos dados para o avanço de inteligência artificial, mas também permitiu uma igual quebra de paradigma em transferência de aprendizado: percebeu-se que modelos treinados na ImageNet podiam facilmente ser usados para inicializar outros modelos e reduzir em muito a necessidade de amostras~\cite{Ruder2019Neural}.   Essa abordagem de "sintonia fina"\footnote{\emph{fine-tuning}} permitiu resultados bons em diversas tarefas com ordens de magnitude a menos de dados. 
 
   Atualmente, \emph{transferência de aprendizado} é um tópico comum em prestigiadas conferências como CVPR, ICCV, ICPR e NeurIPS (vide figura \ref{fig:toptop}, \emph{Top 10 encontros}).
   \subsection{Notações e definições}
@@ -230,96 +230,40 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
 
   A maior parte dos artigos são publicados em \emph{proceeding} de conferências, 63\%. A conferência com mais artigos sobre TL é a CVPR\footnote{Conference on Computer Vision and Pattern Recognition}, mas apesar de ser somente a 4\textordfeminine em artigos a ECCV\footnote{European Conference on Computer Vision} é a conferência com o maior número agregado de citações. É digno de nota que as conferências de visão computacional tem sido o espaço onde artigos de TL mais são divulgados. Ao mesmo tempo, estranha a falta de alguma conferência com maior foco em NLP. Também não há entre os 20 artigos mais citados, nenhum que seja especializado em linguagem.
   \subsection{Os Clássicos}\label{classicos}
-  \begin{figure}[htp]
-    \fbox{\includegraphics[width=\columnwidth]{completo_21.pdf}}
-    \source{Web of Science (março/2019)}{VosViewer\protect{~\cite{VOSviewer}}}
-    \caption{Núcleos de conhecimento obtidos pela análise de co-citações. Os diferentes grupos representam autores que normalmente são co-citados nos 1268 artigos resultantes da busca realizada.}
-    \label{fig:classicos}
-  \end{figure}
-
 A análise de co-citação usando o \emph{VosViewer} apontou para existência de 3 núcleos\footnote{\emph{clusters}} de conhecimento. Esses núcleos têm um forte componente temporal, podendo ser vistos como ondas, a primeira concentrando obras anteriores a 2011 (a moda é 2006),  está em amarelo na figura \ref{fig:classicos}, a segunda entre 2011 e 2014 (a moda é 2012) está em vermelho, e a terceira e última onda, em verde na figura, são obras de 2012 até hoje (moda 2014).
+\begin{figure}[htp]
+  \fbox{\includegraphics[width=\columnwidth]{completo_21.pdf}}
+  \source{Web of Science (março/2019)}{VosViewer\protect{~\cite{VOSviewer}}}
+  \caption{Núcleos de conhecimento obtidos pela análise de co-citações. Os diferentes grupos representam autores que normalmente são co-citados nos 1268 artigos resultantes da busca realizada.}
+  \label{fig:classicos}
+\end{figure}
+
 \subsubsection{Primeira onda}
 Uma das características mais fortes desta onda é sua componente teórica. Nesse núcleo estão obras que apresentam algumas classes de transferência de aprendizado: Thurn, S. (1996) \cite{thrun1996learning} e Caruana, R. (1997) \cite{Caruana1997} introduzem \emph{Multi-Task Learning} e a ideia de que tarefas adicionais (ou auxiliares) introduzem um viés indutivo que facilita a convergência do aprendizado; Chapelle, O. (2006) \cite{Chapelle:2010:SL:1841234} com seu livro sobre \emph{Semi-Supervised Learning}; Raina, R. (2007) e \emph{Self-taught learning}; Vapnik, V. (1998) \cite{Vapnik1998} e os fundamentos da teoria de aprendizagem estatística.
-Uma outra componente da primeira onda são artigos de Adaptação de Domínio, com certo foco em abordagens que buscam aprender características latentes, de menor dimensionalidade, com o pressuposto que em um espaço latente os domínios são mais similares: Ando, R. K.(2005) \cite{ando2005framework} e Daume, H.. (2006) \cite{DaumeIII2006}, por exemplo. 
+
+Uma outra componente da primeira onda são artigos de Adaptação de Domínio, com certo foco em abordagens que buscam aprender características latentes, de menor dimensionalidade, com o pressuposto que em um espaço latente os domínios são mais similares: Ando, R. K.(2005) \cite{ando2005framework}, Blitzer, J. (2006) \cite{Blitzer:2006:DAS:1610075.1610094} e Daume, H.. (2006) \cite{DaumeIII2006}, por exemplo. 
+
 Por fim, algumas das obras mais citadas desta onda são \emph{surveys}: Pan, S. (2010) \cite{PanYang}, Taylor, M. E. (2009) \cite{Taylor:2009:TLR:1577069.1755839}; que não por coincidência aparecem já mais para o final da primeira onda, organizando a pesquisa até aquele ponto. 
 
+\subsubsection{Segunda onda}
+A segunda onda é dominada por artigos sobre Adaptação de Domínio.  Alguns continuam com o foco em características latente como Pan, S. (2011) \cite{Pan2011}, mas a maioria usa abordagens que tentam selecionar amostras do domínio fonte que sejam similares ao domínio alvo: Ben-David, S. (2010) \cite{BenDavid2009} aborda similaridade da distribuição de domínios, Si, S. (2010) \cite{SiSi2010} busca minimizar a divergência; Nesta abordagem também é comum utilizar classificadores, em geral \emph{Support Vector Machines} (SVMs): Yang, J. (2007) \cite{Yang2007}, Bruzzone, L. (2010) \cite{Bruzzone2010}, Duan, L. (2012)\cite{LixinDuan2012}, entre outros.
 
-ando rk (2005) - project data into low-dimension space to make domains more similar - SVD----- cluster:1
-daume h (2006) - latent feature learningDA for statistica lassifiers ----- cluster:1
+Há também trabalhos de Adaptação Não Supervisionada de Domínio: Gong, B. (2012) \cite{BoqingGong2012}, Fernando, B. (2013) \cite{Fernando2013}.
+Notou-se com estranheza que não apareceu em nossa análise nenhuma \emph{survey} "fechando" essa onda, apesar de sabermos da existência do capítulo \emph{A Comprehensive Survey on Domain Adaptation for Visual Applications}, Csurka, G. (2017) \cite{Csurka2017}. Foi constatado, entretanto, que esta obra não foi indexada pela base \emph{WoS} e portanto não fez parte dos resultados de nossas buscas. 
 
+\subsubsection{Terceira onda}
+A terceira onda é o núcleo de conhecimento de transferência de aprendizado no contexto de \emph{deep learning}. 
 
+Encontramos obras clássicas como: Hinton, G. (2006) \cite{Hinton2006}, talvez o artigo seminal de \emph{Deep Learning}; Bengio, Y. (2009) \cite{Bengio2009} apresenta o conceito de \emph{representation learning} e a ideia de curriculum, uma sequencia de tarefas a serem aprendidas em sequencia, por terem representações em diferentes níveis de complexidade; LeCun, Bengio e Hinton (2015)\cite{LeCun2015} fazem uma revisão da área de \emph{Deep Learning}. Também aqui se encontra o artigo de Krizhevsky, A. (2012) \cite{alexnet}, sobre \emph{AlexNet}, o modelo que ao ganhar o desafio ImageNet (ILSVRC) de 2012 com uma margem de mais de 40\% melhor que o segundo colocado, tornou \emph{Deep Learning} conhecido do público geral e deu início a uma verdadeira "corrida do ouro" na pesquisa de aprendizado de máquina. 
 
-yao y (2010) - boosting -> domain adaptation ----- cluster:1
+Alguns artigos são sobre \emph{large datasets}, um importante componente de \emph{deep learning}:  Deng, J. (2009) \cite{Deng2009} apresenta a ImageNet e sugere que modelos treinados nela poderão ser usados para aprender novos domínios mais facilmente; Everingham, M. (2009) \cite{Everingham2009} traz o desafio Pascal VOC; Russakovsky, O. (2015) \cite{Russakovsky2015} analisa o impacto da ImageNet em diversos problemas de visão computacional, e, consequentemente, o papel da transferência de aprendizado. 
 
+Há também artigos que apresentam arquiteturas para resolução de tarefas específicas, utilizando modelos pre-treinados na ImageNet como extração de características: Girshick, R. (2014) \cite{Girshick2014}, modelo R-CNN, He, K. (2016) \cite{He2016}, Resnet, e Simonyan, K.\cite{simonyan2014very}, em detecção de objetos;  Fan, J. \cite{JialueFan2010} em rastreamento de humanos; Long e Shelhamer (2015) \cite{Long2015} em segmentação semântica; entre outros.
 
-  cluster 1 - amarelo
-  mediana e moda 2006
-  dai w. (2007) - boosting -> domain adaptation ----- cluster:1
+Transferência de aprendizado passou a ser tão onipresente em \emph{Deep Learning} que Mahajan (2018) \cite{mahajan2018exploring} argumenta que \emph{não} pré-treinar modelos na ImageNet em problemas de visão computacional é um descuido.  
 
-  pan sj (2010) - surey----- cluster:1
-  taylor me (2009) - survey TL in RL----- cluster:1
-chang cc (2011) - LIBSVM: A library for support vector machines----- cluster:1
+Por essa razão, é difícil apontar trabalhos desta onda cujo foco é a Transferência de Aprendizado. Nessa vertente, alguns artigos dignos de nota são: Glorot, X. (2011) \cite{glorot2011domain} é o primeiro a propor aplicar \emph{deep neural networks} par aprender representações comuns para Adaptação de Domínio; Donahue, J. (2014)\cite{donahue2014decaf} e Oquab, M. (2014)\cite{Oquab:2014:LTM:2679600.2680210} mostram que parametros aprendidos em tarefas fonte servem como representações que permitem aprender com poucos exemplos a tarefa alvo.
 
-  cluster 2 - vermelho
-  moda 2012
-  mediana 2011,5
-  pan sj (2011) - DA with TCA -> feature represenation ----- cluster:2
-gong bq (2012) - unsupervised domain adaptation----- cluster:2
-duan lx (2012) - SVM classifiers DA - cross domain learning----- cluster:2
-bruzzone l (2010) - DA SVM -> accuracy assessment for validating learning when no labels of target domain----- cluster:2
-si s (2010) - minimize divergence -> domain adaptation----- cluster:2
-yang j. (2007) - DA for video using adaptive SVMs----- cluster:2
-long ms (2014) - adaptaion regularization - adaptive classifier----- cluster:2
-fernando b (2013) - unsupervised domain adaptation----- cluster:2
-long ms (2013) - adaptive classifier----- cluster:2
-ben-david s (2010) - distribution similarity----- cluster:2
-
-cluster 3 - verde
-  moda ano de 2014
-  mediana 2013,5
-  he km (2016) - He, 2017 = object detection----- cluster:3
-  krizhevsky a (2012) - alexnet----- cluster:3
-  simonyan k. (2014) - Human tracking using CNN----- cluster:3
-  russakovsky o (2015) - Imagenet----- cluster:3
-  lecun y (2015) - deep learning----- cluster:3
-  oquab m (2014) - Transfer learning -> sequential learning -> fine tunning----- cluster:3
-  donahue j. (2014) - parametros aprendidos servem como representacoes universais que permitem aprender com poucos exemplos na tarefa alvo.----- cluster:3
-  jia y. (2014) - Caffe framework----- cluster:3
-  girshick r (2014) - RCNN - object detection----- cluster:3
-  deng j (2009) - Imagenet----- cluster:3
-  bengio y (2009) - curriculum learning -> simple to complex representations----- cluster:3
-  jia y. (2014) - Adam----- cluster:3
-  everingham m (2010) - Pascal VOC----- cluster:3
-  long j (2015) - FCN for semantic segmentation----- cluster:3
-  bengio y (2013) - review representation learning----- cluster:3
-  dalal n (2005) - human detection----- cluster:3
-  glorot x. (2011) - proposed first approach that applied a deep neural netwok to learn a common representaiton for domain adaptation  SDA----- cluster:3
-  hinton ge (2006) - deep learning----- cluster:3
-  kingma d. (2014) - alexnet----- cluster:3
-  felzenszwalb pf (2010) - Object Detection----- cluster:3
-
-
-  Sequential Transfer Learning became ubiquituous -> not using is considered foolhardy mahajan, 2018 ->descuidado
-  squential learning is commonly as pretraining ImageNEt -> Deng, 2009
-  Donahue, 2014 -> parametros aprendidos servem como representacoes universais que permitem aprender com poucos exemplos na tarefa alvo.
-
-  pre-treained -> sota results in several tasks -> He, 2017 = object detection -> Zhao, 2017 semantic segmentation, Papandreaou , 2017 human pose esimation.
-  Deng et al, 2013 -> MTL for speech Recognition
-  Caruana, MTL introduces an inductive bias provided by the auxiliary tasks ->chapter on multitask learning - hard parameter sharing
-  Taylor -> survey of tL in RL
-  Duong 2015, MTL soft parameter sharing
-  wang and zheng 2015, Sequential transfer leanring => model transfer
-networks.
-
-
-  Domain adaptation
-  Jiang, 2008 - survey
-  zhou 2014, 2015 -> different feature spaces 
-  weightning approaches Huang, 2007, Sugiama 2008
-      
-
-
-  
   \begin{figure}
     \fbox{\includegraphics[width=\columnwidth]{top20_abstracts.pdf}}
     \caption{} \label{fig:scatterText_documentbased}
