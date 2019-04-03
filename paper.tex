@@ -1,6 +1,6 @@
 %%%% Proceedings format for most of ACM conferences (with the exceptions listed below) and all ICPS volumes.
 \documentclass[sigconf]{acmart}
-\usepackage{graphicx, wrapfig}
+\usepackage{graphicx, wrapfig, floatflt}
 \graphicspath{{imgs/}}
 \usepackage[para]{footmisc} %  footnotes na mesma linha
 \usepackage{lipsum}
@@ -165,7 +165,7 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
     }
   
   \end{tcolorbox}
-  \caption{"Busca2anos"Parâmetros de busca para análise de Fronteira.}
+  \caption{"Busca3anos"Parâmetros de busca para análise de Fronteira.}
   \label{card:sota}
 \end{figure}
 
@@ -270,13 +270,13 @@ Uma outra componente da primeira onda são artigos de Adaptação de Domínio, c
 
 Por fim, algumas das obras mais citadas desta onda são \emph{surveys}: Pan, S. (2010) \cite{PanYang}, Taylor, M. E. (2009) \cite{Taylor:2009:TLR:1577069.1755839}; que não por coincidência aparecem já mais para o final da primeira onda, organizando a pesquisa até aquele ponto. 
 
-\subsubsection{Segunda onda}
+\subsubsection{Segunda onda}\label{segunda_onda}
 A segunda onda é dominada por artigos sobre Adaptação de Domínio.  Alguns continuam com o foco em características latente como Pan, S. (2011) \cite{Pan2011}, mas a maioria usa abordagens que tentam selecionar amostras do domínio fonte que sejam similares ao domínio alvo: Ben-David, S. (2010) \cite{BenDavid2009} aborda similaridade da distribuição de domínios, Si, S. (2010) \cite{SiSi2010} busca minimizar a divergência; Nesta abordagem também é comum utilizar classificadores, em geral \emph{Support Vector Machines} (SVMs): Yang, J. (2007) \cite{Yang2007}, Bruzzone, L. (2010) \cite{Bruzzone2010}, Duan, L. (2012)\cite{LixinDuan2012}, entre outros.
 
 Há também trabalhos de Adaptação Não Supervisionada de Domínio: Gong, B. (2012) \cite{BoqingGong2012}, Fernando, B. (2013) \cite{Fernando2013}.
 Notou-se com estranheza que não apareceu em nossa análise nenhuma \emph{survey} "fechando" essa onda, apesar de sabermos da existência do capítulo \emph{A Comprehensive Survey on Domain Adaptation for Visual Applications}, Csurka, G. (2017) \cite{Csurka2017}. Foi constatado, entretanto, que esta obra não foi indexada pela base \emph{WoS} e portanto não fez parte dos resultados de nossas buscas. 
 
-\subsubsection{Terceira onda}
+\subsubsection{Terceira onda}\label{terceira_onda}
 A terceira onda é o núcleo de conhecimento de transferência de aprendizado no contexto de \emph{deep learning}. 
 
 Encontramos obras clássicas como: Hinton, G. (2006) \cite{Hinton2006}, talvez o artigo seminal de \emph{Deep Learning}; Bengio, Y. (2009) \cite{Bengio2009} apresenta o conceito de \emph{representation learning} e a ideia de curriculum, uma sequencia de tarefas a serem aprendidas em sequencia, por terem representações em diferentes níveis de complexidade; LeCun, Bengio e Hinton (2015)\cite{LeCun2015} fazem uma revisão da área de \emph{Deep Learning}. Também aqui se encontra o artigo de Krizhevsky, A. (2012) \cite{alexnet}, sobre \emph{AlexNet}, o modelo que ao ganhar o desafio ImageNet (ILSVRC) de 2012 com uma margem de mais de 40\% melhor que o segundo colocado, tornou \emph{Deep Learning} conhecido do público geral e deu início a uma verdadeira "corrida do ouro" na pesquisa de aprendizado de máquina. 
@@ -287,37 +287,77 @@ Há também artigos que apresentam arquiteturas para resolução de tarefas espe
 
 Transferência de aprendizado passou a ser tão onipresente em \emph{Deep Learning} que Mahajan (2018) \cite{mahajan2018exploring} argumenta que \emph{não} pré-treinar modelos na ImageNet em problemas de visão computacional é um descuido.  
 
-Por essa razão, é difícil apontar trabalhos desta onda cujo foco é a Transferência de Aprendizado. Nessa vertente, alguns artigos dignos de nota são: Glorot, X. (2011) \cite{glorot2011domain} é o primeiro a propor aplicar \emph{deep neural networks} par aprender representações comuns para Adaptação de Domínio; Donahue, J. (2014)\cite{donahue2014decaf} e Oquab, M. (2014)\cite{Oquab:2014:LTM:2679600.2680210} mostram que parametros aprendidos em tarefas fonte servem como representações que permitem aprender com poucos exemplos a tarefa alvo.
+Por essa razão, é difícil apontar trabalhos desta onda cujo foco é a Transferência de Aprendizado. Nessa vertente, alguns artigos dignos de nota são: Glorot, X. (2011) \cite{glorot2011domain} é o primeiro a propor aplicar \emph{deep neural networks} par aprender representações comuns para Adaptação de Domínio; Donahue, J. (2014)\cite{donahue2014decaf} e Oquab, M. (2014)\cite{Oquab:2014:LTM:2679600.2680210} mostram que parâmetros aprendidos em tarefas fonte servem como representações que permitem aprender com poucos exemplos a tarefa alvo.
+\subsubsection{Resultados da análise textual}
+Os 20 artigos mais citados representam quase metade das citações (figura \ref{fig:citacoes_por_ano}). Assim, assumimos que uma análise textual nesse subconjunto da "Busca10Anos" é um bom \emph{proxy} do conjunto dos artigos. 
+
+A figura \ref{fig:scatterText_documentbased} apresenta os 20 artigos mais citados visualizados por proximidade dos termos contidos nos \emph{abstracts} e \emph{keywords} dos artigos.  Os eixos são os dois termos com maior \textbf{tf-idf}. Quando o artigo faz parte de algum dos núcleos clássicos (figura \ref{fig:classicos}), representamos o seu ponto no gráfico com a mesma cor do núcleo clássico do qual faz parte.
+É interessante notar, que em linhas gerais, por um método totalmente diferente, agrupamos nos mesmos núcleos os artigos. Na figura \ref{fig:scatterText_documentbased}, cada quadrante equivale a um núcleo da figura \ref{fig:classicos}.  Essa é uma forte validação que as análises fazem sentido.
+
+A figura \ref{fig:clouds} apresenta "nuvens de palavras" para cada quadrante da figura \ref{fig:scatterText_documentbased}. É interessante notar que esses termos fazem sentido com a análise feita na seção \S\ref{classicos}.
+
+\begin{figure}
+  \fbox{\includegraphics[width=\columnwidth]{top20_abstracts.pdf}}
+  \source{WoS (março/2019)}{ScatterText~\protect{\cite{kessler2017scattertext}}}
+  \caption{Os 20 artigos mais citados visualizados por proximidade de \emph{bag of words}.} \label{fig:scatterText_documentbased}
+\end{figure}
+\begin{figure}
+  \fbox{\includegraphics[width=\columnwidth]{keyword_clouds}}
+  \source{WoS (março/2019)}{TagCrowd}
+  \caption{Nuvens de palavras dos diferentes quadrantes da figura \ref{fig:scatterText_documentbased}.} \label{fig:clouds}
+\end{figure}
+
+
+
+
+\subsection{As Fronteiras}\label{fronteiras}
+  Pra caracterizar as fronteiras de pesquisa em Transferência de Aprendizado fizemos duas análises:
+  \subsubsection{Análise Textual}
+
+  Utilizamos o \emph{ScatterText}~\cite{kessler2017scattertext} para analisar as diferenças dos termos que representam os artigos da  "Busca3anos", que são mais prováveis de estar na fronteira de pesquisa, com os termos da "Busca10Anos" engloba todos os artigos sobre TL. 
+
+  O resultado é apresentado na figura \ref{fig:scatterText}. 
+  É interessante notar que os termos mais identificados com as fronteiras são \emph{deep}, \emph{neural}, \emph{images} e também palavras como \emph{cnn},  \emph{trained networks} e \emph{datasets}.  O que tem bastante correspondência com a noss análise da terceira onda em \S\ref{terceira_onda}. Já os termos da "Busca10Anos" são: \emph{distribution}, \emph{domain}, \emph{adaptation}, \emph{auxiliary} (de tarefas auxiliares), \emph{kernel}; bastante similariedade com a segunda onda \S\ref{segunda_onda}. 
 
   \begin{figure}
-    \fbox{\includegraphics[width=\columnwidth]{top20_abstracts.pdf}}
-    \caption{} \label{fig:scatterText_documentbased}
+    \includegraphics[width=\columnwidth]{frontier.pdf}
+    \source{\emph{WoS}(março/2019)}{ScatterText\protect{\cite{kessler2017scattertext}}}
+    \caption{Análise visual dos termos mais "Fronteira" versus os termos mais "Clássico" no âmbito de Transferência de Aprendizado.} \label{fig:scatterText}
   \end{figure}
-  \begin{figure}
-    \fbox{\includegraphics[width=\columnwidth]{keyword_clouds}}
-    \caption{} \label{fig:clouds}
-  \end{figure}
-  \subsection{A Fronteira}\label{fronteira}
-  \lipsum[2]
-  \begin{figure}
-    \includegraphics[width=\columnwidth]{frontier3.pdf}
-    \caption{} \label{fig:scatterText}
-  \end{figure}
-  \begin{figure}
+
+  \subsubsection{Acoplamento Bibliográfico}
+  O resultado do acoplamento bibliográfico dos artigos da "Busca3anos" pode ser analisado na figura \ref{fig:bicoupling}.
+  \begin{figure}[b]
     \fbox{\includegraphics[width=\columnwidth]{frontier_heat}}
-    \caption{} \label{fig:bicoupling}
+    \source{\emph{WoS}(março/2019)}{VosViewer}
+    \caption{Mapa de calor da análise de acomplamento bibliográfico.} \label{fig:bicoupling}
   \end{figure}
+
+  Analisando os artigos mais destacados, temos:
+  Lucena, O. (2017) \cite{Lucena2017} e de Rezende, E. (2017) \cite{Rezende2017}, ambos artigos brasileiros, são aplicaçoes de \emph{deep convolutional networks}para novos problemas, \emph{face anti-spoofing} e \emph{identificação de fake images}, respectivamente.
+  Venkateswara, H. (2017) \cite{Venkateswara2017} e Ge, W. (2017)\cite{Ge2017} propõem novos métodos de Adaptação de Domínio usando \emph{Deep Learning}. 
+  Fica claro que o aspecto em comum de todos esses trabalhos é que são exemplos de \emph{Deep Transfer Learning}.
+
+  \subsubsection{Os clássicos de amanhã}
+  As análises quantitativas, no que tange às fronteiras de pesquisa, nos dizem que há grande potencial em \emph{Deep Transfer Learning}, mas não são capazes de sugerir se esse ou aquele trabalho é ou não promissor.  Para tanto, além de escolher trabalhos com as características mais "quentes", também é necessária uma análise subjetiva dos trabalhos que parecem estar avançando em espaços em aberto. 
+  
+  Nesse espírito, ressaltamos algumas obras que acreditamos ter potencial para se tornarem clássicos de amanhã:
+  \begin{itemize}
+    \item Zamir, A. (2018)\cite{taskonomy}: considerado o melhor artigo da CVPR 2018, esse artigo explora as relações entre tarefas, criando um grafo que pode ser utilizado para definir que tarefas são as melhores fontes para uma determinada tarefa alvo, entre outras questões.
+    \item Howard, H. (2018)\cite{ulmfit}: o modelo proposto ULMFit avançou o estado-da-arte de tarefas de classificação de texto entre 18 e 24\% e pode se tornar o equivalente em NLP ao que Krizhevsky, A. (2012)\cite{alexnet} foi para Visão Computacional. 
+    \item Zhu, J. (2018)\cite{CycleGan}: propõe o uso de \emph{Generative Adversarial Networks (GANs)} para transferir o domínio de uma imagem para outra de forma totalmente não supervisionada.  Somos extremamente otimistas em relação ao potencial de GANs para transferência de aprendizado.
+    \item Ruder, S. (2019)\cite{Ruder2019Neural}: apresenta uma taxonomia mais atual para problemas de transferência de aprendizado em NLP.
+  \end{itemize}
 
 \section{Problemas em Aberto}\label{emAberto}
+A visão geral que uma revisão sistemática traz, nos permite perceber lacunas no conhecimento científico. Alguns problemas em aberto são:
 \begin{enumerate}
-  \item inexistência de métricas específicas para medir transferência.
-  \item não há uma categorização que dê a devida importância a métodos mais novos (GANs, autoencoders)...???
-  \item NLP
-  \item Teoria
-  \item categorização específica deep transfer learning
-  \item 
+  \item inexistência de métricas específicas para transferência: "models do what you inspect, not what you expect".
+  \item a taxonomia corrente, Pan, S. (2009)\cite{PanYang}, dá ênfase demais a adaptação de domínio e de menos a transferência indutiva de aprendizado. Também precisa ser atualizada para incluir ideias mais recentes como GANs e \emph{autoencoders}. 
+  \item NLP: ainda há muito pouco em transferência de aprendizado para NLP.
+  \item Teoria: Na primeira onda, o papel da Teoria era apontar caminhos que poderiam dar certo. Hoje há vários caminhos que estão dando certo na prática, mas muito pouco se sabe  o porquê de darem certo. 
 \end{enumerate}
-\lipsum[3]
+
 \section{Conclusão}\label{conclusao}
 \lipsum[3]
 \bibliographystyle{ACM-Reference-Format}
