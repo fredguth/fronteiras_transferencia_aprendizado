@@ -4,6 +4,7 @@
 \graphicspath{{imgs/}}
 \usepackage[para]{footmisc} %  footnotes na mesma linha
 \usepackage{lipsum}
+% \usepackage[inline]{enumitem}
 \usepackage{stfloats}
 \usepackage{enumerate}
 \usepackage[most]{tcolorbox}
@@ -88,7 +89,7 @@ uma revisão sistemática com enfoque meta-analítico}
 
   Portanto, não é de se estranhar o crescente interesse pelo assunto (vide figura \ref{fig:citacoes_por_ano} e \S\ref{sec:panorama}).  
 
-  \subsection{Objetivo}
+  \subsection{Objetivo}\label{objetivos}
    Esta pesquisa quer responder duas perguntas:
     \begin{enumerate}
       \item{Quais são as fronteiras do conhecimento em Transferência de Aprendizado?}
@@ -100,14 +101,16 @@ uma revisão sistemática com enfoque meta-analítico}
 
     \begin{enumerate}[C1.]
       \item Apresentamos uma revisão sistemática atualizada da literatura em Transferência de Aprendizagem, usando a abordagem TEMAC (\S \ref{TEMAC}). Esse método nos permite focar nas contribuições de alto impacto. 
-      \item Estendemos o TEMAC com uma análise textual de resumos (\S \ref{inter}\ref{analiseTextual}), utilizando o \emph{ScatterText}~\cite{kessler2017scattertext}, o que até onde sabemos, é uma aplicação original desta ferramenta de visualização.
+      \item Estendemos o TEMAC com uma análise textual de resumos (\S \ref{detalha}\ref{analiseTextual}), utilizando o \emph{ScatterText}~\cite{kessler2017scattertext}, o que até onde sabemos, é uma aplicação original desta ferramenta de visualização.
       \item Apontamos com embasamento quantitativo as direções das frentes de pesquisa da área e apontamos lacunas e problemas em aberto.
     \end{enumerate}
   
   \subsection{Visão Geral e Organização do Artigo}
-  \lipsum[3]
-  \subsection{Trabalhos Relacionados}
-  \lipsum[2]
+  Ainda nesta breve introdução apresentaremos os \emph{Trabalhos Relacionados} (\S\ref{related}). Na próxima seção (\S\ref{TEMAC}), apresentaremos o método de pesquisa que dá embasamento quantitativo que queremos para atingirmos nossos objetivos (\S\ref{objetivos}). Na seção \S\ref{literatura}, apresentamos os resultados, que neste trabalho é a própria  \emph{Revisão da Literatura}. \emph{Problemas em Aberto} são discutidos na seção \S\ref{emAberto}. Por fim, concluímos o trabalho (\S\ref{conclusao}) apresentando as respostas às perguntas de \S\ref{objetivos}.
+  
+
+  \subsection{Trabalhos Relacionados}\label{related}
+  Pan, S. (2009)\cite{PanYang} é a mais citada revisão sobre \emph{Transferência de Aprendizado}. Hohman, F. (2018) faz uma revisão sistemática da literatura sobre análises visuais em \emph{deep learning} e utiliza um método bastante interessante baseado nos cinco W's e um H (Why, Who, What, How, When, and Where). Ruder, S. (2019) \cite{Ruder2019Neural} apresenta um capítulo com uma revisão bibliográfica e taxonomia para o contexto de NLP. Park, I. (2018) utiliza uma abordagem meta-analítica para identificar a fronteira de pesquisa em \emph{Pattern Recognition}.
 \section{Método: Revisão com Enfoque Meta-Analítico Consolidado}\label{TEMAC}
 Na presente pequisa utilizamos o método de revisão sistemática da Teoria do Enfoque Meta-Analítico (TEMAC) ~\cite{Mariano}, que visa oferecer um embasamento quantitativo para a escolha da literatura. Apesar do nome, TEMAC não deve ser confundida com Meta-Análise, pois o foco desta é gerar conhecimento por meio de dados empíricos secundários, enquanto o daquela é oferecer uma sistematização da escolha bibliográfica.
 
@@ -167,8 +170,18 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
 \end{figure}
 
 \subsection{Apresentação e Inter-relação dos Dados}\label{inter}
-
-% O software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer} foi utilizado para as análises bibliográficas. Ele permite analisar co-citação e acoplamento bibliográfico de documentos e autores. Para análise textual de resumos utilizamos a ferramenta \emph{ScatterText}~\cite{kessler2017scattertext}.
+Nessa etapa apresentamos (vide \S\ref{sec:panorama}):
+\begin{enumerate}
+  \item artigos mais citados e com melhor média de citações por ano;
+  \item evolução ano a ano do número de artigos;
+  \item evolução ano a ano do número de citações;
+  \item autores com mais artigos e com mais citações;
+  \item conferência com mais artigos e citações;
+  \item instituições com mais artigos e citações;
+  \item países que mais produzem artigos científicos na área;
+  \item frequencia de palavras-chave (figuras \ref{fig:clouds} e \ref{fig:scatterText}).
+\end{enumerate}
+\subsection{Detalhamento}\label{detalha}
 
 \begin{enumerate}[a)]
   \item{\textbf{Análise de Co-citações}: Co-citação é definida como a frequência em que dois documentos são citados em uma mesma lista de referências. Assume-se que são "peças"~que compõem uma mesma "estrutura de conhecimento".  A análise de co-citações, portanto, é útil para mapear a herança intelectual de um determinado campo de estudos sob a ótica das publicações de alto-impacto, mas tende a negligenciar a dinâmica na fronteira de pesquisa\cite{Vogel2012}, justamente porque os trabalhos na fronteira não tiveram tempo para serem citados e pontuar nas métricas de impacto.\\Para a análise de co-citações, utilizamos o software livre \emph{VosViewer 1.6.10}~\cite{VOSviewer}, que \emph{clusterizou} citações das listas de referências dos artigos da "Busca10anos" (o que abrange artigos que não fazem parte do resultado da busca). Foram identificados 3 núcleos de conhecimento (figura \ref{fig:classicos}).
@@ -200,7 +213,7 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
 
 
 
-\section{Revisão da Literatura}
+\section{Revisão da Literatura}\label{literatura}
   \subsection{Um breve histórico}
   Pesquisa em transferência de aprendizado tem atraído mais e mais atenção desde 1995, quando foi tema de  um workshop na NIPS-95 que discutiu a necessidade de métodos de aprendizado de máquina que retém e reusam conhecimento previamente obtido~\cite{PanYang}. 
   
@@ -217,26 +230,38 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
 
   Atualmente, \emph{transferência de aprendizado} é um tópico comum em prestigiadas conferências como CVPR, ICCV, ICPR e NeurIPS (vide figura \ref{fig:toptop}, \emph{Top 10 encontros}).
   \subsection{Notações e definições}
-  \subsection{O panorama da produção científica na área}\label{sec:panorama}
-  \begin{figure*}[t]
-    \centering
-    \fbox{\includegraphics[width=\textwidth]{listas.pdf}}
-    \source{Web of Science (março/2019)}{Excel}
-    \caption{Panorama da produção científica sobre Transferência de Aprendizado.} \label{fig:toptop}
-  \end{figure*}
+  \begin{figure}[h]
+    \fbox{\includegraphics[width=\columnwidth]{taxonomy.pdf}}
+    \caption{Visão geral dos diversos tipos de transferência. Taxonomia de \emph{A Survey on Transfer Learning}\protect{~\cite{PanYang}} }
+    \label{fig:taxonomia}
+  \end{figure}
+    Transferência de Aprendizado envolve os conceitos de \emph{domínio} e \emph{tarefa}. Seguindo a notação de \cite{PanYang}, um domínio $\mathcal{D}$ é composto de um espaço de características $\mathcal{X}\subset R^d$ e uma distribuição marginal $P(\mathrm{X})$, onde $\mathrm{S}=\{x_1, \dots, x_n\}\in\mathcal{X} $. Para um problema de classificação de imagens, por exemplo, $\mathcal{X}$ é o espaço de todas possíveis representações de imagens, com suas dimensões e canais, $x_i$ é uma imagem e $\mathrm{S}$ é o \textit{dataset} de treinamento. 
+
+    Dado um domínio $\mathcal{D}=\{\mathcal{X}, P(X)\}$, uma tarefa $\mathcal{T}$ é definida pelo espaço de rótulos $\mathcal{Y}$ com distribuição condicional $P(\mathrm{Y}|\mathrm{X})$, ou seja, $\mathcal{T}=\{\mathcal{Y}, f(\cdot)\}$, onde $f(\cdot)$ é uma função objetivo que dado um $x_i \in \mathcal{D}$, prediz seu correspondente $y_i \in \mathcal{Y}$. 
+
+    Dado um domínio fonte $\mathcal{D_S}$ e uma tarefa $\mathcal{T_S}$, um domínio destino $\mathcal{D_T}$ e uma tarefa $\mathcal{T_T}$, \textbf{transferência de aprendizado} objetiva auxiliar o aprendizado da função de predição $f_T(\cdot)$ em  $\mathcal{D_T}$ usando conhecimento de $\mathcal{D_S}$ e $\mathcal{T_S}$, onde $\mathcal{D_S}\neq\mathcal{D_T}$ ou $\mathcal{T_S}\neq\mathcal{T_T}$.
+
+    No presente artigo, usaremos a taxonomia dos tipos de transferência apresentada na figura \ref{fig:taxonomia}. 
+    \subsection{O panorama da produção científica na área}\label{sec:panorama}
   Na figura \ref{fig:toptop}, é possível notar que o autor com mais citações é Pan, S., com 2706 citações. Tal impacto deve-se, sobretudo ao artigo \emph{A Survey on Transfer Learning}, que é o artigo mais citado da área com 2240 citações. O mérito deste trabalho é apresentar notações e uma taxonomia para TL. Saiu na revista \emph{IEEE Transactions on Knowledge an Data Engineering}, de 2,775 de fator de impacto, e ocupa a 33\textordfeminine ~posição no ranking de publicações InCite JCR para a categoria \emph{Computer Science, Artificial Intelligence}, ou seja, uma publicação cujo foco não é o tipo de pesquisa que menciona \emph{transferência de aprendizado}. 
 
   A China é o país com o maior número de artigos publicados, seguido pelos Estados Unidos. O Brazil está na 11\textordfeminine colocação, junto com a Índia, mas a frente de países como Espanha, Coreia do Sul e Israel.
 
   A maior parte dos artigos são publicados em \emph{proceeding} de conferências, 63\%. A conferência com mais artigos sobre TL é a CVPR\footnote{Conference on Computer Vision and Pattern Recognition}, mas apesar de ser somente a 4\textordfeminine em artigos a ECCV\footnote{European Conference on Computer Vision} é a conferência com o maior número agregado de citações. É digno de nota que as conferências de visão computacional tem sido o espaço onde artigos de TL mais são divulgados. Ao mesmo tempo, estranha a falta de alguma conferência com maior foco em NLP. Também não há entre os 20 artigos mais citados, nenhum que seja especializado em linguagem.
   \subsection{Os Clássicos}\label{classicos}
+  \begin{figure}[h!]
+    \fbox{\includegraphics[width=\columnwidth]{completo_21.pdf}}
+    \source{Web of Science (março/2019)}{VosViewer\protect{~\cite{VOSviewer}}}
+    \caption{Núcleos de conhecimento obtidos pela análise de co-citações. Os diferentes grupos representam autores que normalmente são co-citados nos 1268 artigos resultantes da busca realizada.}
+    \label{fig:classicos}
+  \end{figure}
+  \begin{figure*}[htp]
+    \centering
+    \fbox{\includegraphics[width=\textwidth]{listas.pdf}}
+    \source{Web of Science (março/2019)}{Excel}
+    \caption{Panorama da produção científica sobre Transferência de Aprendizado.} \label{fig:toptop}
+  \end{figure*}
 A análise de co-citação usando o \emph{VosViewer} apontou para existência de 3 núcleos\footnote{\emph{clusters}} de conhecimento. Esses núcleos têm um forte componente temporal, podendo ser vistos como ondas, a primeira concentrando obras anteriores a 2011 (a moda é 2006),  está em amarelo na figura \ref{fig:classicos}, a segunda entre 2011 e 2014 (a moda é 2012) está em vermelho, e a terceira e última onda, em verde na figura, são obras de 2012 até hoje (moda 2014).
-\begin{figure}[htp]
-  \fbox{\includegraphics[width=\columnwidth]{completo_21.pdf}}
-  \source{Web of Science (março/2019)}{VosViewer\protect{~\cite{VOSviewer}}}
-  \caption{Núcleos de conhecimento obtidos pela análise de co-citações. Os diferentes grupos representam autores que normalmente são co-citados nos 1268 artigos resultantes da busca realizada.}
-  \label{fig:classicos}
-\end{figure}
 
 \subsubsection{Primeira onda}
 Uma das características mais fortes desta onda é sua componente teórica. Nesse núcleo estão obras que apresentam algumas classes de transferência de aprendizado: Thurn, S. (1996) \cite{thrun1996learning} e Caruana, R. (1997) \cite{Caruana1997} introduzem \emph{Multi-Task Learning} e a ideia de que tarefas adicionais (ou auxiliares) introduzem um viés indutivo que facilita a convergência do aprendizado; Chapelle, O. (2006) \cite{Chapelle:2010:SL:1841234} com seu livro sobre \emph{Semi-Supervised Learning}; Raina, R. (2007) e \emph{Self-taught learning}; Vapnik, V. (1998) \cite{Vapnik1998} e os fundamentos da teoria de aprendizagem estatística.
@@ -283,7 +308,7 @@ Por essa razão, é difícil apontar trabalhos desta onda cujo foco é a Transfe
     \caption{} \label{fig:bicoupling}
   \end{figure}
 
-\section{Problemas em Aberto}
+\section{Problemas em Aberto}\label{emAberto}
 \begin{enumerate}
   \item inexistência de métricas específicas para medir transferência.
   \item não há uma categorização que dê a devida importância a métodos mais novos (GANs, autoencoders)...???
@@ -293,7 +318,7 @@ Por essa razão, é difícil apontar trabalhos desta onda cujo foco é a Transfe
   \item 
 \end{enumerate}
 \lipsum[3]
-\section{Conclusão}
+\section{Conclusão}\label{conclusao}
 \lipsum[3]
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
