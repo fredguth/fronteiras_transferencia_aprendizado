@@ -237,30 +237,28 @@ Também fizemos uma busca mais restrita aos trabalhos mais recentes (figura \ref
     \label{fig:classicos}
   \end{figure}
 
+A análise de co-citação usando o \emph{VosViewer} apontou para existência de 3 núcleos\footnote{\emph{clusters}} de conhecimento. Esses núcleos têm um forte componente temporal, podendo ser vistos como ondas, a primeira concentrando obras anteriores a 2011 (a moda é 2006),  está em amarelo na figura \ref{fig:classicos}, a segunda entre 2011 e 2014 (a moda é 2012) está em vermelho, e a terceira e última onda, em verde na figura, são obras de 2012 até hoje (moda 2014).
+\subsubsection{Primeira onda}
+Uma das características mais fortes desta onda é sua componente teórica. Nesse núcleo estão obras que apresentam algumas classes de transferência de aprendizado: Thurn, S. (1996) \cite{thrun1996learning} e Caruana, R. (1997) \cite{Caruana1997} introduzem \emph{Multi-Task Learning} e a ideia de que tarefas adicionais (ou auxiliares) introduzem um viés indutivo que facilita a convergência do aprendizado; Chapelle, O. (2006) \cite{Chapelle:2010:SL:1841234} com seu livro sobre \emph{Semi-Supervised Learning}; Raina, R. (2007) e \emph{Self-taught learning}; Vapnik, V. (1998) \cite{Vapnik1998} e os fundamentos da teoria de aprendizagem estatística.
+Uma outra componente da primeira onda são artigos de Adaptação de Domínio, com certo foco em abordagens que buscam aprender características latentes, de menor dimensionalidade, com o pressuposto que em um espaço latente os domínios são mais similares: Ando, R. K.(2005) \cite{ando2005framework} e Daume, H.. (2006) \cite{DaumeIII2006}, por exemplo. 
+Por fim, algumas das obras mais citadas desta onda são \emph{surveys}: Pan, S. (2010) \cite{PanYang}, Taylor, M. E. (2009) \cite{Taylor:2009:TLR:1577069.1755839}; que não por coincidência aparecem já mais para o final da primeira onda, organizando a pesquisa até aquele ponto. 
 
 
-  Girshick, 2016 - R-CNN / Fast R-CNN -> multi-task learning
-  Krizhevsky, 2012 -> Alexnet 2012
-  He km, 2016
-  simonian, 2014
+ando rk (2005) - project data into low-dimension space to make domains more similar - SVD----- cluster:1
+daume h (2006) - latent feature learningDA for statistica lassifiers ----- cluster:1
+
+
+
+yao y (2010) - boosting -> domain adaptation ----- cluster:1
+
 
   cluster 1 - amarelo
   mediana e moda 2006
+  dai w. (2007) - boosting -> domain adaptation ----- cluster:1
 
   pan sj (2010) - surey----- cluster:1
-dai w. (2007) - boosting -> domain adaptation ----- cluster:1
-caruana r (1997) - MTL introduces an inductive bias provided by the auxiliary tasks ->chapter on multitask learning - hard parameter sharing----- cluster:1
-blitzer j. (2006) - wightning ->domain adaptation----- cluster:1
-raina r. (2007) - self-thaught learning----- cluster:1
+  taylor me (2009) - survey TL in RL----- cluster:1
 chang cc (2011) - LIBSVM: A library for support vector machines----- cluster:1
-taylor me (2009) - survey TL in RL----- cluster:1
-ando rk (2005) - project data into low-dimension space to make domains more similar - SVD----- cluster:1
-daume h (2006) - DA for statistica lassifiers ----- cluster:1
-yao y (2010) - boosting -> domain adaptation ----- cluster:1
-evgeniou t. (2004) - regularized multi task learning----- cluster:1
-vapnik v. n. (1998) - Learning Theory = livro----- cluster:1
-thrun s (1996) - lifelong learning ----- cluster:1
-chapelle o. (2006) - semi-supervised learning -> overview----- cluster:1
 
   cluster 2 - vermelho
   moda 2012
