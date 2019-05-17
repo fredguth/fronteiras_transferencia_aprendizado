@@ -1,0 +1,1680 @@
+﻿FN Clarivate Analytics Web of Science
+VR 1.0
+PT S
+DE Deep learning; Lung lesion detection; Biomedical image processing;
+   Transfer learning
+ER
+
+PT S
+ER
+
+PT S
+DE Convolutional neural networks; Machine learning; Deep learning;
+   TensorFlow; Inception V3; Inception ResNet V2
+ER
+
+PT S
+DE Biomedical signal processing; Fetal monitoring; Deep convolutional
+   neural network; Classification
+ID HEART-RATE CLASSIFICATION; SUPPORT VECTOR MACHINE; RATE-VARIABILITY;
+   CARDIOTOCOGRAPHY
+ER
+
+PT J
+DE Face recognition; Biometrics; Face verification
+ER
+
+PT J
+DE Performance gap; Sustainability; Building performance simulation;
+   Transfer learning; Multi-task learning; LSTM
+ID COOLING-LOAD PREDICTION; RESIDENTIAL BUILDINGS; CONSUMPTION;
+   PERFORMANCE; OPTIMIZATION; REGRESSION; FRAMEWORK; VS.
+ER
+
+PT J
+DE neural nets; ear; feature extraction; learning (artificial
+   intelligence); image classification; shallow classifier; deep
+   learning-based averaging ensemble; DNNs; feature extractor; transfer
+   learning; deep neural networks; combined AWE plus CVLE dataset;
+   unconstrained ear recognition datasets; feature-extraction models;
+   training dataset
+ID DISCRIMINANT-ANALYSIS; FEATURES; SHAPE
+ER
+
+PT B
+ID ELECTION
+ER
+
+PT S
+DE Transfer Learning; DR images; medical image; CAD
+ID TUBERCULOSIS
+ER
+
+PT B
+DE deep learning; convolutional neural network; recognition; comparation;
+   sign language
+ER
+
+PT B
+DE Image classification; Machine learning; Marine animals
+ER
+
+PT S
+DE Glaucoma diagnosis; Deep learning; Image classification; Transfer
+   learning; VGG19; InceptionResNet-V2
+ID PERIMETRY; SAP
+ER
+
+PT S
+DE Medical Image Analysis; Modality Classification; Medical Image
+   Classification; Concept Detection; Multi-Label learning; Convolutional
+   Neural Networks; Deep Learning
+ID RADIOLOGY; FEATURES
+ER
+
+PT B
+DE Automatic Speech Recognition; Bangla Speech Recognition; Short Speech
+   Commands; MFCC; Transfer learning; Convolutional neural network
+ER
+
+PT B
+DE bengali digit classification; deep learning; convolution neural
+   networks; transfer learning; data augmentation; keras; Numtadb
+ER
+
+PT S
+DE Sence text detection; Multi-language; Transfer learning; Fully
+   convolution networks
+ID LOCALIZATION; IMAGES
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID DENTAL PERIAPICAL RADIOGRAPHS; BONE-MINERAL DENSITY; ALGORITHM;
+   FRAMEWORK; FILTER; SET
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID AERIAL
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID PEOPLE TRACKING; RGB
+ER
+
+PT B
+DE business closure prediction; sentiment aligned topic model; NLP; lexicon
+   generation; apsect-wise ratings; yelp; review analysis; deep learning;
+   hybrid neural network; CNN
+ER
+
+PT B
+ER
+
+PT B
+DE Dark Knowledge; Deep Learning; Model Compression; Neural Network;
+   Transfer Learning
+ER
+
+PT B
+DE video summarization; transfer learning; cricket; deep convolutional
+   networks; image classification; inceptionv3; vgg19
+ER
+
+PT B
+DE switching reinforcement learning; decision making; autonomous system;
+   uncertain environment
+ER
+
+PT B
+DE Deep learning; convolution neural networks; transfer learning; image
+   classification
+ID FEATURES
+ER
+
+PT B
+DE computer vision; deep learning; transfer learning; distracted driver
+   detection
+ER
+
+PT B
+DE Pedestrian detection; Deep learning; Convolutional neural networks;
+   Region-based neural networks (RCNN)
+ID HOUGH TRANSFORM
+ER
+
+PT B
+DE Recommender Systems; Deep Learning; Transfer Learning
+ER
+
+PT B
+DE cross-domain; knowledge transfer; recommender system
+ER
+
+PT B
+DE microblog; profile estimation; transfer learning
+ER
+
+PT B
+ER
+
+PT B
+DE CNN; AlexNet; Transfer Learning; Computer Vision; MSER; OCR
+ER
+
+PT S
+DE Gastro intestinal tract; Deep learning; Texture; Ensemble; Transfer
+   learning
+ID POLYP DETECTION; SYSTEM
+ER
+
+PT B
+DE deep learning; transfer learning; fabric defect; alexnet; CNN
+ID NEURAL-NETWORKS
+ER
+
+PT B
+DE Face recognition; Face spoof detection; Deep learning; CNN; Feature
+   extraction
+ID CHALLENGES; IMAGE
+ER
+
+PT B
+DE Transfer Learning; Activity Recognition; Deep Learning; Domain
+   Adaptation
+ID KERNEL
+ER
+
+PT S
+ER
+
+PT S
+DE Network traffic; convolutional neural networks; deep learning; transfer
+   learning
+ID TRAVEL-TIME PREDICTION; FLOW PREDICTION
+ER
+
+PT S
+ID CONVECTIVE INSTABILITY
+ER
+
+PT S
+ER
+
+PT S
+DE Vehicle classification; Convolutional neural network; Resnet152; Support
+   vector machines; Transfer learning
+ID CONVOLUTIONAL NEURAL-NETWORKS
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID REPRESENTATIONS; RECOGNITION
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID NEURAL-NETWORKS
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID MACHINE; SUPPORT
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID DIMENSIONALITY REDUCTION
+ER
+
+PT S
+ID CANCER
+ER
+
+PT S
+ER
+
+PT B
+DE Deep Convolutional Neural Networks (DCNN); Indoor navigation; Semantic
+   segmentation; Siamese network
+ID LOCALIZATION
+ER
+
+PT B
+DE Big data; multi-view; transfer learning; data Insufficiency; subspace
+   learning; Low rank
+ER
+
+PT B
+DE computer vision; convolutional neural network; object detection; out of
+   stock; tensorflow
+ER
+
+PT S
+DE Text games; reinforcement learning; neural networks
+ER
+
+PT S
+DE transfer learning; online learning; online transfer learning;
+   homogeneous transfer
+ER
+
+PT S
+DE online transfer learning; heterogeneous transfer learning; ensemble
+   learning
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID OBJECT CLASSES
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID CONVOLUTIONAL NEURAL-NETWORKS; CLASSIFICATION; CANCER
+ER
+
+PT B
+DE reinforcement learning; transfer learning; object-oriented options
+ER
+
+PT B
+DE Software defect prediction; Cross-project; Transfer learning
+ID METRICS
+ER
+
+PT B
+ID RECOMMENDATION; ALGORITHM
+ER
+
+PT B
+ER
+
+PT B
+ER
+
+PT B
+ID CLASSIFICATION
+ER
+
+PT B
+DE Object Detection; Computer Vision; Deep Learning; Convolutional Neural
+   Networks; Region based Convolutional Neural Network; Inception; You Only
+   Look Once; Single Shot Detection
+ER
+
+PT B
+ER
+
+PT B
+ER
+
+PT B
+DE Face authentication; Machine Learning; Transfer Learning
+ER
+
+PT B
+ER
+
+PT B
+DE deep learning; convolutional network; quality control system; production
+   spoilage detection
+ID NEURAL-NETWORKS
+ER
+
+PT B
+DE Bioinformatics; Cheminformatics; Computer Vision; Natural Language
+   Processing; Transfer Learning; Weak Supervised Learning
+ID QSAR
+ER
+
+PT B
+DE Deep learning; sentiment analysis; visual analysis; transfer learning;
+   natural language processing
+ER
+
+PT B
+DE Dockless shared bikes; hotspots detection; urban computing; transfer
+   learning
+ER
+
+PT B
+DE Medical image analysis; Computer-assisted detection; Machine learning;
+   Transfer learning; Negative transfer
+ID CONVOLUTIONAL NEURAL-NETWORKS; AIDED DIAGNOSIS; DEEP; SEGMENTATION
+ER
+
+PT B
+DE atrial fibrillation; convolutional neural network; recurrent neural
+   network; deep learning; transfer learning
+ID PHYSIOLOGICAL TIME-SERIES; QRST CANCELLATION; WAVELET TRANSFORM;
+   ENTROPY; BURDEN
+ER
+
+PT B
+DE Transfer learning; cross-lingual; subgraph isomorphism
+ER
+
+PT B
+DE Transfer learning; Semi-supervised learning; Concept drift
+ER
+
+PT B
+DE equivalence structure; transfer learning; imitation learning
+ER
+
+PT S
+DE multi-source clustering; Laplace operator; spectral learning; multi-view
+   spectral embedding
+ER
+
+PT S
+ID DOMAIN ADAPTATION
+ER
+
+PT S
+ER
+
+PT S
+DE remote sensing; superpixel segmentation; convolutional neural network;
+   transfer learning; feature selection; semi-supervised learning
+ER
+
+PT S
+DE domain adaptation; multi-source transfer learning; common subspace
+   learning; face recognition
+ER
+
+PT S
+ID ALGORITHM
+ER
+
+PT S
+ER
+
+PT S
+DE document structure learning; deep convolutional neural network; document
+   recognition; deep learning; transfer learning; intra-domain; neural
+   network
+ER
+
+PT S
+ER
+
+PT S
+ID NONCONTACT
+ER
+
+PT B
+DE Gaussian Process; Domain Adaptation; Transfer Learning; Homogeneous
+ER
+
+PT S
+DE Forward learning; Convolutional neural network; Transfer learning;
+   Extreme learning machine
+ER
+
+PT S
+DE Handwriting Recognition; Language Model; Transfer Learning; Bootstrap;
+   Historical Document Analysis
+ER
+
+PT S
+DE Handwriting recognition; knowledge transfer; Optical model; Language
+   model
+ER
+
+PT S
+DE Air-writing; human-computer interaction; gesture recognition;
+   handwritten character recognition; convolutional neural networks
+ER
+
+PT S
+ER
+
+PT B
+DE transfer learning; metric learning; marginalized denoising; low-rank
+   constraint
+ER
+
+PT B
+DE machine learning; intrusion detection; transfer learning; training
+   samples
+ER
+
+PT S
+DE Transfer Learning; Artificial Neural Networks; Face Verification; Metric
+   Learning
+ER
+
+PT S
+DE FER; GAN; Identity-adaptive; CNN
+ER
+
+PT S
+ER
+
+PT S
+DE micro expression recognition; deep learning; trasnfer learning
+ER
+
+PT S
+DE smile detection; CNN; deep learning; transfer learning
+ER
+
+PT S
+DE incipient fault diagnosis; DNN; transfer learning
+ER
+
+PT B
+DE end-to-end; expressive speech; multi-speaker speech synthesis; transfer
+   learning; emphatic speech
+ER
+
+PT B
+DE reinforcement learning; policy gradient financial trading; transfer
+   learning; strategy cloning
+ER
+
+PT B
+DE Autonomous Driving; Deep Reinforcement Learning; Distributed Machine
+   Learning; Cloud Computing; Simulation
+ER
+
+PT S
+ER
+
+PT S
+DE Times Roman; image area; acronyms; references
+ER
+
+PT B
+ER
+
+PT S
+DE transfer learning; domain adaptation; fuzzy features; machine learning
+ER
+
+PT S
+DE Bayesian transfer learning; fully probabilistic design; incomplete
+   modelling; Kalman filtering
+ID FULLY PROBABILISTIC DESIGN
+ER
+
+PT S
+DE Image classification; Convolutional neural network; Transfer learning;
+   Animal behavior analysis; Hummingbird detection
+ER
+
+PT S
+ER
+
+PT S
+DE Deep autoencoders; Knowledge transfer; Hierarchical dataset; Corrupted
+   dataset
+ER
+
+PT B
+DE component; deep learning; synthetic aperture radar; automatic target
+   recognition
+ID SUPPORT VECTOR MACHINES; IMAGES; CLASSIFICATION; MODELS
+ER
+
+PT B
+DE Passenger Flow; Prediction Model; Knowledge Transfer
+ER
+
+PT S
+DE Activity recognition; Activity classification; Assistive robotics
+ID RECOGNITION
+ER
+
+PT B
+DE convolutional neural network; transfer learning; AlexNet; micro-doppler;
+   radar classification; automatic target recognition
+ER
+
+PT B
+DE deep learning; synthetic aperture radar; transfer learning; automatic
+   target recognition
+ER
+
+PT B
+DE Transfer Learning; Multi-task Learning; Outliers Detection; One Class
+   Classification
+ID SUPPORT
+ER
+
+PT B
+DE Semantic Segmentation; Transfer Learning; Deep Learning; CNN; Plant
+   Segmentation
+ER
+
+PT B
+DE Handwritting Recognition; Image Generation; Digit Detection; Deep Neural
+   Networks; Knowledge Transfer
+ER
+
+PT B
+DE Handwriting Recognition; Historical Document; Transfer Learning; Deep
+   Neural Network; Unlabeled Data
+ER
+
+PT B
+DE Analog Neural Network; Process Variation; Low-Precision; In-Situ
+   Transfer Learning
+ID ERROR RESILIENCE; IMPLEMENTATION
+ER
+
+PT S
+ER
+
+PT S
+ID GRASP; REACH
+ER
+
+PT S
+DE Deep learning; Temporal ConvNets; Transfer learning Text classification;
+   Sentiment analysis
+ER
+
+PT S
+ER
+
+PT S
+DE Deep learning; Preprocessing; Transfer learning; Deep convolutional
+   network
+ID RESOLUTION COMPUTED-TOMOGRAPHY
+ER
+
+PT S
+DE Classification; Random forest; Decision tree; Transfer learning;
+   Quadratic optimization
+ER
+
+PT S
+DE Tactile sensors; Rescue robotics; Machine learning; Deep learning;
+   Transfer learning; Object recognition
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT B
+DE Soccer video scene and event classification; Deep transfer learning; CNN
+ER
+
+PT S
+DE Deep learning; Inception; ResNet; transfer learning; fine-tuning; white
+   blood cell classification
+ER
+
+PT S
+DE Convolutional neural network; computer vision; transfer learning
+ER
+
+PT S
+DE Extreme learning machine; Transfer learning (TL); Multiple kernel
+   learning
+ID FEEDFORWARD NETWORKS; MACHINE; ALGORITHM
+ER
+
+PT S
+DE Web mining; deep learning; transfer learning
+ER
+
+PT J
+DE Deep Learning; Convolutional neural network; Clothing image recognition
+ID PERSPECTIVES; BIG
+ER
+
+PT J
+DE Fully probabilistic design; Parameter prior; External predictive
+   distribution; Bayesian transfer learning; Kullback-Leibler divergence
+ID FULLY PROBABILISTIC DESIGN; INFERENCE; MODELS
+ER
+
+PT J
+DE Reinforcement learning; Skill acquisition; Transfer learning; Graph
+   learning
+ID FRAMEWORK; ABSTRACTION
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+DE Query classification; Active learning; Transfer learning; Search engine;
+   Query log
+ER
+
+PT S
+ER
+
+PT S
+ID PYRAMIDAL NEURAL-NETWORK
+ER
+
+PT S
+DE Scene understanding; food related scene classification; fine-tuning;
+   convolutional neural networks
+ER
+
+PT S
+DE Transfer learning; Deep convolutional neural networks; EEG signals
+ID CLASSIFICATION
+ER
+
+PT S
+DE Deep neural network; Sentence selection; Transfer learning
+ER
+
+PT S
+DE Theme analysis; Deep learning; Transfer learning
+ER
+
+PT S
+DE Expedited convolutional neural network; Mild cognitive impairment;
+   Tucker decomposition; Magnetic resonance imaging
+ID ALZHEIMERS-DISEASE; CLASSIFICATION; STANDARDIZATION; CONSORTIUM
+ER
+
+PT S
+DE Image fusion; Layer division; Transfer learning; Coupled dictionary
+ID SPARSE REPRESENTATION; FRAMEWORK; PERFORMANCE
+ER
+
+PT S
+DE Individual healthcare; Transfer learning; Neural networks; Disease
+   prediction; Unlabeled data
+ER
+
+PT S
+DE Face recognition; Service robot; Audio-visual fusion; Deep learning
+ER
+
+PT S
+DE Deep convolutional neural network; DCE-MRI; Breast; Cancer
+ID CONVOLUTIONAL NEURAL-NETWORKS; CANCER; IMAGES; RECOGNITION; PATTERNS
+ER
+
+PT B
+DE Transfer Learning; Deep Learning; Faster R-CNN; Sequential Monte Carlo
+   Filter (SMC); Pedestrian Detection
+ER
+
+PT B
+DE Deep Learning; Convolution Neural Networks; Fusion; Transfer Learning
+ER
+
+PT B
+DE Braid Hairstyle Recognition; Convolutional Neural Networks
+ER
+
+PT B
+DE Pedestrian Counting; Deep Learning; Convolutional Neural Networks;
+   Synthetic Images; Transfer Learning; Cross Entropy Cost Function;
+   Squared Error Cost Function
+ER
+
+PT B
+DE Fingerprint Classification; Transfer Learning; Convolutional Neural
+   Networks
+ER
+
+PT S
+DE Image tagging; Convolutional neural networks; Personalized tag
+   recommendation; Factorization models
+ER
+
+PT S
+DE Electricity load forecasting; Boosting; Multiple kernel learning;
+   Transfer learning
+ID ALGORITHMS; MACHINE; MODEL
+ER
+
+PT B
+DE component; Fuzzy Transfer Learning; Brain-Computer Interface (BCI);
+   Generalized Hidden-Mapping Ridge Regression (GHRR); Classification;
+   Fuzzy Rule Generation
+ID EEG
+ER
+
+PT S
+DE Unconstrained age estimation; Convolutional Neural Network; Transform
+   learning
+ER
+
+PT S
+DE Convolutional neural networks; End-to-End; Webpage saliency prediction;
+   Two-stage transfer learning
+ER
+
+PT S
+DE Big data; Transfer learning; Temperature forecast
+ID REGRESSION
+ER
+
+PT S
+DE Human carrying baggage classification; Convolution neural network;
+   Transfer learning; Direction attribute; Region division
+ID NETWORKS
+ER
+
+PT S
+DE Incremental learning; Transfer learning; Concept drift
+ER
+
+PT B
+DE Object; transfer learning; data mining; dynamic-TrAdaBoost; K-means
+ER
+
+PT B
+DE sentiment classification; neural network; Gated Recurrent Unit; transfer
+   learning
+ER
+
+PT S
+DE Transfer learning; Long short-term memory; Parameters transfer;
+   Cross-domain sentiment classification
+ER
+
+PT S
+DE Transfer learning; Traditional machine learning; Test framework
+ID UNSUPERVISED DOMAIN ADAPTATION
+ER
+
+PT S
+DE Ship License Numbers localization; Convolution Neural Network; Text
+   Detection
+ER
+
+PT S
+DE surveillance; moving object detection; object tracking; aerial image
+   classification; deep learning; transfer learning; real time; low
+   altitude; aerial video; automation
+ER
+
+PT S
+DE Face anti-spoofing; Transfer learning; Deep learning; Face recognition
+ID IMAGE
+ER
+
+PT S
+DE Face analysis; Smile detection; Gender recognition; Deep learning
+ER
+
+PT S
+DE Active contour; Convolutional Neural Netwrok; transfer learning; image
+   segmentation; Support Vector machine; Pistachio sorting
+ER
+
+PT S
+DE DBN; RBM; Semi-supervised; Rectified Linear Units; Transfer Learning
+ID CLASSIFICATION; REGRESSION; PROGNOSIS; MACHINE
+ER
+
+PT S
+DE Transfer Learning; Reinforcement Learning; Linear Multi-variable
+   Mapping; Inter-task Mapping; Keepaway
+ER
+
+PT S
+DE Convolutional Neural Network; object detection; region proposal;
+   regression; datasets
+ER
+
+PT S
+DE image sentiment analysis; multi-modal embedding; heterogeneous transfer
+   learning; multimodal deep learning
+ID RECOGNITION
+ER
+
+PT B
+ER
+
+PT S
+ID ACTIVITY RECOGNITION
+ER
+
+PT S
+DE Cross-Domain Collaborative Filtering; transfer learning; recommender
+   system; similarity network fusion
+ER
+
+PT S
+DE Breast cancer diagnosis; mammographic image analysis; deep learning;
+   transfer learning
+ID BREAST-CANCER
+ER
+
+PT B
+ER
+
+PT B
+DE Transfer Learning; Convolutional Neural Network (CNN); Facial
+   Recognition; Humanoid Robot
+ER
+
+PT B
+DE transfer learning; traffic sign recognition; stacked auto-encoder; local
+   coordinate coding; deep learning
+ID DIMENSIONALITY
+ER
+
+PT S
+DE Automatic speech recognition; acoustic model; transfer learning; deep
+   neural network; multi-task learning; children's speech processing
+ER
+
+PT S
+DE Sports sununarization; Encoder Decoder model; Transfer learning
+ER
+
+PT S
+DE Computational geometry; Graph theory; Hamilton cycles
+ER
+
+PT S
+DE Transfer learning; Regularization; Cervical cancer; Digital colposcopy
+ER
+
+PT S
+DE Transfer learning; Convolutional neural network; Manifold learning
+ER
+
+PT S
+DE Brain-computer interface; event-related potential; EEG; active learning;
+   domain adaptation; semi-supervised learning; transfer learning
+ID SERIAL VISUAL PRESENTATION; MULTIPLE COMPARISONS; CLASSIFICATION
+ER
+
+PT S
+ID SPATIAL FILTERS
+ER
+
+PT S
+ER
+
+PT S
+ID UPPER-LIMB PROSTHESES; SURFACE EMG
+ER
+
+PT S
+DE Machine Learning; Deep Learning; Convolutional Neural Network (CNN);
+   Support Vector Machine; SVM; Ensemble Subspace Discriminant; Visual
+   Impairment
+ER
+
+PT S
+ID APNEA
+ER
+
+PT B
+DE Terms bibliography extraction; CRF; confidence measure; active learning;
+   transfer learning
+ER
+
+PT B
+DE Hyperspectral remote sensing; Classification; Active Learning; Transfer
+   Learning
+ID HYPERSPECTRAL IMAGES; ROTATION FOREST; SEGMENTATION; DICTIONARY;
+   SELECTION; ENSEMBLE
+ER
+
+PT S
+DE sentiment analysis; topic adaption; transfer learning
+ID DOMAIN ADAPTATION
+ER
+
+PT B
+DE Sentiment Analysis; Transfer Learning; Support Vector Machine; Twitter
+ER
+
+PT S
+DE Arabic script based languages; Generalized OCR; MDLSTM; CTC
+ID HANDWRITTEN TEXT DATABASE; NEURAL-NETWORKS; RECOGNITION; KHATT
+ER
+
+PT B
+DE convolutional neural networks; deep learning; transfer learning; skin
+   lesions
+ER
+
+PT B
+DE image quality; no reference; transfer learning
+ID NEURAL-NETWORKS
+ER
+
+PT S
+ER
+
+PT S
+ID TRAVERSABILITY ANALYSIS; VISION
+ER
+
+PT S
+ID HUMAN POSE ESTIMATION
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID ADAPTIVE DIFFERENTIAL EVOLUTION; ENSEMBLE; CLASSIFICATION; EXTRACTION;
+   RESOLUTION; MODEL
+ER
+
+PT S
+DE transfer learning; machine learning; support vector machine; cancer
+   prediction
+ID RADICAL CYSTECTOMY; MORTALITY
+ER
+
+PT S
+DE action recognition; deep learning; transfer learning; hybrid classifier
+ID SILHOUETTE
+ER
+
+PT S
+ER
+
+PT S
+ID NEURAL-NETWORKS; SYSTEM; MODEL; SVR
+ER
+
+PT S
+ID SUPPORT VECTOR MACHINES; QUANTIZATION
+ER
+
+PT S
+ID RECOGNITION
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID DEEP; ALGORITHM
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT B
+DE Incremental Learning; Transfer Learning; Convolutional Neural Networks;
+   Associative Memories
+ER
+
+PT B
+DE smart healthcare; smart diagnosis; MRI; artificial intelligence; pattern
+   recognition; Alzheimer's disease
+ER
+
+PT S
+ID NEURAL-NETWORKS
+ER
+
+PT S
+DE Transfer learning; domain adaptation; distribution adaptation; class
+   imbalance
+ER
+
+PT B
+DE region based CNN; fast feature pyramids; detection; gender; man woman;
+   transfer learning
+ER
+
+PT S
+DE Transfer Learning; knowledge transfer; sentiment analysis; Twitter; Yelp
+   reviews
+ER
+
+PT B
+ER
+
+PT B
+ID RECOGNITION; EXPRESSIONS
+ER
+
+PT B
+ER
+
+PT B
+DE Single-Image Super Resolution; Iris Recognition; Transfer Learning;
+   Convolutional Neural Networks
+ER
+
+PT B
+DE Deep learning; Small dataset; Stacked autoencoder
+ER
+
+PT B
+DE Arousal recognition; Affect; Deep neural networks; Machine learning;
+   Transfer learning; Stress; Emotions
+ER
+
+PT B
+DE Deep Neural Network; Transfer Learning; Feature Learning; Brain Decoding
+ID NETWORK
+ER
+
+PT B
+DE Online Advertising; Transfer Learning; CTR Prediction
+ER
+
+PT B
+DE User Profile; Personalized Recommendation; Transfer Learning
+ER
+
+PT B
+DE cross-domain; knowledge transfer; recommender system
+ER
+
+PT B
+DE Fashion recommendation; deep learning; cross-domain knowledge transfer;
+   transfer learning; domain adaptation; CNN
+ER
+
+PT B
+ER
+
+PT B
+DE Convolutional Neural Network(CNN); Transfer Learning (TL); Machine
+   Learning (ML); Computer Vision
+ID NEURAL-NETWORKS; SEGMENTATION
+ER
+
+PT B
+DE Nutritional assessment; maize leaf analysis; deep learning; texture
+   analysis; transfer learning; convolutional neural networks
+ID CONVOLUTIONAL NEURAL-NETWORKS
+ER
+
+PT B
+DE optimization; transfer learning; CMA-ES; Powell's Conjugate Gradient
+ER
+
+PT S
+DE Transfer learning; Image classification; Deep learning; Video
+   surveillance; Intrusion detection
+ID RECOGNITION
+ER
+
+PT S
+ID EIGENFACES; FEATURES
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+DE Convolution neural networks; Transfer learning; Dataset complexity
+ER
+
+PT S
+ID SEGMENTATION
+ER
+
+PT B
+DE Deep Learning; Neural Network; Geospatial; Automation; Satellite Imagery
+ID CONVOLUTIONAL NEURAL-NETWORKS
+ER
+
+PT B
+ER
+
+PT B
+ER
+
+PT B
+DE Transfer learning; weight transfer; LF-MMI; multi-task learning;
+   Automatic Speech Recognition
+ID ADAPTATION
+ER
+
+PT B
+DE speech recognition; end-to-end neural network; raw speech waveform
+ER
+
+PT B
+DE Multi-genre broadcast; Automatic speech recognition; Lightly-supervised
+   training; LF-MMI; Segmentation
+ER
+
+PT B
+DE Modality invariance; unsupervised speech processing; multimodal language
+   processing; variational methods; regularization
+ER
+
+PT B
+DE dialogue state tracking; belief tracking; dialogue systems; transfer
+   learning
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID PRINCIPAL COMPONENT ANALYSIS; FEASIBILITY PROBLEMS; LINEAR-SUBSPACES;
+   FACE RECOGNITION; ALGORITHMS; REDUCTION; MANIFOLDS; FRAMEWORK; SPACE
+ER
+
+PT S
+ID HUMANS
+ER
+
+PT S
+ER
+
+PT B
+DE personalization; smart device; user preference; distributed learning;
+   context aware
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID FACIAL-EXPRESSION; FACE RECOGNITION; AGENTS; GABOR
+ER
+
+PT S
+DE deep learning; convolutional neural network; transfer learning;
+   inception model; class activation map; face detection; face
+   localization; thermography
+ER
+
+PT B
+ER
+
+PT B
+DE transfer learning; keyword spotting; cross lingual; small-footprint
+ID CANONICAL CORRELATION-ANALYSIS; CLASSIFICATION; RECOGNITION; MODELS
+ER
+
+PT B
+DE Transfer learning; Domain class imbalance; Traditional machine learning
+ID ADAPTATION; REGULARIZATION
+ER
+
+PT B
+DE anomaly detection; non-stationary time series; automatic diagnosis;
+   reconstruction error; statistical process control; transfer learning
+ID NOVELTY DETECTION
+ER
+
+PT B
+ER
+
+PT B
+ID ADAPTATION
+ER
+
+PT B
+ER
+
+PT S
+ER
+
+PT S
+ID FEATURES
+ER
+
+PT S
+ER
+
+PT S
+ID DOMAIN ADAPTATION; REPRESENTATION
+ER
+
+PT S
+ID RECOGNITION
+ER
+
+PT S
+ID ACTIVITY RECOGNITION
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID PATH GENERATION
+ER
+
+PT S
+ID DISCRIMINATION; FACES
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID ADAPTATION
+ER
+
+PT S
+ER
+
+PT S
+ID VISUAL-ATTENTION; GAZE; EYES
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID LEARNING BINARY-CODES; ITERATIVE QUANTIZATION; PROCRUSTEAN APPROACH
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT B
+DE deep learning; breast cancer; histopathological image; CNN;
+   classification; massive image data
+ER
+
+PT S
+DE deep learning; image recognition; collecting dataset
+ER
+
+PT S
+DE Machine Learning; Computer Vision; Convolution Neural Network; Transfer
+   Learning
+ER
+
+PT S
+DE nodule characteristics; pulmonary nodules; malignancy prediction;
+   tansfer learning
+ID CT IMAGES; CLASSIFICATION; MALIGNANCY; DIAGNOSIS; DENSITY; BENIGN; SHAPE
+ER
+
+PT S
+DE cross-domain; recommender system; transfer learning; cluster
+ER
+
+PT S
+ER
+
+PT S
+ER
+
+PT S
+ID EXPRESSIONS; DATABASE
+ER
+
+PT S
+ER
+
+PT B
+DE flower classification; TensorFlow; inception-v3; transfer learning
+ID RECOGNITION
+ER
+
+PT B
+DE Deep Learning; Temporal ConvNets; Transfer Learning; Text
+   Classification; Sentiment Analysis
+ER
+
+PT B
+DE Transfer Learning; Kernel; SVM; Maximum Mean Discrepancy
+ID KERNEL
+ER
+
+PT B
+DE Biometrics; User Identification; Electrocardiogram (ECG); Deep Learning;
+   Feature Learning; Transfer Learning; Deep Autoencoder
+ID IDENTIFICATION
+ER
+
+PT S
+DE Food classification; Convolutional neural network; Deep learning;
+   Transfer learning
+ER
+
+PT S
+DE convolutional neural network; deep learning; pedestrian; gender
+   classification; k-means; transfer learning
+ER
+
+PT S
+ID ADAPTATION
+ER
+
+PT S
+ER
+
+PT S
+ID INSTRUMENT
+ER
+
+PT S
+DE neural networks; transfer learning; progressive neural networks;
+   computational paralinguistics; emotion recognition
+ER
+
+PT S
+DE Transfer Learning (TL); sincerity prediction; deception prediction
+ER
+
+PT S
+DE cross-lingual speech recognition; probabilistic transcription; deep
+   neural networks; multi-task learning
+ER
+
+PT S
+DE speech recognition; deep neural network; cross lingual; cross-bandwidth;
+   transfer learning
+ER
+
+PT S
+DE speech recognition; low-resource languages; transfer learning;
+   distillation
+ID AUTOMATIC SPEECH RECOGNITION
+ER
+
+PT S
+DE Automated Speech Recognition; Speech Therapy; Speech Assessment Tools
+ID LANGUAGE; RECOGNITION; COMMUNITY; TOOL
+ER
+
+PT S
+DE transfer learning; knowledge distillation; ensemble; neural network;
+   punctuation prediction
+ID CAPITALIZATION
+ER
+
+PT S
+DE sound event detection (SED); connectionist temporal classification
+   (CTC); transfer learning; convolutional neural networks (CNN)
+ER
+
+PT S
+DE Computational Paralinguistics; speaker states; drowsiness detection;
+   transfer learning; feature analysis
+ID RECOGNITION
+ER
+
+PT S
+DE keyword spotting; time delay neural network; singular value
+   decomposition; small-footprint
+ID CANONICAL CORRELATION-ANALYSIS; RECOGNITION
+ER
+
+PT S
+DE breast mass classification; transfer learning; deep learning;
+   convolutional neural networks; mammogram; computer aided diagnosis;
+   fine-tuning
+ID MASS CLASSIFICATION; MAMMOGRAM IMAGES; STATISTICS
+ER
+
+PT S
+DE Deep Learning; Inception; Landmark recognition; neural networks
+ER
+
+PT S
+DE domain adaptation; transfer learning; fuzzy features; heterogeneous
+   feature space
+ER
+
+PT S
+DE machine learning; fuzzy rules; transfer learning; classification
+ER
+
+PT B
+ID NEURAL-NETWORKS
+ER
+
+PT B
+DE Transfer Learning; Multiagent Reinforcement Learning; Cooperative
+   learning; Autonomous Advice Taking
+ER
+
+PT B
+DE Transfer Learning; Multi-agent Systems; Reinforcement Learning
+ER
+
+PT B
+ER
+
+PT B
+DE Causal Inference; Transfer Learning; Reinforcement Learning
+ER
+
+PT S
+DE Audio emotion prediction; Transfer learning; Echo State Network;
+   Regression
+ID RECOGNITION; SIGNALS; MUSIC
+ER
+
+PT S
+DE Skin lesion; Melanoma detection; Computer Vision-based diagnostic
+   systems; Convolutional neural networks - CNN; CNN architectures;
+   Transfer learning
+ID SKIN-CANCER; DIAGNOSIS; STREAKS
+ER
+
+PT S
+DE Deep learning; Thermal imaging; Marine mammals
+ER
+
+PT B
+DE Distributed Multi-Task Learning; Transfer Learning
+ID MULTIPLE TASKS; ALGORITHMS
+ER
+
+PT B
+DE Black-Box Optimization; Bayesian Optimization; Gaussian Processes;
+   Hyperparameters; Transfer Learning; Automated Stopping
+ER
+
+PT B
+DE Transfer Learning; Multi-task Learning; Visual Aesthetic Quality
+   Assessment
+ER
+
+PT B
+DE person re-identification; convolutional neural network; knowledge
+   transfer
+ER
+
+PT B
+DE Protein-ATP binding site prediction; Protein-ADP binding site
+   prediction; Instance transfer learning; Random under sampling
+ID RESIDUES; DNA; SEQUENCE
+ER
+
+PT B
+DE common representation learning; multi-view data; transfer learning; deep
+   learning
+ER
+
+PT B
+ID TRACKING
+ER
+
+PT B
+DE Deep Learning; Convolutional Neural Networks; Transfer Learning; Malware
+   Classification
+ER
+
+PT B
+DE Object recognition; Zero-shot learning; Transfer learning;
+   Visual-Semantic Embedding; Entity embedding
+ER
+
+PT B
+DE convolutional neural networks; facial recognition; transfer learning;
+   FERET image dataset
+ER
+
+PT B
+DE bilingualism; handwritten character recognition; deep learning;
+   hierarchical generative models; restricted Boltzmann machines; transfer
+   learning
+ID INTERLEXICAL HOMOGRAPHS; ACCESS
+ER
+
+PT B
+DE Image classification; CNN; deep learning; transfer learning; remote
+   sensing
+ID REPRESENTATION; SCENE
+ER
+
+PT S
+DE Image retrieval; medical imaging; deep learning; CNNs; digital
+   pathology; image classification; deep features; VGG; Inception
+ER
+
+EF

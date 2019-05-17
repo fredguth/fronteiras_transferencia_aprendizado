@@ -1,0 +1,31 @@
+Delaunay Triangulation Data Augmentation guided
+by Visual Analytics for Deep Learning
+
+
+It is well known that image classification problems
+can be effectively solved by Convolutional Neural Networks
+(CNNs). However, the number of supervised training examples
+from all categories must be high enough to avoid model overfitting. In this case, two key alternatives are usually presented
+(a) the generation of artificial examples, known as data augmentation, and (b) reusing a CNN previously trained over a
+large supervised training set from another image classification
+problem — a strategy known as transfer learning. Deep learning
+approaches have rarely exploited the superior ability of humans
+for cognitive tasks during the machine learning loop. We advocate
+that the expert intervention through visual analytics can improve
+machine learning. In this work, we demonstrate this claim by
+proposing a data augmentation framework based on EncoderDecoder Neural Networks (EDNNs) and visual analytics for the
+design of more effective CNN-based image classifiers. An EDNN
+is initially trained such that its encoder extracts a feature vector
+from each training image. These samples are projected from
+the encoder feature space on to a 2D coordinate space. The
+expert includes points to the projection space and the feature
+vectors of the new samples are obtained on the original feature
+space by interpolation. The decoder generates artificial images
+from the feature vectors of the new samples and the augmented
+training set is used to improve the CNN-based classifier. We
+evaluate methods for the proposed framework and demonstrate
+its advantages using data from a real problem as case study — the
+diagnosis of helminth eggs in humans. We also show that transfer
+learning and data augmentation by affine transformations can
+further improve the results.
+

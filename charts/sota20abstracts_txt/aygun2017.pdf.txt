@@ -1,0 +1,15 @@
+
+Exploiting Convolution Filter Patterns for Transfer Learning
+
+In this paper, we introduce a new regularization technique for transfer learning. The aim of the proposed approach is to capture statistical relationships among convolution ﬁlters learned from a well-trained network and transfer this knowledge to another network. Since convolution
+ﬁlters of the prevalent deep Convolutional Neural Network
+(CNN) models share a number of similar patterns, in order
+to speed up the learning procedure, we capture such correlations by Gaussian Mixture Models (GMMs) and transfer them using a regularization term. We have conducted
+extensive experiments on the CIFAR10, Places2, and CMPlaces datasets to assess generalizability, task transferability, and cross-model transferability of the proposed approach, respectively. The experimental results show that the
+feature representations have efﬁciently been learned and
+transferred through the proposed statistical regularization
+scheme. Moreover, our method is an architecture independent approach, which is applicable for a variety of CNN
+architectures.
+
+
+

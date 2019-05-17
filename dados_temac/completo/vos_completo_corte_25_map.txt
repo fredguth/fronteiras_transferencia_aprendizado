@@ -1,0 +1,77 @@
+﻿id	label	x	y	cluster	weight<Links>	weight<Total link strength>	weight<Citations>
+709	"ando rk, 2005, j mach learn res, v6, p1817"	-0.5902	0.2451	3	53	44	44
+1607	"belkin m, 2006, j mach learn res, v7, p2399"	-0.7596	-0.1392	2	54	36	39
+1697	"ben-david shai, 2007, adv neural inform pr, p137, doi 10.1007/s10994-009-5152-4"	-0.7131	-0.0302	2	52	26	27
+1735	"bengio y, 2009, found trends mach le, v2, p1, doi 10.1561/2200000006"	0.4948	0.1684	1	45	30	31
+1739	"bengio y, 2013, ieee t pattern anal, v35, p1798, doi 10.1109/tpami.2013.50"	0.5116	-0.035	1	58	29	29
+2179	"blitzer j., 2006, p 2006 c emp meth na, p120"	-0.8036	0.0743	3	60	75	76
+2227	"blum a., 1998, proceedings of the eleventh annual conference on computational learning theory, p92, doi 10.1145/279943.279962"	-0.4907	0.1909	3	47	25	26
+2363	"borgwardt km, 2006, bioinformatics, v22, pe49, doi 10.1093/bioinformatics/btl242"	-0.7852	-0.2503	2	57	27	29
+2590	"breiman l, 2001, mach learn, v45, p5, doi 10.1023/a:1010933404324"	0.0595	0.1504	3	58	25	25
+2723	"bruzzone l, 2010, ieee t pattern anal, v32, p770, doi 10.1109/tpami.2009.57"	-0.7579	-0.3108	2	56	48	48
+3156	"caruana r, 1997, mach learn, v28, p41, doi 10.1023/a:1007379606734"	-0.6395	0.4656	3	63	76	90
+3348	"chang cc, 2011, acm t intel syst tec, v2, doi 10.1145/1961189.1961199"	-0.2306	0.2424	3	66	52	58
+4351	"cortes c, 1995, mach learn, v20, p273, doi 10.1023/a:1022627411411"	0.1092	0.2173	3	61	33	33
+4641	"dai w., 2007, p 24 int c mach lear, p193, doi 10.1145/1273496.1273521"	-0.7404	0.1979	3	64	106	116
+4673	"dai wy, 2007, kdd-2007 proceedings of the thirteenth acm sigkdd international conference on knowledge discovery and data mining, p210"	-1.1073	0.1222	3	39	27	27
+4685	"dalal n, 2005, proc cvpr ieee, p886, doi 10.1109/cvpr.2005.177"	0.7467	0.1081	1	50	27	30
+4787	"daume h, 2006, j artif intell res, v26, p101, doi 10.1613/jair.1872"	-0.8126	0.181	3	52	42	44
+5069	"deng j, 2009, proc cvpr ieee, p248, doi 10.1109/cvpr.2009.5206848"	1.3041	0.1188	1	38	25	27
+5070	"deng j, 2009, proc cvpr ieee, p248, doi 10.1109/cvprw.2009.5206848"	1.0947	-0.1575	1	42	32	32
+5520	"donahue j., 2014, p 31 int c mach lear, p647"	0.7311	-0.1703	1	64	43	43
+5730	"duan lx, 2009, proc cvpr ieee, p1375, doi [10.1109/cvprw.2009.5206747 10.1109/cvpr.2009.5206747]"	-0.4845	-0.201	2	52	30	32
+5733	"duan lx, 2012, ieee t neur net lear, v23, p504, doi 10.1109/tnnls.2011.2178556"	-0.7796	-0.3856	2	49	33	33
+5735	"duan lx, 2012, ieee t pattern anal, v34, p465, doi 10.1109/tpami.2011.114"	-0.6664	-0.2966	2	65	49	50
+6142	"everingham m, 2010, int j comput vision, v88, p303, doi 10.1007/s11263-009-0275-4"	0.7903	-0.0726	1	49	30	30
+6174	"evgeniou t., 2004, p 10 acm sigkdd int, p109, doi 10.1145/1014052.1014067"	-0.6137	0.3916	3	49	36	37
+6251	"fan re, 2008, j mach learn res, v9, p1871"	0.316	-0.017	1	53	28	32
+6537	"fernando b, 2013, ieee i conf comp vis, p2960, doi 10.1109/iccv.2013.368"	-0.2584	-0.3723	2	65	34	34
+6831	"freund y, 1997, j comput syst sci, v55, p119, doi 10.1006/jcss.1997.1504"	-0.561	0.127	3	45	26	28
+7118	"gao j, 2008, kdd, p283, doi 10.1145/1401890.1401928"	-0.883	0.1488	3	46	27	27
+7518	"girshick r, 2014, proc cvpr ieee, p580, doi 10.1109/cvpr.2014.81"	0.9572	-0.1257	1	57	36	37
+7604	"glorot x., 2011, p 28 int c mach lear, p513"	0.0736	0.0215	1	60	23	25
+7732	"gong bq, 2012, proc cvpr ieee, p2066, doi 10.1109/cvpr.2012.6247911"	-0.5806	-0.3962	2	70	72	72
+7818	"gopalan r, 2011, ieee i conf comp vis, p999, doi 10.1109/iccv.2011.6126344"	-0.3743	-0.4084	2	64	37	38
+8818	"he km, 2016, proc cvpr ieee, p770, doi 10.1109/cvpr.2016.90"	1.3337	0.0931	1	53	66.6667	72
+9096	"hinton ge, 2006, neural comput, v18, p1527, doi 10.1162/neco.2006.18.7.1527"	0.5853	0.1463	1	57	31	32
+9098	"hinton ge, 2006, science, v313, p504, doi 10.1126/science.1127647"	0.5516	0.2447	1	46	22	27
+9145	"hochreiter s, 1997, neural comput, v9, p1735, doi 10.1162/neco.1997.9.8.1735"	0.7661	0.3025	1	28	24	25
+9552	"huang j., 2006, adv neural inform pr, v19, p601"	-0.4955	-0.0751	2	59	25	25
+10120	"jhuo ih, 2012, proc cvpr ieee, p2168, doi 10.1109/cvpr.2012.6247924"	-0.5375	-0.4812	2	51	26	26
+10162	"jia y., 2014, arxiv14085093"	1.1889	-0.0197	1	34	28	31
+10166	"jia y., 2014, p 22 acm int c mult, p675, doi 10.1145/2647868.2654889"	1.1742	-0.0822	1	49	43	43
+11642	"krizhevsky a, 2012, adv neural inform pr, v25, p1097, doi 10.1145/3065386"	1.0769	0.069	1	69	133	138
+11650	"krizhevsky a., 2012, adv neur inform proc, p1097, doi 10.1145/3065386"	0.9548	-0.0365	1	55	38	40
+11741	"kulis b, 2011, proc cvpr ieee, p1785, doi 10.1109/cvpr.2011.5995702"	-0.5968	-0.4572	2	55	27	28
+12255	"lecun y, 1998, p ieee, v86, p2278, doi 10.1109/5.726791"	0.7459	0.0381	1	69	73	78
+12260	"lecun y, 2015, nature, v521, p436, doi 10.1038/nature14539"	1.0479	0.2561	1	48	56	58
+12666	"li ff, 2006, ieee t pattern anal, v28, p594, doi 10.1109/tpami.2006.79"	0.0887	-0.0045	3	52	33	37
+13756	"long j, 2015, proc cvpr ieee, p3431, doi 10.1109/cvpr.2015.7298965"	1.326	-0.0078	1	36	29	30
+13808	"long ms, 2013, ieee i conf comp vis, p2200, doi 10.1109/iccv.2013.274"	-0.673	-0.395	2	53	34	34
+13810	"long ms, 2014, ieee t knowl data en, v26, p1076, doi 10.1109/tkde.2013.111"	-0.8729	-0.2965	2	46	37	37
+13895	"lowe dg, 2004, int j comput vision, v60, p91, doi 10.1023/b:visi.0000029664.99615.94"	0.3248	-0.0898	1	66	59	67
+13939	"lu j, 2015, knowl-based syst, v80, p14, doi 10.1016/j.knosys.2015.01.010"	-0.4262	-0.2315	2	48	37	40
+16277	"oquab m, 2014, proc cvpr ieee, p1717, doi 10.1109/cvpr.2014.222"	0.8682	-0.1632	1	59	50	51
+16509	"pan s., 2008, aaai, p677"	-0.9166	-0.1319	2	55	44	45
+16552	"pan sj, 2010, ieee t knowl data en, v22, p1345, doi 10.1109/tkde.2009.191"	-0.2947	0.1072	3	75	419	509
+16554	"pan sj, 2011, ieee t neural networ, v22, p199, doi 10.1109/tnn.2010.2091281"	-0.5896	-0.2371	2	73	116	120
+16798	"patel vm, 2015, ieee signal proc mag, v32, p53, doi 10.1109/msp.2014.2347059"	-0.459	-0.2748	2	58	25	26
+17716	"raina r., 2007, learning, p759, doi 10.1145/1273496.1273592"	-0.3672	0.1572	3	64	56	59
+17948	"razavian as, 2014, ieee comput soc conf, p512, doi 10.1109/cvprw.2014.131"	1.057	-0.0135	1	44	39	40
+18613	"russakovsky o, 2015, int j comput vision, v115, p211, doi 10.1007/s11263-015-0816-y"	1.1868	0.0781	1	60	80	82
+18697	"saenko k, 2010, lect notes comput sc, v6314, p213, doi 10.1007/978-3-642-15561-1_16"	-0.3484	-0.3514	2	66	39	40
+19504	"shao l, 2015, ieee t neur net lear, v26, p1019, doi 10.1109/tnnls.2014.2330900"	-0.1779	-0.2481	2	60	27	28
+19748	"shimodaira h, 2000, j stat plan infer, v90, p227, doi 10.1016/s0378-3758(00)00115-4"	-0.9719	0.0912	3	42	28	31
+19827	"si s, 2010, ieee t knowl data en, v22, p929, doi 10.1109/tkde.2009.126"	-0.7527	-0.2722	2	57	46	46
+19961	"simonyan k., 2014, 14091556 arxiv, doi 10.1109/tnn.2010.2066286"	1.1828	0.1077	1	57	89	94
+20447	"srivastava n, 2014, j mach learn res, v15, p1929"	1.0113	0.0526	1	54	42	44
+20919	"sutton r. s., 1998, reinforcement learni"	-1.3513	1.0448	3	12	23	33
+20994	"szegedy c, 2015, proc cvpr ieee, p1, doi 10.1109/cvpr.2015.7298594"	1.3034	0.0304	1	56	71	73
+21408	"taylor me, 2009, j mach learn res, v10, p1633"	-1.2638	0.9362	3	33	47	71
+22172	"van der maaten l, 2008, j mach learn res, v9, p2579"	0.8669	0.0778	1	49	30	32
+22271	"vapnik v. n., 1998, stat learning theory"	-0.7961	0.3656	3	51	26	27
+22451	"vincent p, 2010, j mach learn res, v11, p3371"	0.2539	0.0268	1	53	25	27
+23349	"weiss karl, 2016, journal of big data, v3, doi 10.1186/s40537-016-0043-6"	-0.0438	0.1283	2	54	29	29
+24375	"yang j., 2007, p 15 int c mult, p188, doi 10.1145/1291233.1291276"	-0.6388	-0.209	2	55	41	43
+24595	"yao y, 2010, proc cvpr ieee, p1855, doi 10.1109/cvpr.2010.5539857"	-0.7639	-0.0637	3	49	39	39
+24764	"yosinski j., 2014, adv neural inform pr, v27, p3320"	0.8856	-0.0146	1	67	75	78

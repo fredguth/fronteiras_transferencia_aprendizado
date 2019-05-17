@@ -1,0 +1,14 @@
+Adaptation Regularization: A General
+Framework for Transfer Learning
+Domain transfer learning, which learns a target classifier using labeled data from a different distribution, has shown
+promising value in knowledge discovery yet still been a challenging problem. Most previous works designed adaptive classifiers
+by exploring two learning strategies independently: distribution adaptation and label propagation. In this paper, we propose a
+novel transfer learning framework, referred to as Adaptation Regularization based Transfer Learning (ARTL), to model them
+in a unified way based on the structural risk minimization principle and the regularization theory. Specifically, ARTL learns the
+adaptive classifier by simultaneously optimizing the structural risk functional, the joint distribution matching between domains,
+and the manifold consistency underlying marginal distribution. Based on the framework, we propose two novel methods using
+Regularized Least Squares (RLS) and Support Vector Machines (SVMs), respectively, and use the Representer theorem
+in reproducing kernel Hilbert space to derive corresponding solutions. Comprehensive experiments verify that ARTL can
+significantly outperform state-of-the-art learning methods on several public text and image datasets.
+Index Terms—Transfer learning, adaptation regularization, distribution adaptation, manifold regularization, generalization error.
+

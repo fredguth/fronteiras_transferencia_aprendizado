@@ -1,0 +1,2697 @@
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+1
+
+Adaptation Regularization: A General
+Framework for Transfer Learning
+Mingsheng Long, Jianmin Wang, Guiguang Ding, Sinno Jialin Pan, and Philip S. Yu, Fellow, IEEE
+Abstract—Domain transfer learning, which learns a target classiﬁer using labeled data from a different distribution, has shown
+promising value in knowledge discovery yet still been a challenging problem. Most previous works designed adaptive classiﬁers
+by exploring two learning strategies independently: distribution adaptation and label propagation. In this paper, we propose a
+novel transfer learning framework, referred to as Adaptation Regularization based Transfer Learning (ARTL), to model them
+in a uniﬁed way based on the structural risk minimization principle and the regularization theory. Speciﬁcally, ARTL learns the
+adaptive classiﬁer by simultaneously optimizing the structural risk functional, the joint distribution matching between domains,
+and the manifold consistency underlying marginal distribution. Based on the framework, we propose two novel methods using
+Regularized Least Squares (RLS) and Support Vector Machines (SVMs), respectively, and use the Representer theorem
+in reproducing kernel Hilbert space to derive corresponding solutions. Comprehensive experiments verify that ARTL can
+signiﬁcantly outperform state-of-the-art learning methods on several public text and image datasets.
+Index Terms—Transfer learning, adaptation regularization, distribution adaptation, manifold regularization, generalization error.
+
+!
+
+1
+
+I NTRODUCTION
+
+I
+
+T is very difﬁcult, if not impossible, to induce a
+supervised classiﬁer without any labeled data. For
+the emerging domains where labeled data are sparse,
+to save the manual labeling efforts, one may expect to
+leverage abundant labeled data available in a related
+source domain for training an accurate classiﬁer to be
+reused in the target domain. Recently, the literature
+has witnessed an increasing interest in developing
+transfer learning [1] methods for cross-domain knowledge transfer problems. Transfer learning has proven
+to be promising in many real-world applications, e.g.,
+text categorization [2], [3], sentiment analysis [4], [5],
+image classiﬁcation [6] and retrieval [7], video summarization [8], and collaborative recommendation [9].
+Recall that the probability distributions in different
+domains may change tremendously and have very different statistical properties, e.g., mean and variance.
+Therefore, one major computational issue of transfer
+learning is how to reduce the difference in distributions between the source and target data. Recent
+works aim to discover a good feature representation
+across domains, which can simultaneously reduce the
+distribution difference and preserve the important
+properties of the original data [10]. Under the new fea• Mingsheng Long, Jianmin Wang, and Guiguang Ding are with the
+School of Software, Tsinghua University. Mingsheng Long is also with
+the Department of Computer Science, Tsinghua University, Beijing,
+China. E-mail: longmingsheng@gmail.com, jimwang@tsinghua.edu.cn,
+dinggg@tsinghua.edu.cn. Corresponding author: Jianmin Wang.
+• Sinno Jialin Pan is with the Institute of Infocomm Research, Singapore
+138632. E-mail: jspan@i2r.a-star.edu.sg.
+• Philip S. Yu is with the Department of Computer Science, University
+of Illinois at Chicago, IL 60607, USA. E-mail: psyu@uic.edu.
+Manuscript received August 15, 2012; revised June 15, 2013.
+Digital Object Indentifier 10.1109/TKDE.2013.111
+
+ture representation, standard supervised learning algorithms can be trained on source domain and reused
+on target domain [11], [12]. Pan et al. [11] proposed
+Maximum Mean Discrepancy Embedding (MMDE), in
+which the MMD [13] distance measure for comparing
+different distributions is explicitly minimized. Si et al.
+[12] proposed a general Transfer Subspace Learning
+(TSL) framework, in which the Bregman divergence is
+imposed as a regularization to a variety of subspace
+learning methods, e.g., PCA and LDA. Another line of
+works aims to directly construct an adaptive classiﬁer
+by imposing the distance measure as a regularization
+to supervised learning methods, e.g., SVMs [14], [15],
+[16], [17]. However, these methods only utilized the
+source domain labeled data to train a classiﬁer. We
+show that such labeled data can be further explored
+to reduce the difference in the conditional distributions
+across domains. Also, these methods only utilized the
+target domain unlabeled data to reduce the difference
+in the marginal distributions across domains. We show
+that these unlabeled data can be further explored to
+boost classiﬁcation performance.
+It is noteworthy that, in some real-world scenarios,
+only minimizing difference in marginal distributions
+between domains is not good enough for knowledge
+transfer, since the discriminative directions of the
+source and target domains may still be different [10],
+[18]. Therefore, another major computational issue of
+transfer learning is how to further explore marginal
+distributions to potentially match the discriminative
+directions between domains. In this direction, the unlabeled data may often reveal the underlying truth of
+the target domain [19], [20], [21]. Bruzzone et al. [19]
+proposed Domain Adaptation Support Vector Machine (DASVM), which extended Transductive SVM
+
+1041-4347/13/$31.00 © 2013 IEEE
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+Dt
+
+Ds
+
+Ds
+MDA
+
+f
+
+Dt
+
+Ds
+(a)
+
+Ds
+
+Dt
+CDA
+
+Ds
+(b)
+
+Dt
+
+MR
+
+f
+
+f
+
+Dt
+
+Ds
+
+Dt
+
+Dt
+
+Ds
+(c)
+
+f
+
+Dt
+
+Ds
+(d)
+
+Fig. 1. Motivation of ARTL. f : hyperplane; Ds : source
+domain; Dt : target domain; ◦: domain/class centroid;
+MDA: marginal distribution adaptation; CDA: conditional distribution adaptation; MR: manifold regularization.
+
+(TSVM) to progressively classify the unlabeled target
+data and simultaneously remove some labeled source
+data. Bahadori et al. [20] proposed Latent Transductive Transfer Learning (LATTL) to combine subspace
+learning and transductive classiﬁcation (TSVM) in a
+uniﬁed framework. However, all these methods adopt
+TSVM as building block, which is difﬁcult to solve
+and is not natural for out-of-sample data [22]. In addition, these methods do not minimize the difference
+between the conditional distributions across domains.
+Based on the aforementioned discussions, we summarize the computational issues of transfer learning in
+Figure 1 and highlight our motivation. Given a labeled
+source domain Ds and an unlabeled target domain Dt
+as in subplot (a), we can see that hyperplane f trained
+on Ds cannot discriminate Dt correctly due to substantial distribution difference. Similar to most previous
+works, we minimize the distance between the marginal
+distributions in subplot (b), i.e., the sample means of
+the two domains are drawn closer. Then hyperplane
+f can classify Dt more correctly. Noteworthily, it is
+indispensable to minimize the distance between the
+conditional distributions as in subplot (c), which can
+make the intra-class centroids close and the inter-class
+centroids more separable. Finally, as shown in subplot
+(d), it is important to maximize the manifold consistency underlying the marginal distributions, which
+can “rotate” hyperplane f to respect the groundtruth
+of the target data. This motivates us to design a general framework to integrate all these learning objectives.
+In this paper, we propose a general transfer learning
+framework, referred to as Adaptation Regularization
+based Transfer Learning (ARTL), to model the joint
+distribution adaptation and manifold regularization
+in a uniﬁed way underpinned by the structural risk
+minimization principle and the regularization theory.
+More speciﬁcally, ARTL learns an adaptive classiﬁer by simultaneously optimizing the structural risk
+functional, the joint distribution matching between
+both marginal and conditional distributions, and the
+manifold consistency of the marginal distribution. The
+contributions of this paper are summarized as follows.
+•
+
+To cope with the considerable change between
+data distributions from different domains, ARTL
+aims to minimize the structural risk functional,
+joint adaptation of both marginal and conditional
+
+2
+
+distributions, and the manifold regularization. To
+the best of our knowledge, ARTL is the ﬁrst semisupervised domain transfer learning framework
+which can explore all these learning criteria simultaneously. In particular, ARTL remains simple
+by introducing only one additional term (parameter) compared with the state-of-the-art graphbased semi-supervised learning framework [22].
+• Many standard supervised methods, e.g., RLS
+and SVMs, can be incorporated into the ARTL
+framework to tackle domain transfer learning. A
+revised Representer theorem in the Reproducing
+Kernel Hilbert Space (RKHS) is presented to facilitate easy handling of optimization problems.
+• Under the ARTL framework, we further propose
+two novel methods, i.e., ARRLS and ARSVM, respectively. Both of them are convex optimization
+problems enjoying the global optimal solutions.
+• Comprehensive experiments on text (Reuters21578 and 20-Newsgroups) and image (PIE, USPS, and MNIST) datasets verify the effectiveness of
+the ARTL framework in real-world applications.
+The remainder of the paper is organized as follows.
+We start by reviewing related works in Section 2. In
+Section 3, we present the ARTL framework, the two
+methods ARRLS and ARSVM, and the analysis of
+time complexity. In Sections 4 and 5, we theoretically
+analyze the generalization error bound of ARTL, and
+conduct empirical studies on real-world datasets, respectively. Finally, we conclude the paper in Section 6.
+
+2
+
+R ELATED W ORK
+
+In this section, we discuss previous works on transfer
+learning that are most related to our work, and highlight their differences. According to literature survey
+[1], most previous methods can be roughly organized
+into two categories: instance reweighting [23], [24] and
+feature extraction. Our work belongs to the feature
+extraction category, which includes two subcategories:
+transfer subspace learning and transfer classiﬁer induction.
+2.1 Transfer Subspace Learning
+These methods aim to extract a shared subspace in
+which the distributions of the source and target data
+are drawn close. Typical learning strategies includes:
+1) Correspondence Learning, which ﬁrst identiﬁes the
+correspondence among features and then explores this
+correspondence for transfer subspace learning [4], [5];
+2) Property Preservation, which extracts shared latent
+factors between domains by preserving the important
+properties of the original data, e.g., statistical property
+[25], [2], geometric structure [26], [27], [28], or both [3];
+3) Distribution Adaptation, which learns a shared
+subspace where the distribution difference is explicitly
+reduced by minimizing predeﬁned distance measures,
+e.g., MMD or Bregman divergence [11], [12], [10], [29].
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+2.2
+
+Transfer Classiﬁer Induction
+
+These methods aim to directly design an adaptive
+classiﬁer by incorporating the adaptation of different
+distributions through model regularization. For easy
+discussion, the learning strategies of these methods
+are summarized as below. Our ARTL framework belongs to this subcategory, with substantial extensions.
+1) Subspace Learning + Classiﬁer Induction: These
+methods simultaneously extract a shared subspace
+and train a supervised [30] or semi-supervised classiﬁer [20] in this subspace. The advantage is that the
+subspace and classiﬁer can establish mutual reinforcement. Different from these methods, ARTL does not
+involve subspace learning and thus is more generic.
+2) Distribution Adaptation + Classiﬁer Induction:
+These methods directly integrate the minimization of
+distribution difference as a regularization term to the
+standard supervised classiﬁer [15], [19], [16], [17]. But
+all these methods only minimize the distance between
+the marginal distributions. Different from these methods, ARTL minimizes the distance between both the
+marginal and conditional distributions. Our work also
+explores manifold structure to improve performance.
+3) Feature Replication + Co-Regularization: In these
+methods, the distribution difference is ﬁrstly reduced
+through feature replication, then both the source and
+target classiﬁers are required to agree on the unlabeled
+target data [31]. These methods require some labeled
+data in target domain, which is not required by ARTL.
+4) Parameter Sharing + Manifold Regularization: This
+strategy is explored by semi-supervised multi-task
+learning methods [32], [33], which aim to improve the
+performance of multiple related tasks by exploring the
+common structure through a common prior. However,
+these methods ignore the distribution adaptation between multiple tasks, which is different from ARTL.
+5) Kernel Matching + Manifold Regularization: These
+methods simultaneously perform classiﬁer induction,
+kernel matching, and manifold preservation [21]. The
+differences between these methods and ARTL are that:
+1) these methods do not reduce the distance between
+conditional distributions; 2) kernel matching is usually
+formulated as an integer program, which is difﬁcult to
+solve; and 3) it is difﬁcult to encode kernel matching
+as a regularization to standard classiﬁers, as a result
+a Representer theorem is missing for these methods.
+
+3 A DAPTATION R EGULARIZATION BASED
+T RANSFER L EARNING F RAMEWORK
+In this section, we ﬁrst deﬁne the problem setting and
+learning goal for domain transfer learning. After that,
+we present the proposed general framework, ARTL.
+Based on the framework, we propose two methods
+using RLS and SVMs, and derive learning algorithms
+using the Representer theorem in RKHS. Finally, we
+analyze the computational complexity of algorithms.
+
+3
+
+TABLE 1
+Notations and descriptions used in this paper.
+Notation
+Description
+Notation
+Description
+Ds , Dt source/target domain
+X
+data matrix
+n, m
+#examples in Ds /Dt
+Y
+label matrix
+K
+kernel matrix
+d, C #shared features/classes
+#nearest neighbors
+w, α
+classiﬁer parameters
+p
+σ
+shrinkage regularization
+E
+label indicator matrix
+MMD regularization
+M
+MMD matrix
+λ
+γ
+manifold regularization
+L
+graph Laplacian matrix
+
+3.1 Problem Deﬁnition
+Notations, which are frequently used in this paper,
+are summarized in Table 1.
+Deﬁnition 1 (Domain). [1] A domain D is composed of
+a d-dimensional feature space X and a marginal probability
+distribution P (x), i.e., D = {X , P (x)}, where x ∈ X .
+In general, if two domains Ds and Dt are different, then they may have different feature spaces or
+marginal distributions, i.e., Xs =
+ Xt ∨ Ps (xs ) = Pt (xt ).
+Deﬁnition 2 (Task). [1] Given domain D, a task T is
+composed of a label space Y and a prediction function f (x),
+i.e., T = {Y, f (x)}, where y ∈ Y, and f (x) = Q(y|x) can
+be interpreted as the conditional probability distribution.
+In general, if two tasks Ts and Tt are different, then
+they may have different label spaces or conditional
+distributions, i.e., Ys = Yt ∨ Qs (ys |xs ) = Qt (yt |xt ).
+Deﬁnition 3 (Domain Transfer Learning). Given labeled source domain Ds = {(x1 , y1 ), . . . , (xn , yn )} and
+unlabeled target domain Dt = {xn+1 , . . . , xn+m }, the goal
+of domain transfer learning is to learn a target prediction
+function ft : xt → yt with low expected error on Dt , under
+the assumptions Xs = Xt , Ys = Yt , Ps (xs ) = Pt (xt ), and
+Qs (ys |xs ) = Qt (yt |xt ).
+To address domain transfer learning problems directly by estimating the distribution densities is challenging. Although the marginal distribution Pt (xt )
+can be estimated using kernel density estimate (KDE)
+[18], it is impossible for the conditional distribution
+Qt (yt |xt ) since there are no labeled data in the target
+domain. Most previous works thus assume that there
+exists a proper feature transformation F such that
+Ps (F (xs )) = Pt (F (xt )), Qs (ys |F (xs )) ≈ Qt (yt |F (xt )).
+The transformation F can be inferred by minimizing
+the distribution distance between marginal distributions, and preserving properties of original data [10].
+In this paper, we put forward several justiﬁcations.
+• It is insufﬁcient to minimize only the distribution
+distance between the marginal distributions. The
+distribution distance between the conditional distributions should also be explicitly minimized.
+• It is useful to further explore the marginal distributions. Noteworthily, preserving manifold consistency underlying the marginal distribution can
+beneﬁt us from semi-supervised learning [22].
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+It may be more generic to explore the data distributions in original feature space or kernel space,
+instead of various dimension-reduced subspaces.
+Based on these justiﬁcations, we propose our general
+ARTL framework in the following section.
+•
+
+3.2
+
+General Framework
+
+We design the general ARTL framework underpinned
+by the structural risk minimization principle and the
+regularization theory. Speciﬁcally, we aim to optimize
+three complementary objective functions as follows:
+1) Minimizing the structural risk functional on the
+source domain labeled data Ds ;
+2) Minimizing the distribution difference between
+the joint probability distributions Js and Jt ;
+3) Maximizing the manifold consistency underlying the marginal distributions Ps and Pt .
+Suppose the prediction function (i.e., classiﬁer) be f =
+wT φ(x), where w is the classiﬁer parameters, and φ :
+X → H is the feature mapping function that projects
+the original feature vector to a Hilbert space H. The
+learning framework of ARTL is formulated as
+f = arg min
+f ∈HK
+
+n
+
+
+ (f (xi ) , yi ) + σ f
+
+i=1
+
+2
+K
+
+(1)
+
+where K is the kernel function induced by φ such
+that φ (xi ) , φ (xj ) = K (xi , xj ), and σ, λ, and γ are
+positive regularization parameters. We interpret each
+term of Framework (1) in the following subsections.
+3.2.1 Structural Risk Minimization
+Our ultimate goal is to learn an adaptive classiﬁer for
+the target domain Dt . To begin with, we can induce a
+standard classiﬁer f on the labeled source domain Ds .
+We adopt the structural risk minimization principle
+[34], and minimize the structural risk functional as
+f ∈HK
+
+n
+
+i=1
+
+ (f (xi ) , yi ) + σ f
+
+2
+K
+
+distance between the joint probability distributions Js
+and Jt . By probability theory, J = P · Q, thus we seek
+to minimize the distribution distance 1) between the
+marginal distributions Ps and Pt , and 2) between the
+conditional distributions Qs and Qt , simultaneously.
+Marginal Distribution Adaptation: We minimize
+Df,K (Ps , Pt ), the distance between marginal distributions Ps and Pt . Since directly estimating probability
+densities is nontrivial, we resort to explore nonparametric statistics. We adopt empirical Maximum Mean
+Discrepancy (MMD) [13], [11] as the distance measure,
+which compares different distributions based on the
+distance between the sample means of two domains in
+a reproducing kernel Hilbert space (RKHS) H, namely
+
+2
+ n
+
+n+m
+
+
+
+
+1
+1
+
+MMD2H (Ds , Dt ) = 
+φ
+(x
+)
+−
+φ
+(x
+)
+i
+j 
+n
+m j=n+1
+ i=1
+
+H
+
+where φ : X → H is the feature mapping. To make
+MMD a proper regularization for the classiﬁer f , we
+adopt the projected MMD [15], which is computed as
+
+2
+ 
+
+n+m
+
+1 n
+
+1
+ (3)
+Df,K (Ps , Pt ) = 
+f
+(x
+)
+−
+f
+(x
+)
+i
+j 
+n
+m j=n+1
+ i=1
+
+H
+
++ λDf,K (Js , Jt ) + γMf,K (Ps , Pt )
+
+f = arg min
+
+4
+
+(2)
+
+where HK is a set of classiﬁers in the kernel space,
+f 2K is the squared norm of f in HK , σ is the shrinkage regularization parameter, and  is the loss function
+that measures the ﬁtness of f for predicting the labels
+on training samples. Two widely-used loss functions
+are the hinge loss for SVMs  = max (0, 1 − yi f (xi )),
+2
+and the squared loss for RLS  = (yi − f (xi )) .
+3.2.2 Joint Distribution Adaptation
+Unfortunately, the standard classiﬁer f inferred by (2)
+may not generalize well to the target domain Dt , since
+the structural risk minimization principle requires the
+training and test data to be sampled from identical
+probability distribution [34]. Thus the ﬁrst major computational issue is how to minimize the distribution
+
+T
+
+where f (x) = w φ(x), and K is the kernel function
+induced by φ such that φ (xi ) , φ (xj ) = K (xi , xj ).
+Conditional Distribution Adaptation: We minimize Df,K (Qs , Qt ), the distance between conditional
+distributions Qs and Qt . Since calculating the nonparametric statistics of Qs (ys |xs ) and Qt (yt |xt ) is difﬁcult, we resort to explore the nonparametric statistics
+of Qs (xs |ys ) and Qt (xt |yt ) instead, which can well approximate Qs (ys |xs ) and Qt (yt |xt ) when sample sizes
+are large. Unfortunately, it is impossible to calculate
+the sample means of Qt (xt |yt ) w.r.t. each class (class
+centroids), since there are no labels in the target domain data. In this paper, we propose to use the pseudo
+target labels predicted by some supervised classiﬁers
+(e.g., SVMs) trained on the source domain labeled
+data. Though many of the pseudo target labels may
+be incorrect due to substantial distribution difference,
+we assume that the pseudo class centroids calculated
+by them may reside not far apart from the true class
+centroids. Therefore, we can use both true and pseudo
+labels to compute the projected MMD w.r.t. each class
+c ∈ {1, . . . , C} and make the intra-class centroids of
+two distributions Qs (xs |ys ) and Qt (xt |yt ) closer in H
+
+
+
+
+ 1
+(c)
+Df,K (Qs ,Qt )= (c)
+n
+
+
+(c)
+
+
+
+
+
+f (xi )− 1(c)
+m
+(c)
+(c)
+xi ∈Ds
+xj ∈Dt
+
+2
+
+
+
+f (xj )
+
+
+
+(4)
+
+H
+
+where Ds = {xi : xi ∈ Ds ∧ y (xi ) = c} is the set of
+examples belonging to class c in the source data, y (xi )
+(c)
+is the true label of xi , and n(c) = |Ds |. Correspond(c)
+ingly, Dt = {xj : xj ∈ Dt ∧ ŷ (xj ) = c} is the set of
+examples belonging to class c in the target data, ŷ (xj )
+(c)
+is the pseudo (predicted) label of xj , and m(c) = |Dt |.
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+Integrating (3) and (4) leads to the regularization
+for joint distribution adaptation, computed as follows
+Df,K (Js , Jt ) = Df,K (Ps , Pt ) +
+
+C
+
+c=1
+
+(c)
+
+Df,K (Qs , Qt ) (5)
+
+By regularizing (2) with (5), both the sample means of
+the marginal and conditional distributions are drawn
+closer in H. It is noteworthy that, if we use an adaptive classiﬁer to obtain the pseudo labels, then we can
+usually obtain a more accurate labeling for the target
+data, which can further boost classiﬁcation accuracy.
+ARTL can readily integrate any base classiﬁers by (5).
+3.2.3 Manifold Regularization
+In domain transfer learning, there are both labeled
+and unlabeled data. Since by using (5) we can only
+match the sample means between different distributions, but we expect that knowledge of the marginal
+distributions Ps and Pt can be further exploited for
+better function learning. In other words, the unlabeled
+data may often reveal the underlying truth of the target domain, e.g., the sample variances. By the manifold
+assumption [22], if two points xs , xt ∈ X are close in
+the intrinsic geometry of the marginal distributions
+Ps (xs ) and Pt (xt ), then the conditional distributions
+Qs (ys |xs ) and Qt (yt |xt ) are similar. Under geodesic
+smoothness, the manifold regularization is computed as
+Mf,K (Ps ,Pt )=
+
+n+m
+
+i,j=1
+
+(f (xi )−f (xj ))2 Wij =
+
+n+m
+
+
+i,j=1
+
+f (xi )Lij f (xj )
+
+(6)
+
+where W is the graph afﬁnity matrix, and L is the
+normalized graph Laplacian matrix. W is deﬁned as
+
+cos (xi , xj ) , if xi ∈ Np (xj ) ∨ xj ∈ Np (xi )
+Wij =
+0,
+otherwise
+(7)
+where Np (xi ) is the set of p-nearest neighbors of point
+xi . L is computed as L = I−D−1/2 WD−1/2
+, where D
+n
+is a diagonal matrix with each item Dii = j=1 Wij .
+By regularizing (2) with (6), the marginal distributions can be fully exploited to maximize the consistency between the predictive structure of f and the
+intrinsic manifold structure of the data. This can substantially match the sample variances between domains.
+3.3
+
+Learning Algorithms
+
+We extend standard algorithms (RLS and SVMs) under the ARTL framework with different choices of loss
+functions . The major difﬁculty lies in that the kernel
+mapping φ : X → H may have inﬁnite dimensions.
+To solve (1) effectively, we need to reformulate it by
+using the following revised Representer theorem.
+Theorem 1 (Representer Theorem). [35], [22] The
+minimizer of optimization problem (1) admits an expansion
+f (x) =
+
+n+m
+
+i=1
+
+αi K (xi , x)
+
+and
+
+w=
+
+n+m
+
+i=1
+
+αi φ (xi ) (8)
+
+5
+
+in terms of the cross-domain labeled and unlabeled examples, where K is a kernel induced by φ, αi is a coefﬁcient.
+We focus on reformulating the regularization. By
+incorporating Equation (8) into Equation (5), we have
+C
+
+ 
+
+
+Df,K (Js , Jt ) = tr αT KM0 Kα +
+tr αT KMc Kα
+c=1
+
+
+
+= tr αT KMKα
+
+with M =
+
+C
+
+
+Mc
+
+c=0
+
+(9)
+where K ∈ R(n+m)×(n+m) is kernel matrix with Kij =
+K(xi , xj ), α = (α1 , . . . , αn+m ) is classiﬁer parameters.
+Mc , c ∈ {0, 1, . . . , C} are MMD matrices computed as
+⎧
+(c)
+1
+⎪
+, x i , xj ∈ Ds
+⎪
+n(c) n(c)
+⎪
+⎪
+(c)
+1
+⎪
+⎪
+⎨ m(c) m(c) , x
+i , xj ∈ Dt
+(c)
+(c)
+(Mc )ij =
+(10)
+x i ∈ Ds , x j ∈ D t
+−1
+⎪
+,
+⎪
+(c)
+(c)
+n(c) m(c)
+⎪
+⎪
+x j ∈ D s , xi ∈ D t
+⎪
+⎪
+⎩
+0,
+otherwise
+(c)
+
+(c)
+
+where n(c) , m(c) , Ds , Dt , c ∈ {1, . . . , C} are deﬁned
+as (4). For clarity, we can also compute M0 with (10) if
+(0)
+(0)
+substituting n(0) = n, m(0) = m, Ds = Ds , Dt = Dt .
+Similarly, by incorporating (8) into (6), we obtain
+
+
+Mf,K (Ps , Pt ) = tr αT KLKα
+(11)
+With (9) and (11), we can readily implement new
+algorithms under ARTL by extending RLS and SVMs.
+3.3.1 ARRLS: ARTL Using Squared Loss
+2
+Using squared loss  (f (xi ), yi ) = (yi − f (xi )) , the
+structural risk functional can be formulated as follows
+n
+
+i=1
+
+n+m
+
+
+(f (xi ),yi )+σf 2K =
+
+i=1
+
+Eii (yi −f (xi ))2 +σf 2K
+
+(12)
+
+where E is a diagonal label indicator matrix with each
+element Eii = 1 if xi ∈ Ds , and Eii = 0 otherwise.
+By substituting Representer theorem (8) into (12), we
+obtain
+n
+
+i=1
+
+(f (xi ),yi )+σf 2K =
+
+(Y−αT K)E
+
+2
+F
+
++σtr(αT Kα)
+
+(13)
+
+where Y = [y1 , . . . , yn+m ] is the label matrix. It is no
+matter that the target labels are unknown, since they
+are ﬁltered out by the label indicator matrix E. Integrating Equations (13), (9), and (11) into Framework
+(1), we obtain the objective for ARRLS based on RLS:
+α= arg min
+
+α∈Rn+m
+
+(Y−αT K)E
+
+2
+F
+
++tr(σαT Kα+αT K(λM+γL)Kα)
+
+(14)
+Setting derivative of objective function as 0 leads to
+α = ((E + λM + γL) K + σI)
+
+−1
+
+EYT
+
+(15)
+
+Note that when λ = γ = 0, (15) gives zero coefﬁcients
+over the joint distribution adaptation and manifold
+regularization and thus degenerates to standard RLS.
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+Multi-Class Extension: Denote y ∈ RC a label vector such that yc = 1 if y(x) = c, and yc = 0 otherwise.
+The label matrix is Y = [y1 , . . . , yn+m ] ∈ RC×(n+m) ,
+and the parameter matrix is α ∈ R(n+m)×C . In this
+way, ARRLS can be extended to multi-class problems.
+3.3.2 ARSVM: ARTL Using Hinge Loss
+Using hinge loss  (f (xi ), yi ) = max (0, 1 − yi f (xi )),
+the structural risk functional can be formulated as
+n
+
+i=1
+
+(f (xi ),yi )+σf 2K =
+
+n
+
+
+i=1
+
+max(0,1−yi f (xi ))+σf 2K
+
+(16)
+
+By substituting the Representer theorem (8) into (16),
+and integrating Equations (16), (9), and (11) into (1),
+we obtain the objective for ARSVM based on SVMs:
+α∈R
+
+n
+
+
+min
+n+m
+
+,ξ∈Rn
+
+⎛
+
+ξi + σαT Kα + αT K (λM + γL) Kα
+
+i=1
+
+n+m
+
+
+s.t. yi ⎝
+
+⎞
+
+(17)
+To solve Equation (17) effectively, we follow [22] and
+reformulate (17) using Lagrange dual, which leads to
+β = arg max
+β∈Rn
+
+i=1
+
+Denote s the average number of non-zero features per
+example, s ≤ d, p  min(n + m, d). The computational
+complexity of the framework consists of three parts.
+1) Solving the linear systems (15) or (18) using LU
+decomposition requires O((n + m)3 ), which may be
+greatly reduced using the conjugate gradient method.
+For ARSVM, solving the SVM optimization (18) with
+a widely-used SVM solver [36] requires O((n + m)2.3 ).
+2) For constructing
+the graph Laplacian matrix L,
+
+ARTL needs O s(n + m)2 , which is performed once.
+3) For constructing the kernel matrix K
+
+ and aggregate MMD matrix M, ARTL requires O C(n + m)2 .
+In summary,
+of Algo
+ the computational complexity
+rithm 1 is O (n + m)3 + (s + C) (n + m)2 using exact
+computations, which is adopted in this paper. It is not
+difﬁcult to speed up the algorithms using conjugate
+gradient methods, and this is left for our future work.
+3.5 Connections to Existing Works
+
+ξi ≥ 0, i = 1, . . . , n
+
+s.t.
+
+3.4 Computational Complexity
+
+αj K (xi , xj ) + b⎠ ≥ 1 − ξi , i = 1, . . . , n
+
+j=1
+
+n
+
+
+6
+
+n
+
+
+1
+βi − β T Qβ
+2
+i=1
+
+βi yi = 0, 0 ≤ βi ≤
+
+1
+, i = 1, . . . , n
+n
+
+with Q = ỸẼK(2σI + 2 (λM + γL) K)
+
+−1
+
+(18)
+
+ẼT Ỹ
+
+where Ỹ = diag(y1 , . . . , yn ), Ẽ = [In , 0] ∈ Rn×(n+m) .
+ARSVM can be easily implemented by using a standard SVM solver with the quadratic form induced by
+the Q matrix, and then using β to obtain the classiﬁer
+−1
+parameters by α = (2σI + 2 (λM + γL) K) ẼT Ỹβ.
+The learning algorithms are summarized in Algorithm 1. To make parameters λ and γ easily tuned, we
+normalize graph Laplacian matrix and MMD matrix.
+Algorithm 1: ARTL: Adaptation Regularization
+Transfer Learning Algorithms ARRLS and ARSVM
+Input: Data X, Y; parameters p, σ, λ, γ.
+Output: Adaptive classiﬁer f : X → Y.
+1 begin
+2
+Construct MMD matrix M by Equations (9),
+(10), graph Laplacian L by Equation (7).
+3
+Choose a kernel function K(xi , xj ) and
+compute kernel matrix K by Kij = K(xi , xj ).
+M
+4
+Normalize M ← M
+, L ← D−1/2 LD−1/2 .
+F
+5
+Compute α for ARRLS by Equation (15), for
+ARSVM by Equation (18) with SVM solver.
+6
+Return adaptive classiﬁer f by Equation (8).
+
+As discussed in Section 2, our work is substantially
+different from a variety of prior cross-domain learning
+methods such as [4], [25], [5], [6], [37], which do not
+explicitly consider distribution matching or manifold
+regularization. In this subsection, we will speciﬁcally
+distinguish our work from an insightful perspective.
+Distribution Adaptation: These methods explicitly reduce distribution difference by minimizing predeﬁned
+distance measures, e.g., MMD or Bregman divergence
+[14], [11], [15], [12], [19], [16], [17]. However, they only
+reduce the distance between marginal distributions,
+while the distance between conditional distributions
+is not minimized. Several works considered to match
+both the marginal and conditional distributions [18],
+[29], however, they require some labeled data in the
+target domain, which are not required by our method.
+Also, the manifold structure underlying the marginal
+distributions is not considered in all these methods.
+Manifold Regularization: These methods explicitly
+maximize the consistency of the induced embeddings
+(subspace learning) [26], [27], [28], [3] or classiﬁers
+(supervised learning) [22], [33] with respect to the
+intrinsic manifold structure. However, these methods
+have not explicitly reduced the distribution difference
+between domains and may overﬁt target domain data.
+To our knowledge, the works most closely related
+to our ARTL are Graph co-regularized Transfer Learning (GTL) [3], Semi-Supervised Transfer Component
+Analysis (SSTCA) [10], Discriminative Feature Extraction (DFE) [30], Latent Transductive Transfer Learning
+(LATTL) [20], and Semi-Supervised Kernel Matching
+(SSKM) [21]. All these methods can be categorized as
+“semi-supervised transfer learning”, since they have
+explored the combination of semi-supervised learning
+and transfer learning. For clear comparison, the difference between these methods is illustrated in Table 2.
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+TABLE 2
+Comparison between Most Closely Related Works.
+Comparison Perspective
+GTL SSTCA DFE LATTL SSKM ARTL
+√
+√
+√
+Data Reconstruction
+√
+√
+√
+√
+Structural Risk Minimization
+√
+√
+√
+Marginal Adaptation
+∠
+√
+Conditional Adaptation
+√
+√
+√
+√
+Manifold Regularization
+
+∠
+√
+Convex Optimization
+√
+√
+√
+√ General Framework
+uniﬁed optimization;  two-step approach; ∠ alternative approach.
+
+GTL and SSTCA are dimensionality reduction
+methods where label information and manifold
+structure are explored only for subspace learning.
+Our ARTL is a framework for adaptive classiﬁers.
+• DFE is a joint learning method for distribution
+adaptation and classiﬁer training. It explores the
+manifold structure in a separated second step, also it does not match the conditional distributions.
+• LATTL is a combination of subspace learning and
+transductive classiﬁcation. By using Transductive
+SVM (TSVM) to explore both the labeled and unlabeled data, LATTL can naturally achieve a better generalization capability to the target domain.
+It has two weaknesses: 1) it does not explicitly
+reduce distribution distance; 2) its TSVM learning
+framework is not natural for out-of-sample data.
+• SSKM is the most similar work to ours. It simultaneously considers structural risk minimization,
+kernel matching, and manifold preservation. The
+differences between SSKM and ARTL are that: 1)
+SSKM does not reduce the distance between conditional distributions; 2) the kernel matching is an
+integer programming problem and is difﬁcult to
+solve; and 3) the kernel matching is not directly
+imposed as a regularization to the classiﬁer, thus
+it does not exhibit a generic Representer theorem.
+In summary, our proposed ARTL can simultaneously
+explore 1) structural risk minimization, 2) distribution
+adaptation of both the marginal and conditional distributions, and 3) manifold consistency maximization.
+ARTL is underpinned by the regularization theory in
+RKHS, and can exhibit a revised Representer theorem.
+Thus ARTL is a general framework in which a variety
+of supervised algorithms can be readily incorporated.
+Furthermore, ARTL is a convex optimization problem
+enjoying global optima. We will compare ARTL with
+TCA and SSKM empirically to validate its advantage.
+•
+
+4
+
+G ENERALIZATION B OUND A NALYSIS
+
+We analyze the generalization error bound of ARTL
+on the target domain based on the structural risk on
+the source domain, following the approaches in [38],
+[30]. First, we denote
+the
+
+ induced prediction function
+as f (x) = sgn wT φ (x) , and the true labeling function as h(x) : X → {1, −1}. Let (x) be a continuous
+loss function  (x) = |h (x) − f (x)|, then 0 ≤  (x) ≤ 2.
+
+7
+
+First of all, the expected error of f in Dt is deﬁned as
+t
+
+(f ) = Ex∼Pt [|h (x) − f (x)|] = Ex∼Pt [ (x)]
+
+Similarly, the expected error of f in Ds is deﬁned as
+s
+
+(f ) = Ex∼Ps [|h (x) − f (x)|] = Ex∼Ps [ (x)]
+
+Now we present the target error bound in terms of the
+source risk in the following theorem, which is essentially a restatement of [38] with a slight modiﬁcation.
+Theorem 2. Suppose the hypothesis space containing f is
+of VC-dimension d, then the expected error of f in Dt is
+bounded with probability at least 1 − δ by
+
+t (f ) ≤ ˆs (f ) +
+
+4
+n
+
+
+d log
+
+2en
+4
++ log
+d
+δ
+
+
++ Df,K (Js , Jt ) + Ω
+(19)
+
+where e is the base of natural logarithm, ˆs (f ) is the empirical error of f in Ds , and Ω = inf f ∈HK [ s (f ) + t (f )].
+From Theorem 2, the expected error in Dt , i.e., t (f ),
+is bounded if we can simultaneously minimize 1) the
+empirical error of labeled data in Ds , i.e., ˆs (f ), 2) the
+distribution distance between Ds and Dt in RKHS H,
+i.e., Df,K (Js , Jt ), and 3) the adaptability of the true
+function h in terms of hypothesis space HK , i.e., Ω.
+In ARTL framework, i.e., Equation (1), ˆs (f ) is explicitly minimized by structural risk minimization in
+Equation (2); Df,K (Js , Jt ) is explicitly minimized by
+distribution adaptation in Equation (5); Ω is implicitly
+minimized by manifold regularization in Equation (6).
+Non-rigorously, we interpret why manifold regularization in Equation (6) can implicitly minimize Ω,
+the adaptability of the true function h in terms of the
+hypothesis space HK . First, we introduce the following theorem, which states the error bound of semisupervised learning based on manifold regularization.
+Theorem 3. [39] Consider collection (xi , yi ) for i ∈
+Zn+m = {1, . . . , n+m}. Assume that we randomly pick n
+distinct integers j1 , . . . , jn from Zn+m uniformly (without
+replacement), and denote it by Zn . Let h be the true
+predictor and f̂ (Zn ) be the semi-supervised learner trained
+using labeled data in Zn and unlabeled data in Zn+m \Zn
+
+
+1 
+T
+ (fi , yi ) + γf Lf
+f̂ (Zn ) = arg inf
+f ∈Rn+m n
+i∈Zn
+
+∂
+ (h, y)| ≤ τ , and (h, y) is convex with respect to h,
+if | ∂h
+then we have the generalization error bound on Zn+m \Zn
+
+
+
+1
+E Zn
+ fˆi (Zn ) , yi
+m
+i∈Zn+m \Zn
+
+
+ 
+n+m
+
+τ 2 tr L−1
+1
+T
+ (fi , yi ) + γf Lf +
+≤ inf
+2γn (n + m)
+f ∈Rn+m n + m
+i=1
+
+In ARTL, manifold regularization (6) is performed
+in RKHS H where the distribution distance has been
+minimized by Equation (5). Thus, Theorem 3 states
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+that, the classiﬁer fˆ trained in a semi-supervised way
+on Ds ∪ Dt in RKHS H can be guaranteed by an error
+bound in Dt . In other words, the manifold regularization (6) can implicitly minimize Ω, the adaptability of
+true function h in terms of the hypothesis space HK .
+
+TABLE 3
+Top categories and subcategories in 20-Newsgroups.
+Top Category
+comp
+
+5 E XPERIMENTS
+In this section, we perform extensive experiments
+on two real-world applications (i.e., text classiﬁcation
+and image recognition) to evaluate ARTL. Datasets
+and codes will be available online upon publication.
+5.1 Data Preparation
+5.1.1 Text Datasets
+The 219 cross-domain text datasets are generated from
+20-Newsgroups and Reuters-21578, which are two
+benchmark text corpora widely used for evaluating
+transfer learning algorithms [25], [26], [10], [2], [17].
+20-Newsgroups1 has approximately 20,000 documents distributed evenly in 20 different subcategories.
+The corpus contains four top categories comp, rec, sci
+and talk. Each top category has four subcategories,
+which are listed in Table 3. In the experiments, we
+can construct 6 dataset groups for binary classiﬁcation
+by randomly selecting two top categories (one for
+positive and the other one for negative) from the four
+top categories. The 6 dataset groups are comp vs rec,
+comp vs sci, comp vs talk, rec vs sci, rec vs talk, and sci
+vs talk. Similar to the approach in [25], we set up one
+dataset (including source domain and target domain)
+for cross-domain classiﬁcation as follows. For each
+pair of top categories P and Q (e.g., P for positive and
+Q for negative), their four sub-categories are denoted
+by P1 , P2 , P3 , P4 and Q1 , Q2 , Q3 , Q4 , respectively. We
+randomly select (without replacement) two subcategories from P (e.g., P1 and P2 ) and two subcategories
+from Q (e.g., Q1 and Q2 ) to form a source domain,
+then the remaining subcategories in P and Q (i.e., P3 ,
+P4 and Q3 , Q4 ) are selected to form a target domain.
+This dataset construction strategy ensures that the
+domains of labeled and unlabeled data are related,
+since they are under the same top categories. Besides,
+the domains are also ensured to be different, since
+they are drawn from different subcategories. In this
+way, for each dataset group P vs Q, we can generate
+C42 · C42 = 36 datasets. Clearly, for each example in the
+generated dataset group, its class label is either P or Q.
+In total, we can generate 6 dataset groups consisting
+of 6 · 36 = 216 datasets. For fair comparison, the 216
+datasets are constructed using a preprocessed version
+of 20-Newsgroups [2], which contains 25,804 features
+and 15,033 documents, with each document weighted
+by term frequency-inverse document frequency (TF-IDF).
+Reuters-215782 has three top categories orgs, people,
+and place. Using the same strategy, we can construct 3
+1. http://people.csail.mit.edu/jrennie/20newsgroups
+2. http://www.daviddlewis.com/resources/testcollections/reuters21578
+
+8
+
+rec
+
+sci
+
+talk
+
+Subcategory
+comp.graphics
+comp.os.ms-windows.misc
+comp.sys.ibm.pc.hardware
+comp.sys.mac.hardware
+rec.autos
+rec.motorcycles
+rec.sport.baseball
+rec.sport.hokey
+sci.crypt
+sci.electronics
+sci.med
+sci.space
+talk.politics.guns
+talk.politics.mideast
+talk.politics.misc
+talk.religion.misc
+
+#Examples
+970
+963
+979
+958
+987
+993
+991
+997
+989
+984
+987
+985
+909
+940
+774
+627
+
+#Features
+
+25804
+
+cross-domain text datasets orgs vs people, orgs vs place
+and people vs place. For fair comparison, we use the
+preprocessed version of Reuters-21578 studied in [40].
+5.1.2 Image Datasets
+USPS, MNIST and PIE (refer to Figure 2 and Table 4)
+are three handwritten digits/face datasets broadly
+adopted in compute vision and pattern recognition.
+USPS3 dataset composes of 7,291 training images
+and 2,007 test images of size 16 × 16.
+MNIST4 dataset has a training set of 60,000 examples and a test set of 10,000 examples of size 28 × 28.
+From Figure 2, we see that USPS and MNIST follow
+different distributions. They share 10 semantic classes,
+with each corresponding to one digit. We construct
+one dataset USPS vs MNIST by randomly sampling
+1,800 images in USPS to form the source domain, and
+sampling 2,000 images in MNIST to form the target
+domain. Then we switch the source/target pair to get
+another dataset MNIST vs USPS. We uniformly rescale
+all images to size 16 × 16, and represent each image
+by a 256-dimensional vector encoding the gray-scale
+values of all pixels. In this way, the source and target
+domain are ensured to share the same feature space.
+PIE5 , standing for “Pose, Illumination, Expression”,
+is a benchmark face database. It has 68 individuals
+with 41,368 face images sized 32×32. The images were
+captured by 13 synchronized cameras and 21 ﬂashes,
+under varying poses, illuminations, and expressions.
+In our experiments, we simply adopt the preprocessed versions of PIE6 , i.e., PIE1 [41] and PIE2 [42],
+which are generated by randomly sampling the face
+images from the near-frontal poses (C27) under different lighting and illumination conditions. We construct
+one dataset PIE1 vs PIE2 by selecting all 2,856 images
+in PIE1 to form the source domain, and all 3,329
+images in PIE2 to form the target domain. We switch
+source/target pair to get another dataset PIE2 vs PIE1.
+3.
+4.
+5.
+6.
+
+http://www-i6.informatik.rwth-aachen.de/∼keysers/usps.html
+http://yann.lecun.com/exdb/mnist
+http://vasc.ri.cmu.edu/idb/html/face
+http://www.cad.zju.edu.cn/home/dengcai/Data/FaceData.html
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+Fig. 2. Benchmark image datasets PIE, USPS, MNIST.
+TABLE 4
+Statistics of the 4 benchmark image datasets.
+Dataset
+USPS
+MNIST
+PIE1
+PIE2
+
+Type
+Digit
+Digit
+Face
+Face
+
+#Examples
+1,800
+2,000
+2,856
+3,329
+
+#Features
+256
+256
+1,024
+1,024
+
+#Classes
+10
+10
+68
+68
+
+Thus the source and target domains are guaranteed
+to follow different distributions in the same feature
+space, due to variations in lighting and illumination.
+5.2
+
+Experimental Setup
+
+5.2.1 Baseline Methods
+We compare ARTL approaches, i.e., ARSVM and ARRLS, with eight state-of-the-art supervised and transfer learning methods for text and image classiﬁcation:
+• Logistic Regression (LR)
+• Support Vector Machine (SVM)
+• Laplacian SVM (LapSVM) [22]
+• Cross-Domain Spectral Classiﬁcation (CDSC) [26]
+• Spectral Feature Alignment (SFA) [5]
+• Transfer Component Analysis (TCA) [10]
+• Large Margin Transductive TL (LMTTL) [15]
+• Semi-Supervised Kernel Matching (SSKM) [21]
+Speciﬁcally, LMTTL is a special case of ARTL with γ =
+0, C = 0, while SSKM can be viewed as a special case
+of ARTL with C = 0. SSKM adopts a kernel matching
+strategy which needs an additional mapping matrix to
+match different kernels. Different from SSKM, ARTL
+seamlessly integrates the distribution adaptation term
+into the classiﬁer based on the regularization theory.
+Note that we do not compare with [30] because their
+work cannot cope with thousands of training samples.
+5.2.2 Implementation Details
+Following [1], [10], [21], LR and SVM are trained on
+the labeled source data, and tested on the unlabeled
+target data; CDSC, SFA, and TCA are run on all data
+as dimensionality reduction step, then an LR classiﬁer
+is trained on the labeled source data to classify the unlabeled target data; LapSVM, LMTTL, SSKM, ARSVM,
+and ARRLS are trained on all data in a transductive
+way to directly induce domain-adaptive classiﬁers.
+Under our experimental setup, it is impossible to
+automatically tune the optimal parameters for the
+target classiﬁer using cross validation, since we have
+no labeled data in the target domain. Therefore, we
+evaluate the eight baseline methods on our datasets
+
+9
+
+by empirically searching the parameter space for the
+optimal parameter settings, and report the best results
+of each method. For LR7 and SVM8 , we set the tradeoff parameter C (i.e., 1/2σ in ARTL) by searching C ∈
+{0.1, 0.5, 1, 5, 10, 50, 100}. For LapSVM9 , we set regularization parameters γA and γI (i.e., σ and γ in ARTL)
+by searching γA , γI ∈ {0.01, 0.05, 0.1, 0.5, 1, 5, 10}. For
+transfer subspace learning methods CDSC, SFA, and
+TCA, we set the optimal subspace dimension k by
+searching k ∈ {4, 8, 16, 32, 64, 128}. For transfer classiﬁer induction methods LMTTL and SSKM, we set
+the trade-off parameter λ between the structural risk
+functional and the distribution adaptation term by
+searching λ ∈ {0.01, 0.1, 1, 10, 100}. We use linear kernel, i.e., K(xi , xj ) = xi , xj , for all kernel methods.
+ARTL approaches involve four tunable parameters:
+shrinkage/MMD/manifold regularization parameters
+σ, λ, γ, and #nearest neighbors p. Sensitivity analysis
+validates that ARTL can achieve stable performance
+under a wide range of parameter values, especially for
+σ, λ, and p. In the comparative study, we ﬁx σ = 0.1,
+λ = 10, p = 10, and set 1) γ = 10 for the text datasets,
+and 2) γ = 1 for the image datasets. In practice, we
+can simplify model selection by sequentially choosing
+optimal parameter values from the most stable ones to
+the most sensitive ones. Firstly, since the adaptation
+regularization can largely control model complexity,
+ARTL is very robust to σ, and we can simply choose small σ such that ARTL does not degenerate. Secondly,
+since distribution adaptation is inevitable for transfer
+learning, we choose λ such that ARTL can sufﬁciently
+match both the marginal and conditional distributions
+across domains. Finally, we can choose γ by following
+the graph-based semi-supervised learning framework
+[22], where p is often predetermined as KNN methods.
+We use the classiﬁcation Accuracy on the test data
+(unlabeled target data) as the evaluation metric, since
+it is widely adopted in the literature [30], [5], [10], [17]
+Accuracy =
+
+|x : x ∈ Dt ∧ f (x) = y (x)|
+|x : x ∈ Dt |
+
+where y(x) is the groundtruth label of x while f (x)
+is the label predicted by the classiﬁcation algorithm.
+5.3 Experimental Results
+In this section, we compare our ARTL with the eight
+baseline methods in terms of classiﬁcation accuracy.
+5.3.1 Results of Text Classiﬁcation
+As 20-Newsgroups and Reuters-21578 are different in
+hierarchical structure, we report the results separately.
+20-Newsgroups: The average classiﬁcation accuracy
+of ARTL approaches, including ARSVM and ARRLS,
+and the eight baseline methods on the 6 cross-domain
+7. http://www.csie.ntu.edu.tw/∼cjlin/liblinear
+8. http://www.csie.ntu.edu.tw/∼cjlin/libsvm
+9. http://vikas.sindhwani.org/manifoldregularization.html
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+10
+
+TABLE 5
+Average classiﬁcation accuracy (%) on the 6 cross-domain text dataset groups comprising of 216 datasets.
+Dataset
+Group
+comp vs rec
+comp vs sci
+comp vs talk
+rec vs sci
+rec vs talk
+sci vs talk
+Average
+
+LR
+88.37
+77.87
+96.31
+75.28
+82.28
+76.99
+82.85
+
+Standard Learning
+SVM
+LapSVM
+87.51
+81.93
+75.38
+68.96
+95.44
+95.40
+73.82
+74.21
+83.27
+87.44
+76.85
+80.22
+82.05
+81.36
+
+LR
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARRLS
+
+70
+60
+
+5
+
+10
+
+15
+20
+25
+Dataset Index
+
+30
+
+95
+
+80
+
+LR
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARRLS
+
+70
+60
+50
+
+35
+
+5
+
+(a) comp vs rec
+
+10
+
+15
+20
+Dataset Index
+
+25
+
+30
+
+Accuracy (%)
+
+Accuracy (%)
+
+Accuracy (%)
+
+80
+
+85
+
+80
+
+35
+
+90
+
+LR
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARRLS
+
+70
+60
+
+15
+20
+Dataset Index
+
+(d) rec vs sci
+
+25
+
+30
+
+35
+
+80
+
+LR
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARRLS
+
+70
+60
+50
+
+5
+
+10
+
+15
+20
+Dataset Index
+
+(e) rec vs talk
+
+25
+
+30
+
+35
+
+Accuracy (%)
+
+90
+Accuracy (%)
+
+90
+80
+
+10
+
+15
+20
+Dataset Index
+
+25
+
+30
+
+35
+
+(c) comp vs talk
+100
+
+10
+
+5
+
+(b) comp vs sci
+100
+
+5
+
+LR
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARRLS
+
+90
+
+100
+
+50
+
+Transfer Classiﬁer Induction
+SSKM
+ARSVM
+ARRLS
+96.06
+95.10
+96.64
+84.15
+84.53
+86.71
+97.40
+97.53
+98.03
+85.71
+87.19
+91.02
+90.15
+95.99
+96.82
+74.74
+89.03
+91.11
+88.03
+91.56
+93.40
+
+100
+
+90
+
+90
+
+Accuracy (%)
+
+LMTTL
+92.15
+77.58
+94.93
+78.24
+84.55
+74.80
+83.71
+
+100
+
+100
+
+50
+
+Transfer Subspace Learning
+CDSC
+SFA
+TCA
+87.95
+89.73
+95.12
+75.72
+78.07
+77.32
+97.33
+95.85
+97.20
+77.53
+79.25
+82.31
+82.14
+86.98
+86.58
+80.97
+79.27
+79.30
+83.62
+84.86
+86.31
+
+80
+
+LR
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARRLS
+
+70
+60
+50
+
+5
+
+10
+
+15
+20
+Dataset Index
+
+25
+
+30
+
+35
+
+(f) sci vs talk
+
+Fig. 3. Classiﬁcation accuracy of LR, CDSC, SFA, TCA, LMTTL, SSKM, and ARRLS on the 216 text datasets.
+dataset groups (216 datasets) are illustrated in Table 5.
+All the detailed results of the 6 dataset groups are
+listed in Figures 3(a)∼3(f). Each of these six ﬁgures
+contains the results on the 36 datasets in the corresponding group. The 36 datasets are sorted by an increasing order of the classiﬁcation accuracy obtained
+by Logistic Regression (LR). Therefore, the x-axis in
+each ﬁgure can essentially indicate the degree of
+difﬁculty in cross-domain knowledge transfer. From
+these ﬁgures, we can make the following observations.
+ARTL approaches achieve much better performance
+than the eight baseline methods with statistical signiﬁcance. The average classiﬁcation accuracy of ARRLS on the 216 datasets is 93.40%. The performance
+improvement is 5.37% compared to the best baseline
+method SSKM, which means a very signiﬁcant error
+reduction of 44.86%. Since these results are obtained
+from a large number of datasets, it can convincingly
+verify that ARTL can build robust adaptive classiﬁers
+for classifying cross-domain documents accurately.
+Secondly, we observe that all the transfer learning
+methods can achieve better classiﬁcation accuracy
+than the standard learning methods. A major limitation of existing standard learning methods is that they
+treat the data from different domains as if they were
+drawn from a homogenous distribution. In reality, the
+
+identical-distribution assumption does not hold in the
+cross-domain learning problems, and thus results in
+their unsatisfactory performance. It is important to
+notice that, the state-of-the-art semi-supervised learning method LapSVM cannot perform better than LR
+and SVM. Although LapSVM can explore the target
+data in a transductive way, it does not minimize the
+distribution difference between domains. Therefore, it
+may overﬁt the target data when the discriminative
+directions are signiﬁcantly different between domains.
+Thirdly, we notice that ARTL signiﬁcantly outperforms CDSC, SFA, and TCA, which are state-of-the-art
+transfer subspace learning methods based on feature
+transformation. A major limitation of existing transfer
+subspace learning methods is that they are prone to
+overﬁtting, due to their incapability to simultaneously
+reduce the difference in both marginal and conditional
+distributions between domains. Although SFA works
+particularly well for sentiment classiﬁcation, it works
+fairly for text classiﬁcation, and the reason is that SFA
+only explores feature co-occurrence for feature alignment without considering feature frequency, which
+is effective for low-frequency sentiment data but not
+effective for high-frequency text data. ARTL addresses
+these limitations and can achieve much better results.
+Fourthly, we observe that ARTL achieves much bet-
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+90
+
+100
+LR
+LapSVM
+CDSC
+SFA
+TCA
+LMTTL
+SSKM
+ARSVM
+ARRLS
+
+80
+70
+60
+50
+
+11
+
+orgs vs people
+
+orgs vs place
+Dataset
+
+people vs place
+
+(a) Reuters-21578
+
+LR
+
+SVM
+
+CDSC
+
+TCA
+
+LMTTL
+
+SSKM
+
+ARRLS
+
+ARRLS+
+
+80
+60
+40
+20
+
+USPS vs MNIST
+
+MNIST vs USPS
+
+PIE1 vs PIE2
+
+PIE2 vs PIE1
+
+Dataset
+
+(b) Image Datasets
+
+Fig. 4. Classiﬁcation accuracy of LR, SVM, LapSVM, CDSC, TCA, LMTTL, SSKM, ARSVM, ARRLS, ARRLS+.
+ter performance than LMTTL and SSKM. Notice that,
+LMTTL and SSKM are typical transfer classiﬁer induction methods, which can induce a supervised/semisupervised classiﬁer and meanwhile minimize the distribution difference between domains. However, since
+the difference between the conditional distributions is
+not minimized, while the regularization terms are not
+imposed to the classiﬁer, it is likely that these methods
+cannot fully reduce the distribution difference and
+may get stuck in poor local optima. ARTL achieves
+superior performance by alleviating these limitations.
+Lastly, ARTL approaches often perform more robustly on difﬁcult-to-classify datasets than all baseline
+methods. This can be observed from Figures 3(a)∼3(f),
+where the improvements of ARTL over the baseline
+methods are more remarkable on datasets in which LR
+performs with extremely low accuracy (below 70%).
+Reuters-21578: The classiﬁcation accuracy of ARTL
+and the baseline methods on the 3 datasets generated
+from Reuters-21578 are illustrated in Figure 4(a). We
+observe that ARTL has outperformed, or achieved
+comparable performance than the baseline methods.
+We notice that, Reuters-21578 is more challenging
+than 20-Newsgroups, since each of its top categories
+consists of many subcategories, i.e., clusters or subclasses. Therefore, it is more difﬁcult to minimize the
+distribution difference by only matching the sample
+means between domains. This reason can explain the
+unsatisfactory performance obtained by distribution
+adaptation methods, i.e., TCA, LMTTL, and SSKM.
+By minimizing the distribution difference between
+both marginal and conditional distributions, ARTL
+can naturally match more statistical properties, i.e.,
+both domain centroids and class centroids. Also, by
+maximizing the manifold consistency, ARTL can fully
+explore the marginal distributions, which can implicitly “rotate” the decision hyperplane to better respect
+the target data. In this way, ARTL can perform better
+on difﬁcult datasets with many classes or subclasses.
+5.3.2 Results of Image Recognition
+The average classiﬁcation accuracy of ARTL and the
+six baseline methods on the four image datasets is
+illustrated in Figure 4(b). SFA is not compared since it
+cannot handle non-sparse image data, while LapSVM
+and ARSVM are not compared since their original implementations cannot deal with multi-class problems.
+
+We notice that, the transfer subspace learning methods, e.g., CDSC, generally outperform standard LR
+and SVM. This is an expected result, since subspace
+learning methods, e.g., PCA, are very effective for image representation. Unfortunately, TCA has generally
+underperformed CDSC at this time. The main reasons
+are two-folds: 1) the MMD distance measure is not
+very suitable for image data, as exempliﬁed by [12];
+2) the distribution difference is signiﬁcantly large in
+the image datasets, resulting in the overﬁtting issues.
+We also notice that, the transfer classiﬁer induction
+methods, i.e., LMTTL and SSKM, outperform CDSC
+in the face datasets but underperform CDSC in the
+handwritten digits datasets. We conjecture the reasons
+as follows: 1) for the face datasets, there are 68 classes,
+thus transfer classiﬁer induction methods which directly inject the labeled information into the learning
+procedure, are more effective; 2) for the handwritten
+digits datasets, data reconstruction may be a more important process to reduce the distribution difference.
+In conclusion, ARTL generally outperforms all baseline methods. Therefore, we can often harvest a robust adaptive classiﬁer, by minimizing the difference
+between both marginal and conditional distributions,
+and meanwhile preserving the manifold consistency.
+5.4 Effectiveness Veriﬁcation
+We verify effectiveness of ARTL by inspecting the impacts of base classiﬁer and adaptation regularization.
+5.4.1 Base Classiﬁer Integration
+ARTL utilizes some base classiﬁer, e.g., SVM, to obtain
+the pseudo labels for the target data, through which
+the difference between the conditional distributions is
+minimized. Unsurprisingly, if we use some adaptive
+classiﬁer, e.g., ARRLS, to obtain more accurate pseudo
+labels for the target data, then we can match the conditional distributions more accurately and further boost
+the classiﬁcation accuracy. It is very interesting that
+ARTL can accept its outputs as inputs to iteratively
+improve itself. We denote this alternatingly enhanced
+version of ARRLS as ARRLS+. We run ARRLS+ on the
+image datasets, and show its classiﬁcation accuracy in
+Figure 4(b). Similar results on other datasets are omitted due to space limitation. We note that ARRLS+ has
+signiﬁcantly outperformed ARRLS by 10.60%, which
+veriﬁes ARTL can naturally integrate base classiﬁers.
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+α
+
+Kα
+1.5
+
+1.5
+
+α
+
+Kα
+1.5
+
+1.5
+
+α
+
+Kα
+1.5
+
+12
+
+1.5
+
+1.5
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+0.5
+
+0.5
+
+0.5
+
+0.5
+
+0.5
+
+0.5
+
+0.5
+
+0.5
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+−0.5
+
+−0.5
+
+−0.5
+
+−0.5
+
+−0.5
+
+−0.5
+
+−0.5
+
+−0.5
+
+−1
+
+−1
+
+−1
+
+−1
+
+−1
+
+−1
+
+−1
+
+−1
+
+−1.5
+
+−1.5
+
+−1.5
+
+−1.5
+
+−1.5
+
+−1.5
+
+−1.5
+
+−1.5
+
+0
+
+2000 4000 6000 8000
+
+0
+
+20
+
+40
+
+(a) C = 0
+
+0
+
+2000 4000 6000 8000
+
+0
+
+20
+
+40
+
+0
+
+2000 4000 6000 8000
+
+(b) λ = 0
+
+0
+
+20
+
+α
+
+Kα
+1.5
+
+40
+
+(c) γ = 0
+
+0
+
+2000 4000 6000 8000
+
+0
+
+20
+
+40
+
+(d) optimal parameters
+
+Fig. 5. Classiﬁcation predictions Kα and classiﬁer parameters α output by ARRLS on the rec vs sci 1 dataset.
+5.4.2 Adaptation Regularization
+To inspect the effectiveness of each criterion, we run
+ARRLS on a randomly selected dataset, e.g., rec vs sci
+1, by removing one term from its objective function.
+First, we remove the conditional distribution adaptation term by setting C = 0 as in Figure 5(a). In this
+case, we cannot even ﬁnd a clear decision hyperplane
+for the target data, i.e., the target data are not well
+separated at all. This veriﬁes the crucial role that the
+conditional distribution adaptation has played. Similar results can be observed from Figure 5(b), in which
+we remove the whole distribution adaptation term by
+setting λ = 0. The similar results between C = 0 and
+λ = 0 implies that minimizing the difference between
+the conditional distributions is much more important
+than that of the marginal distributions. With conditional distribution adaptation, we can make the intraclass centroids close and the inter-class centroids more
+separable, as can be clearly observed from Figure 5(d).
+Secondly, we remove the manifold regularization
+term by setting γ = 0 as in Figure 5(c). In this case,
+the predictions are scattering in a wider range than the
+groundtruth [−1, 1]. In other words, the manifold consistency underlying the target data is violated, regardless that the target data are better separated due to
+the distribution adaptation of both the marginal and
+conditional distributions. Therefore, to induce a good
+adaptive classiﬁer using the ARTL framework, it is
+very important to preserve the manifold consistency.
+The importance of the manifold regularization can be
+observed by comparing Figure 5(c) with Figure 5(d).
+
+TABLE 6
+Time complexity of ARTL and the baseline methods.
+Method
+LR
+LapSVM
+SFA
+LMTTL
+ARSVM
+
+Running Time (s)
+0.05
+44.20
+20.82
+604.69
+730.09
+
+Method
+SVM
+CDSC
+TCA
+SSKM
+ARRLS
+
+Running Time (s)
+6.79
+25.37
+1794.90
+191.32
+48.94
+
+different values of p in Figure 6(a), which indicates
+a wide range p ∈ [4, 64] for optimal parameter values.
+Shrinkage Regularization σ: We run ARTL with
+varying values of σ. Theoretically, σ controls model
+complexity of the adaptive classiﬁer. When σ → 0,
+the classiﬁer degenerates and overﬁtting occurs. On
+the contrary, when σ → ∞, ARTL is dominated by
+the shrinkage regularization without ﬁtting the input
+data. We plot the classiﬁcation accuracy w.r.t. different
+values of σ in Figure 6(b), and choose σ ∈ [0.001, 1].
+MMD Regularization λ: We run ARTL with varying values of λ. Theoretically, larger values of λ make
+distribution adaptation more effective. When λ → 0,
+distribution difference is not reduced and overﬁtting
+occurs. We plot classiﬁcation accuracy w.r.t. different
+values of λ in Figure 6(c), and can choose λ ∈ [5, 1000].
+Manifold Regularization γ: We run ARTL with
+varying values of γ. Theoretically, larger values of γ
+make manifold consistency more important in ARTL.
+When γ → ∞, only manifold consistency is preserved
+while labeled information is discarded, which is unsupervised. We plot classiﬁcation accuracy w.r.t. different values of γ in Figure 6(d), and choose γ ∈ [0.1, 10].
+
+5.5 Parameter Sensitivity
+We conduct empirical parameter sensitivity analysis,
+which validates that ARTL can achieve optimal performance under wide range of parameter values. Due
+to space limitation, we randomly select one generated
+dataset from 20-Newsgroups, Reuters-21578, USPS &
+MNIST, and PIE respectively, and discuss the results.
+#Nearest Neighbors p: We run ARTL with varying
+values of p. Theoretically, p should be neither too
+large nor too small, since an extremely dense graph
+(p → ∞) will connect two examples which are not
+similar at all, while an extremely sparse graph (p → 0)
+will capture limited similarity information between
+examples. We plot the classiﬁcation accuracy w.r.t.
+
+5.6 Time Complexity
+We empirically check the time complexity of all algorithms by running them on the comp vs rec 1 dataset
+with 25,800 features and 8,000 documents, and show
+the results in Table 6. We see that ARRLS can achieve
+comparable time complexity as the baseline methods.
+
+6
+
+C ONCLUSION
+
+In this paper, we proposed a general framework, referred to as Adaptation Regularization based Transfer
+Learning (ARTL), to address cross-domain learning
+problems. ARTL aims to simultaneously optimize the
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+13
+
+100
+
+100
+
+90
+
+90
+
+90
+
+80
+
+80
+
+80
+
+80
+
+70
+60
+50
+
+30
+
+2
+
+4
+
+8
+
+16
+p
+
+32
+
+60
+50
+
+rec vs sci 1
+org vs place
+MNIST vs USPS
+PIE2 vs PIE1
+
+40
+
+70
+
+40
+64
+
+inf
+
+(a) #nearest neighbors p
+
+30
+0.001 0.005 0.01 0.05
+
+0.5
+
+1
+
+70
+60
+50
+
+rec vs sci 1
+org vs place
+MNIST vs USPS
+PIE2 vs PIE1
+0.1
+σ
+
+Accuracy (%)
+
+100
+
+90
+
+Accuracy (%)
+
+100
+
+Accuracy (%)
+
+Accuracy (%)
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+5
+
+10
+
+(b) shrinkage regularization σ
+
+30
+0.1
+
+0.5
+
+1
+
+5
+
+10
+λ
+
+50
+
+100
+
+60
+50
+
+rec vs sci 1
+org vs place
+MNIST vs USPS
+PIE2 vs PIE1
+
+40
+
+70
+
+rec vs sci 1
+org vs place
+MNIST vs USPS
+PIE2 vs PIE1
+
+40
+500 1000
+
+(c) MMD regularization λ
+
+30
+0.01 0.05
+
+0.1
+
+0.5
+
+1
+γ
+
+5
+
+10
+
+50
+
+100
+
+(d) manifold regularization γ
+
+Fig. 6. Parameter sensitivity study for ARTL on selected datasets (dashed lines show the best baseline results).
+structural risk functional, joint distribution adaptation
+of both the marginal and conditional distributions,
+and the manifold consistency. An important advantage of ARTL is that it can explore as many necessary
+learning objectives as possible, yet still remain simple
+to implement practically. Furthermore, many existing
+supervised learning algorithms, e.g., RLS and SVM,
+can be readily incorporated into the ARTL framework.
+ARTL is robust to the distribution difference between
+domains, and can signiﬁcantly improve cross-domain
+text/image classiﬁcation problems. Extensive experiments on 219 text datasets and 4 image datasets validate that the proposed approach can achieve superior
+performance than state-of-the-art adaptation methods.
+
+ACKNOWLEDGMENTS
+This work is supported by National HGJ Key Project
+(2010ZX01042-002-002), National High-Tech Development Program (2012AA040911), National Basic Research Program (2009CB320700), and National Natural Science Foundation of China (61073005, 61271394).
+Philip S. Yu is supported in part by US NSF through
+grants OISE-1129076, CNS-1115234, DBI-0960443, and
+US Department of Army through grant W911NF-121-0066.
+
+R EFERENCES
+[1]
+[2]
+
+[3]
+[4]
+
+[5]
+
+[6]
+
+S. J. Pan and Q. Yang, “A survey on transfer learning,” IEEE
+Transactions on Knowledge and Data Engineering, vol. 22, pp.
+1345–1359, 2010.
+F. Zhuang, P. Luo, Z. Shen, Q. He, Y. Xiong, Z. Shi, and H. Xiong, “Mining distinction and commonality across multiple
+domains using generative model for text classiﬁcation,” IEEE
+Transactions on Knowledge and Data Engineering, vol. 24, no. 11,
+2011.
+M. Long, J. Wang, G. Ding, D. Shen, and Q. Yang, “Transfer
+learning with graph co-regularization,” in Proceedings of the
+26th AAAI Conference on Artiﬁcial Intelligence, ser. AAAI, 2012.
+J. Blitzer, R. McDonald, and F. Pereira, “Domain adaptation
+with structural correspondence learning,” in Proceedings of
+the 2006 Conference on Empirical Methods in Natural Language
+Processing, ser. EMNLP, 2006.
+S. J. Pan, X. Ni, J.-T. Sun, Q. Yang, and Z. Chen, “Cross-domain
+sentiment classiﬁcation via spectral feature alignment,” in
+Proceedings of the 19th International Conference on World Wide
+Web, ser. WWW, 2010.
+Y. Zhu, Y. Chen, Z. Lu, S. J. Pan, G.-R. Xue, Y. Yu, and Q. Yang,
+“Heterogeneous transfer learning for image classiﬁcation,” in
+Proceedings of the 25th AAAI Conference on Artiﬁcial Intelligence,
+ser. AAAI, 2011.
+
+[7]
+
+[8]
+[9]
+
+[10]
+[11]
+[12]
+[13]
+[14]
+[15]
+[16]
+[17]
+[18]
+
+[19]
+
+[20]
+
+[21]
+[22]
+
+[23]
+[24]
+
+M. Rohrbach, M. Stark, G. Szarvas, I. Gurevych, and B. Schiele,
+“What helps where – and why? semantic relatedness for
+knowledge transfer,” in Proceedings of the 23rd IEEE Conference
+on Computer Vision and Pattern Recognition, ser. CVPR, 2010.
+L. Li, K. Zhou, G.-R. Xue, H. Zha, and Y. Yu, “Video summarization via transferrable structured learning,” in Proceedings
+of International Conference on World Wide Web, ser. WWW, 2011.
+B. Li, Q. Yang, and X. Xue, “Transfer learning for collaborative
+ﬁltering via a rating-matrix generative model,” in Proceedings
+of the 26th International Conference on Machine Learning, ser.
+ICML, 2009.
+S. J. Pan, I. W. Tsang, J. T. Kwok, and Q. Yang, “Domain
+adaptation via transfer component analysis,” IEEE Transactions
+on Neural Networks, vol. 22, no. 2, pp. 199–210, 2011.
+S. J. Pan, J. T. Kwok, and Q. Yang, “Transfer learning via
+dimensionality reduction,” in Proceedings of the 22nd AAAI
+Conference on Artiﬁcial Intelligence, ser. AAAI, 2008.
+S. Si, D. Tao, and B. Geng, “Bregman divergence-based regularization for transfer subspace learning,” IEEE Transactions on
+Knowledge and Data Engineering, vol. 22, no. 7, 2010.
+A. Gretton, K. M. Borgwardt, M. J. Rasch, B. Scholkopf, and
+A. J. Smola, “A kernel method for the two-sample problem,”
+in Neural Information Processing Systems, ser. NIPS, 2006.
+J. Yang, R. Yan, and A. G. Hauptmann, “Cross-domain video
+concept detection using adaptive svms,” in Proceedings of the
+15th international conference on Multimedia, ser. ACM MM, 2007.
+B. Quanz and J. Huan, “Large margin transductive transfer
+learning,” in Proceedings of the 18th ACM conference on Information and knowledge management, ser. CIKM, 2009.
+J. Tao, F.-L. Chung, and S. Wang, “On minimum distribution
+discrepancy support vector machine for domain adaptation,”
+Pattern Recognition, vol. 45, no. 11, 2012.
+L. Duan, I. W. Tsang, and D. Xu, “Domain transfer multiple
+kernel learning,” IEEE Transactions on Pattern Analysis and
+Machine Intelligence, vol. 34, no. 3, pp. 465–479, 2012.
+E. Zhong, W. Fan, J. Peng, K. Zhang, J. Ren, D. Turaga,
+and O. Verscheure, “Cross domain distribution adaptation via
+kernel mapping,” in Proceedings of the 15th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining,
+ser. KDD, 2009.
+L. Bruzzone and M. Marconcini, “Domain adaptation problems: A dasvm classiﬁcation technique and a circular validation strategy,” IEEE Transactions on Pattern Analysis and
+Machine Intelligence, vol. 32, no. 5, 2010.
+M. T. Bahadori, Y. Liu, and D. Zhang, “Learning with minimum supervision: A general framework for transductive
+transfer learning,” in Proceedings of the 11th IEEE International
+Conference on Data Mining, ser. ICDM, 2011.
+M. Xiao and Y. Guo, “Semi-supervised kernel matching for
+domain adaptation,” in Proceedings of the 26th AAAI Conference
+on Artiﬁcial Intelligence, ser. AAAI, 2012.
+M. Belkin, P. Niyogi, and V. Sindhwani, “Manifold regularization: A geometric framework for learning from labeled
+and unlabeled examples,” Journal of Machine Learning Research,
+vol. 7, pp. 2399–2434, 2006.
+W. Dai, Q. Yang, G.-R. Xue, and Y. Yu, “Boosting for transfer
+learning,” in Proceedings of the 24th International Conference on
+Machine Learning, ser. ICML, 2007.
+J. Jiang and C. Zhai, “Instance weighting for domain adap-
+
+This article has been accepted for publication in a future issue of this journal, but has not been fully edited. Content may change prior to final publication.
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. 99, NO. PREPRINTS, 20XX
+
+[25]
+
+[26]
+
+[27]
+[28]
+
+[29]
+[30]
+
+[31]
+[32]
+[33]
+[34]
+[35]
+[36]
+
+[37]
+[38]
+[39]
+[40]
+
+[41]
+
+[42]
+
+tation in nlp,” in Proceedings of the 45th Annual Meeting of the
+Association of Computational Linguistics, ser. ACL, 2007.
+W. Dai, G.-R. Xue, Q. Yang, and Y. Yu, “Co-clustering based
+classiﬁcation for out-of-domain documents,” in Proceedings of
+the 13th ACM SIGKDD International Conference on Knowledge
+Discovery and Data Mining, ser. KDD, 2007.
+X. Ling, W. Dai, G.-R. Xue, Q. Yang, and Y. Yu, “Spectral
+domain-transfer learning,” in Proceedings of the 14th ACM
+SIGKDD International Conference on Knowledge Discovery and
+Data Mining, ser. KDD, 2008.
+C. Wang and S. Mahadevan, “Heterogeneous domain adaptation using manifold alignment,” in Proceedings of the 25th AAAI
+Conference on Artiﬁcial Intelligence, ser. AAAI, 2011.
+X. Shi, Q. Liu, W. Fan, and P. S. Yu, “Transfer across completely different feature spaces via spectral embedding,” IEEE
+Transactions on Knowledge and Data Engineering, vol. 25, no. 4,
+2012.
+B. Quanz, J. Huan, and M. Mishra, “Knowledge transfer with
+low-quality data: A feature extraction issue,” IEEE Transactions
+on Knowledge and Data Engineering, vol. 24, no. 10, 2012.
+B. Chen, W. Lam, I. Tsang, and T.-L. Wong, “Extracting discriminative concepts for domain adaptation in text mining,”
+in Proceedings of the 15th ACM SIGKDD International Conference
+on Knowledge Discovery and Data Mining, ser. KDD, 2009.
+H. Daumé III, A. Kumar, and A. Saha, “Co-regularization
+based semi-supervised domain adaptation,” in Advances in
+Neural Information Processing Systems, ser. NIPS, 2010.
+A. Argyriou and T. Evgeniou, “Multi-task feature learning,”
+in Neural Information Processing Systems, ser. NIPS, 2006.
+Q. Liu, X. Liao, and L. Carin, “Semi-supervised multitask
+learning,” in Advances in Neural Information Processing Systems,
+ser. NIPS, 2007.
+V. Vapnik, Statistical Learning Theory. John Wiley, 1998.
+B. Schölkopf, R. Herbrich, and A. J. Smola, “A generalized representer theorem,” in Proceedings of the 14th Annual Conference
+on Computational Learning Theory, ser. COLT, 2001.
+C.-C. Chang and C.-J. Lin, “LIBSVM: A library for support
+vector machines,” ACM Transactions on Intelligent Systems and
+Technology, vol. 2, 2011, software available at http://www.csie.
+ntu.edu.tw/∼cjlin/libsvm.
+M. Long, J. Wang, G. Ding, W. Cheng, X. Zhang, and W. Wang,
+“Dual transfer learning,” in Proceedings of the 12th SIAM International Conference on Data Mining, ser. SDM, 2012.
+S. Ben-David, J. Blitzer, K. Crammer, and F. Pereira, “Analysis
+of representations for domain adaptation,” in Advances in
+Neural Information Processing Systems, ser. NIPS, 2006.
+R. Johnson and T. Zhang, “Graph-based semi-supervised
+learning and spectral kernel design,” IEEE Transactions on
+Information Theory, 2008.
+J. Gao, W. Fan, J. Jiang, and J. Han, “Knowledge transfer
+via multiple model local structure mapping,” in Proceedings
+of the 14th ACM SIGKDD International Conference on Knowledge
+Discovery and Data Mining, ser. KDD, 2008.
+D. Cai, X. He, J. Han, and T. S. Huang, “Graph regularized nonnegative matrix factorization for data representation,”
+IEEE Transactions on Pattern Analysis and Machine Intelligence,
+vol. 33, no. 8, 2011.
+D. Cai, X. He, and J. Han, “Spectral regression: A uniﬁed
+approach for sparse subspace learning,” in Proceedings of the
+IEEE International Conference on Data Mining, ser. ICDM, 2007.
+
+Mingsheng Long received the BS degree in
+2008, from the Department of Electrical Engineering, Tsinghua University, China. He is
+a PhD candidate in the Department of Computer Science and Technology, Tsinghua University. His research interests are transfer
+learning, feature learning, large-scale data
+mining, and unstructured data management.
+
+14
+
+Jianmin Wang graduated from Peking University, China, in 1990, and received his M.E.
+and Ph.D. in computer software from Tsinghua University, China, in 1992 and 1995,
+respectively. He is now a professor at the
+School of Software, Tsinghua University. His
+research interests include unstructured data
+management, workﬂow and BPM technology,
+benchmark for database system, software
+watermarking, and mobile digital right management. He has published over 100 DBLP
+indexed papers in major journals (TKDE, DMKD, DKE, WWWJ, etc)
+and conferences (SIGMOD, VLDB, ICDE, CVPR, AAAI, etc). He led
+to develop a product data/lifecycle management system, which has
+been implemented in hundreds of enterprizes in China. He leads to
+develop an unstructured data management system named LaUDMS.
+
+Guiguang Ding received his Ph.D degree
+in electronic engineering from the University
+of Xidian. He is an associate professor at
+the School of Software, Tsinghua University.
+His current research centers on the area of
+multimedia information retrieval and mining,
+with speciﬁc focus on visual object recognition, automatic semantic annotation, image
+coding and representation, and social media
+recommendation. He has published about 40
+research papers in international conferences
+and journals and applied for 18 Patent Rights in China.
+
+Sinno Jialin Pan received the Ph.D. degree in computer science from the Hong
+Kong University of Science and Technology
+(HKUST). He is currently a head (acting) of
+the text analytics lab of the Data Analytics Department at the Institute for Infocomm
+Research (I2 R), Singapore. He also holds an
+adjunct position of assistant professor of the
+Department of Computer Science at National University of Singapore (NUS). His main
+research interests include transfer learning,
+active learning, semi-supervised learning and theirs applications in
+text mining, pervasive computing, medical engineering, and software
+engineering.
+
+Philip S. Yu received his Ph.D. degree in
+E.E. from Stanford University. He is a Distinguished Professor in Computer Science at
+the University of Illinois at Chicago and holds
+the Wexler Chair in Information Technology.
+Dr. Yu is a Fellow of the ACM and the IEEE.
+He is the Editor-in-Chief of ACM Transactions on Knowledge Discovery from Data. He
+was the Editor-in-Chief of IEEE Transactions
+on Knowledge and Data Engineering (20012004). He received a Research Contributions
+Award from IEEE International Conference on Data Mining (2003).
+
+

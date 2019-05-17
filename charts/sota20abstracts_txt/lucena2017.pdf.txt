@@ -1,0 +1,14 @@
+Transfer Learning Using Convolutional
+Neural Networks for Face Anti-spoofing
+
+ Face recognition systems are gaining momentum with current developments in computer vision. At the same time, tactics to
+mislead these systems are getting more complex, and counter-measure
+approaches are necessary. Following the current progress with convolutional neural networks (CNN) in classification tasks, we present an approach based on transfer learning using a pre-trained CNN model using
+only static features to recognize photo, video or mask attacks. We tested
+our approach on the REPLAY-ATTACK and 3DMAD public databases.
+On the REPLAY-ATTACK database our accuracy was 99.04% and the
+half total error rate (HTER) of 1.20%. For the 3DMAD, our accuracy
+was of 100.00% and HTER 0.00%. Our results are comparable to the
+state-of-the-art.
+Face anti-spoofing · Transfer learning · Deep learning · Face
+recognition

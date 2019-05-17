@@ -1,0 +1,18 @@
+RGB-D Object Recognition Using Deep Convolutional Neural Networks
+
+We address the problem of object recognition from
+RGB-D images using deep convolutional neural networks
+(CNNs). We advocate the use of 3D CNNs to fully exploit
+the 3D spatial information in depth images as well as the
+use of pretrained 2D CNNs to learn features from RGB-D
+images. There exists currently no large scale dataset available comprising depth information as compared to those
+for RGB data. Hence transfer learning from 2D source
+data is key to be able to train deep 3D CNNs. To this end,
+we propose a hybrid 2D/3D convolutional neural network
+that can be initialized with pretrained 2D CNNs and can
+then be trained over a relatively small RGB-D dataset. We
+conduct experiments on the Washington dataset involving
+RGB-D images of small household objects. Our experiments show that the features learnt from this hybrid structure, when fused with the features learnt from depth-only
+and RGB-only architectures, outperform the state of the art
+on RGB-D category recognition.
+

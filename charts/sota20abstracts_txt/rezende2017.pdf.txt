@@ -1,0 +1,17 @@
+Detecting Computer Generated Images with
+Deep Convolutional Neural Networks
+
+Computer graphics techniques for image generation are
+living an era where, day after day, the quality of produced content is
+impressing even the more skeptical viewer. Although it is a great advance
+for industries like games and movies, it can become a real problem when
+the application of such techniques is applied for the production of fake
+images. In this paper we propose a new approach for computer generated
+images detection using a deep convolutional neural network model based
+on ResNet-50 and transfer learning concepts. Unlike the state-of-theart approaches, the proposed method is able to classify images between
+computer generated or photo generated directly from the raw image data
+with no need for any pre-processing or hand-crafted feature extraction
+whatsoever. Experiments on a public dataset comprising 9700 images
+show an accuracy higher than 94%, which is comparable to the literature
+reported results, without the drawback of laborious and manual step of
+specialized features extraction and selection.

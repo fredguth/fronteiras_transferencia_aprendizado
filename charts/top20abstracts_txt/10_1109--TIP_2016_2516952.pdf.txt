@@ -1,0 +1,28 @@
+LSDT: Latent Sparse Domain Transfer Learning
+for Visual Adaptation
+
+We propose a novel reconstruction-based transfer
+learning method called latent sparse domain transfer (LSDT)
+for domain adaptation and visual categorization of heterogeneous data. For handling cross-domain distribution mismatch,
+we advocate reconstructing the target domain data with the
+combined source and target domain data points based on
+1 -norm sparse coding. Furthermore, we propose a joint learning
+model for simultaneous optimization of the sparse coding and
+the optimal subspace representation. In addition, we generalize
+the proposed LSDT model into a kernel-based linear/nonlinear
+basis transformation learning framework for tackling nonlinear subspace shifts in reproduced kernel Hilbert space. The
+proposed methods have three advantages: 1) the latent space
+and the reconstruction are jointly learned for pursuit of an
+optimal subspace transfer; 2) with the theory of sparse subspace
+clustering, a few valuable source and target data points are
+formulated to reconstruct the target data with noise (outliers)
+from source domain removed during domain adaptation, such
+that the robustness is guaranteed; and 3) a nonlinear projection
+of some latent space with kernel is easily generalized for dealing
+with highly nonlinear domain shift (e.g., face poses). Extensive
+experiments on several benchmark vision data sets demonstrate
+that the proposed approaches outperform other state-of-the-art
+representation-based domain adaptation methods.
+ Transfer learning, domain adaptation, visual
+categorization, heterogeneous data.
+

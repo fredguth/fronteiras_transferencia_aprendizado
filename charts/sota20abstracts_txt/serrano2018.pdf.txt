@@ -1,0 +1,25 @@
+Automated Detection of Hummingbirds
+in Images: A Deep Learning Approach
+
+The analysis of natural images has been the topic of research
+in uncountable articles in computer vision and pattern recognition (e.g.,
+natural images has been used as benchmarks for object recognition and
+image retrieval). However, despite the research progress in such ﬁeld,
+there is a gap in the analysis of certain type of natural images, for
+instance, those in the context of animal behavior. In fact, biologists perform the analysis of natural images manually without the aid of techniques that were supposedly developed for this purpose. In this context,
+this paper presents a study on automated methods for the analysis of
+natural images of hummingbirds with the goal to assist biologists in
+the study of animal behavior. The automated analysis of hummingbird
+behavior is challenging mainly because of (1) the speed at which these
+birds move and interact; (2) the unpredictability of their trajectories;
+and (3) its camouﬂage skills. We report a comparative study of two deep
+learning approaches for the detection of hummingbirds in their nest. Two
+variants of transfer learning from convolutional neural networks (CNNs)
+are evaluated in real imagery for hummingbird behavior analysis. Transfer learning is adopted because not enough images are available for training a CNN from scratch, besides, transfer learning is less time consuming.
+Experimental results are encouraging, as acceptable classiﬁcation performance is achieved with CNN-based features. Interestingly, a pretrained
+CNN without ﬁne tunning and a standard classiﬁer performed better in
+the considered data set.
+ Image classiﬁcation · Convolutional neural network
+Transfer learning · Animal behavior analysis · Hummingbird detection
+c Springer International Publishing AG, part of Springer Nature 2018
+

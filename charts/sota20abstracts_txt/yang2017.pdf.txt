@@ -1,0 +1,18 @@
+Fault Diagnosis Based on improved Deep Belief Network
+
+A fault diagnosis method based on improved Deep
+Belief Network is proposed. This paper proposed an network
+named Semi-DBN, which adapts an adaptive semi supervised
+method to train the RBM structure to improve the
+performance of DBN, replaces the Sigmoid activation function
+with Rectified Linear Units to improve the performance of the
+network, and combines the model with Transfer Learning to
+solve the problem of lack of data. It can get rid of the
+dependence of the traditional machine learning methods on the
+extraction of the sample characteristics, and effectively
+overcome the problem of gradient vanishing, local extremum
+and so on. The identification and generalization ability of the
+method is verified when we used it in the experiment of rolling
+bearing data.
+DBN RBM Semi-supervised Rectified Linear
+Units Transfer Learning

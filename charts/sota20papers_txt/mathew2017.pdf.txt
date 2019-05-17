@@ -1,0 +1,480 @@
+Available online at www.sciencedirect.com
+
+Available online at www.sciencedirect.com
+
+ScienceDirect
+Procedia
+Computer
+Science
+(2017)
+000–000
+Procedia
+Computer
+Science
+11500
+(2017)
+251–257
+
+www.elsevier.com/locate/procedia
+
+7th International Conference on Advances in Computing & Communications, ICACC-2017,
+22-24 August 2017, Cochin, India
+
+An Improved Transfer learning Approach for Intrusion Detection
+Alwyn Mathew*a , Jimson Mathewa , Mahesh Govindb , Asif Mooppanb
+a Department
+
+of Computer Science and Engineering ,IIT Patna-801103, India
+Technologies Pvt Ltd, Bangalore-560102, India
+
+b Vuelogix
+
+Abstract
+Its crucial for financial systems to have sound security measures in place. For security reasons customers are not allowed to wear
+a helmet while using ATM(Automated Teller Machine). An automated helmet detection using ATM surveillance camera feed can
+help improve security significantly. Recently deep convolutional neural network (DCNN) have shown state of the art accuracy
+in object detection and localization. In this work, a pretrained Google’s inception model have been used and have achieved an
+accuracy of 95.3% by training the model on a proprietary ATM surveillance dataset. Transferred information from inception model
+has been feed to multiple fully connected layers with drop outs to achieve better accuracy.
+c 2017 The Authors. Published by Elsevier B.V.
+
+Peer-review under responsibility of the scientific committee of the 7th International Conference on Advances in Computing &
+Communications.
+Keywords: Transfer learning; Image classification; Deep learning; Video surveillance; Intrusion detection
+
+1. Introduction
+Human brain effortlessly and instantly divides images into simple and complex shapes, discrete objects and regions
+of interest, and categorizes these entities according to their perceived significance and semantic context[1]. Brain
+makes instant decisions as to whether a shape is a circle, a corner or a straight line, and within milliseconds we
+make mental associations as to what type of objects this compilation of shapes describes, and whether those objects
+themselves are components of a larger, more abstract and perhaps more meaningful discrete object category (such as
+a man with a Helmet, a man without a Helmet), rather than just the sum of their parts. Furthermore, a judgment is
+made as to whether those objects are worthy of our focus and attention in the overall image presented before us; the
+man in this picture (see Fig. 1) clearly the object of interest in this picture is the user, whereas the cash machine and
+the poster are part of the background. It is often desirable for digital images to be treated by the computer in a similar
+∗
+
+Alwyn Mathew. Tel.: +91-9645239304.
+E-mail address: alwyn.pcs16@iitp.ac.in
+
+c 2017 The Authors. Published by Elsevier B.V.
+1877-0509 
+1877-0509 © 2017 The Authors. Published by Elsevier B.V.
+Peer-review under responsibility of the scientific committee of the 7th International Conference on Advances in Computing & Communications.
+Peer-review under responsibility of the scientific committee of the 7th International Conference on Advances in Computing &
+Communications
+10.1016/j.procs.2017.09.132
+
+252
+2
+
+Alwyn Mathew et al. / Procedia Computer Science 115 (2017) 251–257
+Alwyn Mathew et al. / Procedia Computer Science 00 (2017) 000–000
+
+manner. The process by which we try to classify a digital image into different categories is of particular interest to
+many application.
+
+Fig. 1: ATM surveillance image
+
+The accurate recognition of intrusion at a point in time is the most challenging problem for systems that provide
+location-based services. For a better understanding of the situation, consider a situation where a user walks around
+with a helmet inside an ATM, a helmet detection system can be employed to analyse the video stream from the
+camera in real-time and determine the current context, the user is at a point in time. This can be useful for identifying
+users those who violate the rules (intrusion detection) and appropriate warning can be given remotely. There has been
+continuous research in the field of image recognition due to the challenges. Recognition methods analyse information
+from digital images. Digital images are obtained through a camera or a video camera and they store information as
+intensity values at each pixel [17]. A recognition method contains a database of the objects or the class of objects to
+be recognised. Here a class is a type of objects sharing some common features, for example a same horse at different
+poses [6, 13] or different brands of motorbikes [15] . The database needs to be obtained by training or learning objects
+from input images, either real-time or offline. Here real-time learning takes much less processing time than offline
+ones. Processing time is the time taken from the start of learning to the end of adding image to the database.
+2. Related Work
+Deep learning and convolution neural network (CNN) have revolutionized the way researchers approach problems
+such as computer vision, speech recognition and natural language processing that were nearly impossible for computers to understand. Deep learning algorithm powered by computation advances and availability of very large dataset
+have recently been shown to exceed human performance in visual tasks.
+Two major barriers still prevail in deep learning. Firstly, computational requirement increased tremendously as
+models got deeper and huge amount of data are used to train these models. To overcome this hurdle, we went from
+CPU(Central Processing Unit) to parallel GPU(Graphics Processing Unit) computing which made training deep networks a breeze. Even though GPU price are dropping, high end GPUs capable of handling deeper models are costly.
+Secondly, while training and testing these data are pulled from the same feature space and same distribution where
+most machine learning methods works perfectly. But change in distribution makes the model fail and needs to be
+revamped for better results. Transfer learning enables us to transfer knowledge between task domains(see Fig. 2,3).
+Transfer learning permits us to use knowledge acquired from a pretrained model to a new task with minimum computation.
+Standard feedforward neural network was one of the most popular primitive building blocks in machine learning.
+The computation complexity of these model restricted researchers and industries to take advantage of it. Introduction
+of convolutional neural network made a breakthrough in performance and had more learning capabilities than traditional neural network. Very soon researches figured out stacking more convolutional neural layers can give better
+models.
+
+Alwyn Mathew et al. / Procedia Computer Science 115 (2017) 251–257
+Alwyn Mathew et al. / Procedia Computer Science 00 (2017) 000–000
+
+253
+3
+
+One of the most popular CNN deep learning initial step was taken by Y. LeCun et al. with LeNet5[10] model for
+handwritten character recognition. LeNet5 model is a pile of convolution layer with mix of normalization, max pooling and one or more fully connected layers resulting state of the art performance on MNIST, CIFAR and ImageNet.
+Much other iteration was built on this model by increasing the number and size of the layers. CNN[11] are made up of
+alternate convolution and pooling layers. Feature maps are generated by the linear convolutional filter tailed by a nonlinear activation. Different variation of same abstraction can be learned by individual linear filter. An overcomplete[9]
+set of filters can be used to cover the entire concept but it brings additional load to the subsequent layers[4].
+Maxout network[12] reduced the number of feature maps by maximum pooling over affine maps. Network in
+network[14] remodeled the traditional convolution layer by inserting micro network within it to assess more abstract
+feature for local patches. For increasing the depth of the network without increasing the computation complexity, they
+added extra 1x1 convolution layers to the network. Region CNN (RCNN)[2] splits the problem into sub problems and
+low level features for object location proposal and object identification in these locations are done by CNN classifier.
+VGGNet[18] bought a promising simple deep neural architecture with only 3x3 convolution and 2x2 pooling. But still
+it required lot of computation to generate its 160M parameters, whereas AlexNet[8] had only 3 times less parameters.
+3. Problem Formulation
+Few decades ago, if one needs to withdraw cash from a bank account he had to head to bank and be in queue for
+hours. ATM where introduced to overcome this barrier and have taken over the world, placing millions of machine
+around the world and still adding on a average of 280 new machines every day. Along with the convenience ATMs
+bought many security problems. As a part of this, surveillance cameras are fixed in each ATMs and are closely
+monitored by human. An automated surveillance can help improve the security tremendously. ATM visitors who have
+wore helmets makes it painful to identify the person if an abnormal activity happens, thus helmet detection in ATM
+were crucial. Deep convolution network with transfer learning was the best way to tackle this detection problem to
+achieve state of the art performance with minimum computational requirement.
+Tasks
+
+t1
+
+t2
+
+t3
+
+l1
+
+l2
+
+l3
+
+Learning systems
+
+Fig. 2: Traditional machine learning
+
+Source tasks
+
+t1
+
+t2
+
+Knowledge
+
+Target task
+
+t3
+
+Learning
+System
+
+Fig. 3: Transfer learning
+
+4. Proposed Methodology
+Deep convolution network are usually build up of convolutional modules consisting of several convolution layer and
+pooling layers. Repeating these modules to a depth has proven to be more powerful. Each unit in a layer corresponds
+to same region in the input images and these units unites together to form a set of filters. Layers closer to the input
+learns low level details like edges and layers closer to output learns high level abstractions. Google’s inception v3[21]
+model that was trained on 1.28 million images with 1000 classes from the ImageNet LSVRC 2014 is used in this
+work. The knowledge accumulated in this model was transfer and used on a proprietary ATM surveillance dataset of
+4719 images(see Fig. 4) with two classes.
+
+Alwyn Mathew et al. / Procedia Computer Science 115 (2017) 251–257
+
+254
+4
+
+Alwyn Mathew et al. / Procedia Computer Science 00 (2017) 000–000
+
+Fig. 4: Subset of image dataset used
+
+The naive inception[20] model consist of one 1x1, one 3x3, one 5x5 convolution and one 3x3 max pooling layers.
+These operations and combined by a filter concatenation operation and feed to the next layer(see Fig. 5).
+
+Previous layer
+Previous layer
+Previous layer
+
+1x1
+conv
+
+3x3
+conv
+
+5x5
+conv
+
+Filter concatenation
+
+Fig. 5: Naive inception module
+
+1x1
+conv
+3x3
+pool
+
+1x1
+conv
+
+1x1
+conv
+
+1x1
+conv
+
+3x3
+conv
+
+5x5
+conv
+
+3x3
+pool
+
+Filter concatenation
+Fig. 6: Inception module
+
+1x1
+conv
+
+1x1
+conv
+
+3x3
+pool
+
+1x1
+conv
+
+3x3
+conv
+
+3x3
+conv
+
+1x1
+conv
+
+1x1
+conv
+
+3x3
+conv
+Filter concatenation
+Fig. 7: 5x5 replaced by 3x3 convolution in
+Inception
+
+Even an adequate number of 5x5 convolution are computationally expensive in top layers, a serious dimensionality
+reduction was required. Thus 1x1 convolution were introduced before each 3x3 and 5x5 convolution(see Fig. 6).
+Inception model helps to keep down the computational complexity and in turn allows to increase the width as well
+as number of stages. This network architecture results 3-10x faster performance than non inception models. Still the
+original inception model was difficult to scale up, doubling the number of filter bank size induced computational loss.
+Larger convolutions like 5x5 and 7x7 can capture dependencies further away but these operations are too expensive in
+deep networks. With same number of filters 5x5 convolutions are 2.78 times more expensive than 3x3 convolutions.
+One way to capture more dependencies with minimum computation is replacing 5x5 convolution with a multilayer
+network with same input and output size(see Fig. 7). Network architecture was remapped by replacing 5x5 convolution
+with two 3x3 and 7x7 convolution by three 3x3 convolutions. A slightly improved iteration of this model referred as
+inception v3 model in which the fully connected layer of the auxiliary classifier is also batch normalized.
+Transfer values are generated after each images has been moved through 6 convolution layers, 1 pooling layer and
+10 inception modules. Patterns and relations learned in early levels by a deep neural network are similar irrespective
+of the dataset on which the network is trained. This property of deep neural network enables to use features extracted
+without recalculating it again in turn reducing the computational requirement extremely. Transfer value obtained are
+passed through multiple fully connected layers with pooling(see Table 1) which are trained with the ATM dataset.
+
+Alwyn Mathew et al. / Procedia Computer Science 115 (2017) 251–257
+
+255
+
+Alwyn Mathew et al. / Procedia Computer Science 00 (2017) 000–000
+
+5
+
+Table 1: Inception architecture used
+
+Type
+
+Patch size/stride
+
+Input size
+
+conv
+conv
+conv padded
+pool
+conv
+conv
+conv
+3xInception
+5xInception
+2xInception
+pool
+linear
+linear
+softmax
+
+3x3/2
+3x3/1
+3x3/1
+3x3/2
+3x3/1
+3x3/2
+3x3/1
+8x8
+logits
+logits
+classifier
+
+299x299x3
+Table 2: Model accuracy comparison
+149x149x32
+147x147x32
+147x147x64
+Network
+73x73x64
+71x71x80
+Inception transfer learning
+35x35x192
+Resnet 152[5]
+35x35x288
+VGG 16[16]
+17x17x768
+8x8x1024
+8x8x1024
+1x1x5024
+1x1x1024
+1x1x2
+
+Accuracy
+95.3
+93.8
+93.5
+
+5. Experimental Results & Discussion
+Transfer values are analyzed using PCA (Principal Component Analysis) and t-SNE (t-Distributed Stochastic
+Neighbor Embedding) to check whether the inception model has been able to extract useful information and separate the classes(see Fig. 8, 9).
+
+Fig. 8: PCA reduction
+
+Fig. 9: t-SNE reduction
+
+All models are build on Intel Xeon CPU clocked at 3.10GHz processor beside 8GB RAM system and each model
+is pretrained on ImageNet and transfer learning are used on all of them over the same proprietary ATM dataset under
+similar conditions. At each epoch training accuracy and testing accuracy of these models are checked with a randomly
+picked labeled image that doesn’t include in the current training or testing batch respectively. (see Fig. 10). Table
+2 shows the experimental results about the helmet recognition accuracy of transfer learned inception model with
+comparison to VGG-16[16] and Resnet 152[5]. Training deep neural networks on smaller dataset was challenging but
+it turns out to give better results in detection because of the huge number of features readily available that have been
+extracted from one of the biggest dataset, ImageNet. Network is trained using back propagation and used a learning
+rate of 0.0004 with Adam Optimizer[7]. We used Google’s Tensorflow deep learning framework to train, validate
+and test the network. The current model may have tank recognition problem[22] but effective risk on the result will
+
+Alwyn Mathew et al. / Procedia Computer Science 115 (2017) 251–257
+Alwyn Mathew et al. / Procedia Computer Science 00 (2017) 000–000
+
+256
+6
+
+Model performance comparison
+
+1
+0.9
+0.8
+
+Accuracy
+
+0.7
+0.6
+0.5
+0.4
+
+Inception transfer test
+Inception transfer train
+Resnet-158 [18] test
+Resnet-158 [18] train
+VGG [17] test
+VGG [17] train
+
+0.3
+0.2
+0.1
+0
+
+0
+
+500
+
+1000
+
+1500
+
+2000
+
+2500
+
+3000
+
+Iterations
+
+3500
+
+4000
+
+4500
+
+5000
+
+Fig. 10: Performance comparison
+
+be insignificant. This is because ATM surveillance cameras are always fixed and relatively at same position in each
+ATMs.
+The proposed network is found to be harder to train due to vanishing gradient[19] and degradation problems[3].
+Some neuron fade away during training and never comes back. This problem can be dealt by normalizing initialization
+and intermediate layers. As depth of the network increases, the training accuracy get saturated. Degradation is not a
+overfitting problem since adding more layers lead to higher training error.
+6. Conclusion
+This work demonstrates the ability of the deep CNN in the field of object detection. Instead of continuous running
+this detector over every video feed from the surveillance camera, the system can be coupled with motion and other
+sensors that are already in the ATM room to make it as efficient as possible. Dynamically trainable system can be
+modeled by autonomously training the system daily or weekly over data captured. An accuracy of 95.3% was achieved
+in testing phase. A larger training dataset can improve the accuracy.
+References
+[1] Brown, M., (1996). Neuronal responses and recognition memory, in: Seminars in Neuroscience, Elsevier. pp. 23–32.
+[2] Girshick, R., Donahue, J., Darrell, T., Malik, J., (2014). Rich feature hierarchies for accurate object detection and semantic segmentation, in:
+Proceedings of the IEEE conference on computer vision and pattern recognition, pp. 580–587.
+[3] Glorot, X., Bengio, Y., (2010). Understanding the difficulty of training deep feedforward neural networks., in: Aistats, pp. 249–256.
+[4] Goodfellow, I.J., (2013). Piecewise linear multilayer perceptrons and dropout. stat 1050, 22.
+[5] He, K., Zhang, X., Ren, S., Sun, J., (2016). Deep residual learning for image recognition, in: Proceedings of the IEEE Conference on Computer
+Vision and Pattern Recognition, pp. 770–778.
+[6] Jung, K., (2012). Object recognition on mobile devices, in: Consumer Electronics-Berlin (ICCE-Berlin), 2012 IEEE International Conference
+on, IEEE. pp. 258–262.
+[7] Kingma, D., Ba, J., (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980 .
+[8] Krizhevsky, A., Sutskever, I., Hinton, G.E., (2012). Imagenet classification with deep convolutional neural networks, in: Advances in neural
+information processing systems, pp. 1097–1105.
+[9] Le, Q.V., Karpenko, A., Ngiam, J., Ng, A.Y., (2011). Ica with reconstruction cost for efficient overcomplete feature learning, in: Advances in
+Neural Information Processing Systems, pp. 1017–1025.
+[10] LeCun, Y., Boser, B., Denker, J.S., Henderson, D., Howard, R.E., Hubbard, W., Jackel, L.D., (1989). Backpropagation applied to handwritten
+zip code recognition. Neural computation 1, 541–551.
+[11] LeCun, Y., Bottou, L., Bengio, Y., Haffner, P., (1998)a. Gradient-based learning applied to document recognition. Proceedings of the IEEE 86,
+2278–2324.
+
+Alwyn Mathew et al. / Procedia Computer Science 115 (2017) 251–257
+Alwyn Mathew et al. / Procedia Computer Science 00 (2017) 000–000
+
+257
+7
+
+[12] LeCun, Y., Bottou, L., Bengio, Y., Haffner, P., (1998)b. Gradient-based learning applied to document recognition. Proceedings of the IEEE 86,
+2278–2324.
+[13] Leordeanu, M., Hebert, M., Sukthankar, R., (2007). Beyond local appearance: Category recognition from pairwise interactions of simple
+features, in: Computer Vision and Pattern Recognition, 2007. CVPR’07. IEEE Conference on, IEEE. pp. 1–8.
+[14] Lin, M., Chen, Q., Yan, S., (2013). Network in network. arXiv preprint arXiv:1312.4400 .
+[15] Ozuysal, M., Calonder, M., Lepetit, V., Fua, P., (2010). Fast keypoint recognition using random ferns. IEEE transactions on pattern analysis
+and machine intelligence 32, 448–461.
+[16] Russakovsky, O., Deng, J., Su, H., Krause, J., Satheesh, S., Ma, S., Huang, Z., Karpathy, A., Khosla, A., Bernstein, M., et al., (2015). Imagenet
+large scale visual recognition challenge. International Journal of Computer Vision 115, 211–252.
+[17] Shapiro, L., Stockman, G., (2001). Textbook: computer vision.
+[18] Simonyan, K., Zisserman, A., (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556 .
+[19] Srivastava, R.K., Greff, K., Schmidhuber, J., (2015). Highway networks. arXiv preprint arXiv:1505.00387 .
+[20] Szegedy, C., Liu, W., Jia, Y., Sermanet, P., Reed, S., Anguelov, D., Erhan, D., Vanhoucke, V., Rabinovich, A., (2015). Going deeper with
+convolutions, in: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pp. 1–9.
+[21] Szegedy, C., Vanhoucke, V., Ioffe, S., Shlens, J., Wojna, Z., (2016). Rethinking the inception architecture for computer vision, in: Proceedings
+of the IEEE Conference on Computer Vision and Pattern Recognition, pp. 2818–2826.
+[22] Yudkowsky, E., (2008). Artificial intelligence as a positive and negative factor in global risk. Global catastrophic risks 1, 184.
+
+

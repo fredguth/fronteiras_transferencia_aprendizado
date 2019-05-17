@@ -1,0 +1,24 @@
+Deep Transfer Learning for Segmentation of
+Anatomical Structures in Chest Radiographs
+Segmentation of anatomical structures in Chest
+Posterior-Anterior Radiographs is a classical task on biomedical
+image analysis. Deep Learning has been widely used for detection
+and diagnosis of illnesses in several medical image modalities
+over the last years, but the portability of deep methods is
+still limited, hampering the reusability of pre-trained models
+in new data. We address this problem by proposing a novel
+method for Cross-Dataset Transfer Learning in Chest X-Ray
+images based on Unsupervised Image Translation architectures.
+Our Transfer Learning approach achieved Jaccard values of
+88.20% on lung field segmentation in the Montgomery Set
+by using a pre-trained model on the JSRT dataset and no
+labeled data from the target dataset. Several experiments in
+unsupervised and semi-supervised transfer were performed and
+our method consistently outperformed simple fine-tuning when
+a limited amount of labels is used. Qualitative analysis on the
+tasks of clavicle and heart segmentation are also performed on
+Montgomery samples and pre-trained models from JSRT dataset.
+Our secondary contributions encompass several experiments in
+anatomical structure segmentation on JSRT, achieving state-ofthe-art results in lung field (96.02%), heart (89.64%) and clavicle
+segmentation (87.30%).
+

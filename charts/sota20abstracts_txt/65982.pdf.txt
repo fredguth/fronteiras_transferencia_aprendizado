@@ -1,0 +1,21 @@
+Transfer Learning for Structures Spotting in Unlabeled Handwritten
+Documents using Randomly Generated Documents
+
+
+Handwritting Recognition, Image Generation, Digit Detection, Deep Neural Networks, Knowledge Transfer.
+
+
+Despite recent achievements in handwritten text recognition due to major advances in deep neural networks,
+historical handwritten documents analysis is still a challenging problem because of the requirement of large
+annotated training database. In this context, knowledge transfer of neural networks pre-trained on already
+available labeled data could allow us to process new collections of documents. In this study, we focus on
+localization of structures at the word-level, distinguishing words from numbers, in unlabeled handwritten documents. We based our approach on a transductive transfer learning paradigm using a deep convolutional neural
+network pre-trained on artificial labeled images randomly generated with strokes, word and number patches.
+We designed our model to predict a mask of the structures positions at the pixel-level, directly from the pixel
+values. The model has been trained using 100,000 generated images. The classification performances of our
+model were assessed by using randomly generated images coming from a different set of images of words and
+digits. At the pixel level, the averaged accuracy of the proposed structures detection system reach 96.1%. We
+evaluated the transfer capability of our model on two datasets of real handwritten documents unseen during
+the training. Results show that our model is able to distinguish most ”digits” structures from ”word” structures while avoiding other various structures present in the documents, showing the good transferability of the
+system to real documents.
+

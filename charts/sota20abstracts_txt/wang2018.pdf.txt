@@ -1,0 +1,23 @@
+Deep Transfer Learning for Cross-domain Activity Recognition
+Human activity recognition plays an important role in people’s
+daily life. However, it is often expensive and time-consuming to
+acquire sufficient labeled activity data. To solve this problem, transfer learning leverages the labeled samples from the source domain
+to annotate the target domain which has few or none labels. Unfortunately, when there are several source domains available, it is
+difficult to select the right source domains for transfer. The right
+source domain means that it has the most similar properties with
+the target domain, thus their similarity is higher, which can facilitate transfer learning. Choosing the right source domain helps the
+algorithm perform well and prevents the negative transfer. In this
+paper, we propose an effective Unsupervised Source Selection algorithm for Activity Recognition (USSAR). USSAR is able to select the
+most similar K source domains from a list of available domains. After this, we propose an effective Transfer Neural Network to perform
+knowledge transfer for Activity Recognition (TNNAR). TNNAR
+could capture both the time and spatial relationship between activities while transferring knowledge. Experiments on three public
+activity recognition datasets demonstrate that: 1) The USSAR algorithm is effective in selecting the best source domains. 2) The
+TNNAR method can reach high accuracy when performing activity
+knowledge transfer.
+
+Human-centered computing  Ubiquitous computing
+Computing methodologies  Transfer learning;
+
+
+Transfer Learning, Activity Recognition, Deep Learning, Domain
+Adaptation

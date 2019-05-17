@@ -1,0 +1,12 @@
+Comparison of deep transfer learning strategies for digital pathology
+
+In this paper, we study deep transfer learning as a way
+of overcoming object recognition challenges encountered
+in the field of digital pathology. Through several experiments, we investigate various uses of pre-trained neural network architectures and different combination schemes with
+random forests for feature selection. Our experiments on
+eight classification datasets show that densely connected
+and residual networks consistently yield best performances
+across strategies. It also appears that network fine-tuning
+and using inner layers features are the best performing
+strategies, with the former yielding slightly superior results.
+

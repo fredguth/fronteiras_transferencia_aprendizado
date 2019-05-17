@@ -1,0 +1,2154 @@
+770
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+Domain Adaptation Problems:
+A DASVM Classification Technique
+and a Circular Validation Strategy
+Lorenzo Bruzzone, Fellow, IEEE, and Mattia Marconcini, Member, IEEE
+ABSTRACT—This paper addresses pattern classification in the framework of domain adaptation by considering methods that solve
+problems in which training data are assumed to be available only for a source domain different (even if related) from the target domain
+of (unlabeled) test data. Two main novel contributions are proposed: 1) a domain adaptation support vector machine (DASVM)
+technique which extends the formulation of support vector machines (SVMs) to the domain adaptation framework and 2) a circular
+indirect accuracy assessment strategy for validating the learning of domain adaptation classifiers when no true labels for the
+target-domain instances are available. Experimental results, obtained on a series of two-dimensional toy problems and on two real
+data sets related to brain computer interface and remote sensing applications, confirmed the effectiveness and the reliability of both the
+DASVM technique and the proposed circular validation strategy.
+Index Terms—Domain adaptation, transfer learning, semi-supervised learning, support vector machines, accuracy assessment,
+validation strategy.
+
+Ç
+1
+
+INTRODUCTION
+
+T
+
+HE
+
+complexity of pattern classification problems depends on both the investigated application and the
+available prior information. Two main families of learning
+methods can be used for training a classifier: supervised
+learning methods (when labeled training samples are given)
+or unsupervised learning methods (when labeled training
+samples are not available). Let us define a domain D as a
+distribution P ðx; yÞ, x 2 X~, y 2 , which governs the
+classification problem under investigation, where X~ and
+ represent all possible instances and all possible
+information classes for the considered problem, respectively. In the supervised learning setting, classification
+algorithms are designed under the hypothesis that the
+distribution P^ðx; yÞ estimated from available labeled
+training data T ¼ fðxi ; yi Þgi , xi 2 X  X~, yi 2  drawn
+from D well approximates P ðx; yÞ. Hence, it is possible to
+obtain high classification accuracies over unseen test data
+drawn from the same domain. In the unsupervised
+learning setting, no training data are available. Thus, the
+problem can be addressed only through clustering methods. However, in many operational applications, there are
+hybrid situations where, even if prior information is
+available, it is not sufficient to define a training set
+representative of the distribution to which the trained
+model should be applied. These kinds of problems can be
+addressed according to transfer learning methods.
+
+. The authors are with the Department of Information Engineering and
+Computer Science, University of Trento, 38050, Povo, Trento, Italy.
+E-mail: lorenzo.bruzzone@ing.unitn.it, mattia.marconcini@gmail.com.
+Manuscript received 16 Jan. 2008; revised 19 Feb. 2009; accepted 2 Mar. 2009;
+published online 10 Mar. 2009.
+Recommended for acceptance by A. Smola.
+For information on obtaining reprints of this article, please send e-mail to:
+tpami@computer.org, and reference IEEECS Log Number
+TPAMI-2008-01-0033.
+Digital Object Identifier no. 10.1109/TPAMI.2009.57.
+0162-8828/10/$26.00 ß 2010 IEEE
+
+Transfer learning refers to the problem of retaining and
+applying the knowledge available for one or more tasks,
+domains, or distributions to efficiently develop an effective
+hypothesis for a new task, domain, or distribution. Instead
+of involving generalization across problem instances,
+transfer learning emphasizes the transfer of knowledge
+across tasks, domains, and distributions that are similar but
+not the same. When the objective is to transfer knowledge
+across different tasks, this results in the multitask learning
+subproblem. Multitask learning methods aim at improving
+the generalization capability by exploiting the information
+contained in training data available for the considered tasks
+(where the set of considered information classes is allowed
+to vary). In particular, what is learned for each task is used
+as a bias for other tasks in order to improve the
+classification performances [1], [2], [3]. In the single-task
+framework, the default assumption of supervised learning
+methods is that training and test data are drawn from the
+same distribution. When the two distributions do not
+match, two distinct transfer learning subproblems can be
+defined depending on whether training and test data refer
+to the same domain or not: 1) learning under sample selection
+bias and 2) learning under domain adaptation.
+In the case of sample selection bias, unlabeled test data are
+drawn from the same domain D of training data, but the
+estimated distribution P^ðx; yÞ ¼ P^ðxÞP^ðy j xÞ does not
+correctly model the true underlying distribution that
+governs D since the number (or the quality) of available
+training samples is not sufficient for an adequate learning of
+the classifier. The small amount of labeled data generally
+leads to a poor estimation P^ðxÞ of the prior distribution
+P ðxÞ (i.e., P^ðxÞ 6¼ P ðxÞ). Moreover, if the few available
+training data do not represent the general target population
+and introduce a bias in the estimated class prior distribution
+(i.e., P^ðyÞ 6¼ P ðyÞ), this may cause a poor estimation of the
+Published by the IEEE Computer Society
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+771
+
+TABLE 1
+Taxonomy of Learning Types and Problems
+(X~ and  Represent All Possible Instances and All Possible Information Classes, Respectively, for the Considered Problem)
+
+conditional distribution (i.e., P^ðy j xÞ 6¼ P ðy j xÞ). On one
+hand, if both P^ðxÞ 6¼ P ðxÞ and P^ðy j xÞ 6¼ P ðy j xÞ, the
+problem is referred to as sample selection bias [4], [5], [6].
+On the other hand, the particular case where the true and
+estimated distributions are assumed to differ only via
+P^ðxÞ 6¼ P ðxÞ, but P^ðy j xÞ  P ðy j xÞ is denoted by covariate
+shift [7], [8].
+In the case of domain adaptation, unlabeled test patterns
+X t ¼ fxti gi , X t  X~, are drawn from a target domain Dt
+different from the source domain Ds of training samples
+T s ¼ fðxsi ; ysi Þgi , xsi 2 X s  X~, ysi 2 . This may happen when
+the available labeled data are out of date, whereas the test data
+are obtained from fast evolving information sources, or when
+series of data acquired at different times should be classified,
+but training samples collected only at one time are available.
+In this context, let P s ðx; yÞ ¼ P s ðy j xÞ  P s ðxÞ and P t ðx; yÞ ¼
+P t ðy j xÞ  P t ðxÞ be the true underlying distributions for the
+source and target domains, respectively. The key idea is to
+infer a good approximation of P t ðx; yÞ by exploiting
+P s ðx; yÞ. If P t ðy j xÞ deviates from P s ðy j xÞ to a given
+extent, domain adaptation is necessary. In the framework of
+domain adaptation, most of the learning methods are
+inspired by the idea that, although different, the two
+
+considered domains are correlated.1 In particular, it is
+intuitive to observe that considering the (unlabeled) data of
+the target domain in the training phase could improve the
+performances with respect to ignore this information
+source.2 Table 1 summarizes the main characteristics of all
+the aforementioned learning methods.
+In the last few years, transfer learning has been
+recognized as an important topic in the machine learning
+and pattern recognition community. However, the attention
+has been focused mainly on developing methodologies for
+addressing multitask learning or learning under sample
+selection bias, whereas less attention has been devoted to
+1. The correlation between probability distributions (which allows
+estimating quantitatively how similar they are) can be empirically
+evaluated according to some similarity metrics. Hence, two domains are
+considered correlated if the distance between the corresponding underlying
+distributions is relatively small according to proper metrics (e.g., [9], [10],
+[11]).
+2. A simple toy example for domain adaptation problems is described
+and investigated in Section 6, where source-domain samples are distributed
+according to two intertwining moons associated with two specific
+information classes, while target-domain samples are obtained by a free
+rotation of the original source-domain patterns (i.e., due to rotation, sourceand target-domain data exhibit different distributions: P s ðxÞ 6¼ P t ðxÞ and
+P s ðy j xÞ 6¼ P t ðy j xÞ).
+
+772
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+domain adaptation problems. This is due to two main
+motivations: 1) Domain adaptation is a more critical and
+challenging problem with respect to the other transfer
+learning subproblems, as training data are assumed to be
+available only for a source domain different (even if related)
+from the target domain of the (unlabeled) test samples, and
+2) unlike other problems, in practice, there are no strategies
+to assess the effectiveness of the classification results using
+standard statistical validation methods as no labeled
+samples are assumed to be available for the target domain.
+Considering the complexity of the problem, the lack of
+procedures for the accuracy assessment is crucial, and at
+present, seems to be a major limitation for the development
+of operational domain adaptation learning methods.
+In this paper, we address domain adaptation problems
+by introducing two main novel contributions: 1) a domain
+adaptation support vector machine (DASVM) technique
+that extends support vector machines (SVMs) to the domain
+adaptation framework by exploiting labeled source-domain
+data and unlabeled target domain data in the training phase
+of the algorithm and 2) a circular indirect accuracy
+assessment strategy for the domain adaptation learning
+that permits to automatically identify reliable solutions for
+the target-domain classification problem by only exploiting
+source-domain labeled samples.
+The rationale for developing a domain adaptation
+technique in the framework of SVMs [12], [13] is due to
+the effectiveness of this classification methodology that
+attempts to separate samples belonging to different classes
+by defining maximum margin hyperplanes [14], [15], [16].
+The relevance of SVMs is mainly related to their desirable
+properties that can be summarized as follows:
+Empirical effectiveness with respect to other traditional classifiers, which results in relatively high
+classification accuracies and very good generalization capabilities.
+2. Convexity of the objective function used in the
+learning of the classifier, which results in a unique
+solution (i.e., the system cannot fall into suboptimal
+solutions associated with local minima).
+3. Possibility of representing the optimization problem
+in a dual formulation, where only nonzero Lagrange
+multipliers are necessary for defining the separation
+hyperplane (sparsity of the solution).
+4. Capability of addressing classification problems in
+which no explicit parametric models on the distribution of information classes are assumed (distribution-free classifier).
+5. Possibility of defining nonlinear decision boundaries
+by implicitly mapping the available observations
+into a higher dimensional space (i.e., kernel trick).
+In the literature, semi-supervised [17], [18], [19] and
+transductive [20], [21] techniques based on SVMs have
+been proposed for solving problems under sample selection
+bias characterized by a large amount of unlabeled data but a
+reduced number of labeled data.3 In particular, they try to
+recover information from the distribution of unlabeled data
+1.
+
+3. It is worth noting that the objective functions used in the learning of
+semi-supervised and transductive SVMs are often not convex.
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+in the input space in order to improve the final classification
+performances. Nevertheless, these techniques are designed
+for handling problems where labeled and unlabeled data
+come from the same domain; thus, they are ineffective on
+domain adaptation problems, especially when the sourceand target-domain distributions are significantly different.
+In order to overcome such a drawback, the proposed
+DASVM technique exploits and extends to domain adaptation problems principles of both transductive SVMs
+(TSVMs) [20] and progressive transductive SVMs (PTSVMs)
+[21]. From a general perspective, available labeled data
+from the source domain Ds are used for determining an
+initial unreliable solution for the target-domain problem;
+then, unlabeled samples of the target domain Dt are
+exploited for properly adjusting the decision function,
+while labeled samples of Ds are gradually erased. The final
+classification function is determined only on the basis of
+semilabeled samples, i.e., originally unlabeled target-domain
+instances that obtain labels during the learning process.
+In order to estimate the correctness of the solutions for
+domain adaptation problems (where no prior information
+for Dt is available), we propose a novel validation strategy
+developed under the assumption that there exists an
+intrinsic structure intimately relating Ds and Dt . Under
+the hypothesis that data in the two domains do not follow
+uncorrelated distributions, we assume that it is possible to
+obtain an indirect evaluation of the reliability of the solution
+to the investigated target problem. The effectiveness of the
+solution for the target-domain samples can be inferred at
+the end of a circular procedure by exploiting available
+labeled samples (i.e., prior information) related to the
+source domain Ds .
+Experimental results obtained on a series of simulated
+domain adaptation toy problems and on two real domain
+adaptation problems defined in the framework of brain
+computer interface and remote sensing point out the
+effectiveness and the reliability of both the presented
+DASVM and the proposed circular validation strategy. It
+is worth noting that the circular validation strategy is
+general and can be used with any classification technique
+applied to domain adaptation problems.
+The paper is organized into seven sections. In Section 2, a
+survey on domain adaptation methods is presented. Section 3
+introduces the notation and the assumptions considered in
+this work. Section 4 presents the proposed DASVM technique. Section 5 describes the circular validation strategy
+devised for assessing the accuracy of domain adaptation
+learning algorithms. In Section 6, experimental results are
+reported and discussed. Finally, Section 7 draws the
+conclusions of this paper.
+
+2
+
+RELATED WORK
+
+In the last few years, the scientific community has devoted a
+growing interest to the definition of classification techniques for addressing domain adaptation problems. It is
+worth mentioning that a series of preliminary algorithms
+has been developed under the assumption that a small
+amount of target-domain labeled samples are available in
+the learning phase, thus violating one of the key hypotheses
+for domain adaptation. However, the role of these studies
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+has been particularly important for later development of
+domain adaptation classifiers. In the following, we first
+briefly review some of the most relevant algorithms
+developed in the aforementioned framework; then, we
+focus the attention on current state-of-the-art domain
+adaptation techniques.
+
+2.1
+
+Algorithms Assuming Labeled Data Available
+for the Target Domain
+Most of the techniques presented in this framework have
+been developed for solving text classification problems. A
+common approach is to treat source-domain data as prior
+knowledge and to estimate the target-domain model parameters under such prior distribution. Hwa [22] and Gildea
+[23] proved that simple techniques based on using adequately
+selected subsets of source-domain data and parameter
+pruning can improve the performance on unlabeled target
+data. In [24], Roark and Bacchiani used source-domain data to
+construct a Dirichlet prior for MAP estimation of the target
+domain. In [25], Li and Bilmes proposed an accuracyregularization objective function, which minimizes the
+empirical risk on target data while maximizing a Bayesian
+divergence prior determined on the source-domain data
+distribution. Another approach proposed in [26] by Chelba
+and Acero is to use the parameters of the maximum entropy
+model learned from the source domain as the means of a
+Gaussian prior when training a new model on target data. A
+different technique based on the Conditional Expectation
+Maximization (CEM) algorithm developed in the maximum
+entropy framework has been presented by Daumè and Marcu
+in [27]. Unlike the aforementioned techniques that do not
+consider unlabeled samples of the target domain in the
+learning phase, in [28], a domain adaptation method that can
+exploit information intrinsic in unlabeled target-domain data
+has been presented. Jiang and Zhai proposed a general
+instance weighting framework that implements several
+adaptation heuristics: removing misleading training samples
+in the source domain, assigning more weights to labeled
+target patterns than labeled source patterns, and augmenting
+training samples with target samples with predicted labels.
+Other techniques aim at bridging the gap between source and
+target distributions by changing data representation. As an
+example, in [29], Florian et al. developed an algorithm that
+builds a source-domain model and considers its predictions
+as features for the target domain. In this context, another
+interesting approach has been recently proposed in [30],
+where Daumè presented an algorithm based on the idea of
+transforming domain adaptation problems into standard
+supervised learning problems (to which any standard
+algorithm may be applied) by augmenting the size of the
+feature space of both source and target data.
+2.2 Domain Adaptation Algorithms
+At present, several domain adaptation algorithms rely on
+defining new features for capturing the correspondence
+between source and target domains [31], [32]. In this way,
+the two domains appear to have similar distributions, thus
+enabling effective domain adaptation. Moreover, as often
+features are correlated, careful feature subsetting could lead
+to significant accuracy gains [33]. In [31], Blitzer et al.
+describe a heuristic method for domain adaptation, which
+exploits unlabeled data from both domains to induce
+correspondences among features in the two domains. The
+
+773
+
+unlabeled target samples are exploited for inferring a good
+feature representation, which can be regarded as weighting
+the features. In [32], rather than choosing a common feature
+representation heuristically, Ben-David et al. try to directly
+learn a new representation which minimizes a bound on the
+target generalization error. The bound is determined both
+using source-domain labeled samples and source and
+target-domain unlabeled samples, and it is stated in terms
+of a representation function designed to minimize domain
+divergence, as well as classification error. The algorithm
+aims at jointly minimizing a trade-off between source-target
+similarity and source-domain training error. In [33], Satpal
+and Sarawagi present a method for addressing domain
+adaptation problems that selects a subset of features for
+which the distance (evaluated in terms of a particular
+distortion metric) between the source and target distributions is minimized, while maximizing the likelihood of
+labeled training data.
+Other interesting approaches for domain adaptation have
+been presented by Dai et al. [34] and [35]. In [34], they
+introduced a naive Bayes algorithm for addressing domain
+adaptation in the context of text categorization, where the EM
+algorithm is used to find a locally optimal posterior
+hypothesis under the target distribution. An initial model
+based on the source training data is first estimated. Such a
+model is treated as a poor estimation of the target distribution. The EM algorithm is applied to find a local optimal in
+the hypothesis space, where the estimation should gradually
+approach the target distribution. In [35], a co-clusteringbased classification algorithm is presented, where co-clustering is used as a bridge to propagate the class structure and
+knowledge from the source domain to the target domain.
+Domain adaptation without labeled target-domain data
+has also been previously analyzed by the authors in the
+context of remote sensing image classification [36], [37], [38],
+[39] for addressing automatic updating of land-cover maps.
+In [36], a domain adaptation approach is proposed that is able
+to update the parameters of an already trained parametric
+maximum-likelihood (ML) classifier on the basis of the
+distribution of a new image for which no labeled samples
+are available. In [37], in order to take into account the
+temporal correlation between images acquired on the same
+area at different times, the ML-based domain adaptation
+approach is reformulated in the framework of the Bayesian
+rule for cascade classification (i.e., the classification process is
+performed by jointly considering information contained in
+the source and target domains). The basic idea in both
+approaches is modeling the observed spaces by a mixture of
+distributions whose components are estimated by the use of
+unlabeled target data and according to a proper inference
+applied to source samples of the reference image. This is
+achieved by using a specific version of the EM algorithm with
+finite Gaussian Mixture Models [40]. In [38], domain
+adaptation approaches based on a multiple-classifier system
+and a multiple-cascade-classifier system (MCCS) have been
+defined, respectively. In particular, in [39], the proposed
+MCCS architecture is composed of an ensemble of classifiers
+developed in the framework of cascade classification, which
+is integrated in a multiple-classifier architecture. Both a
+parametric ML classification approach and a nonparametric
+radial basis function neural network (RBF-NN) classification
+technique are used as basic classifiers. In addition, in order to
+increase both the effectiveness and robustness of the
+
+774
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+ensemble, hybrid ML and RBF-NN cascade classifiers are
+defined.
+
+3
+
+PROBLEM FORMULATION AND ASSUMPTIONS
+
+Given an input space X~ and a set of information
+classes , a classifier is any function gðxÞ : X~ !  that
+maps instances x 2 X~ to information classes. In supervised learning problems, training samples T ¼ fðxi ; yi Þgi ,
+xi 2 X  X~, yi 2 , drawn from the probability distribution P ðx; yÞ ¼ P ðy j xÞ  P ðxÞ are assumed to be available.
+Accordingly, the learning problem is to determine a
+supervised classifier gðx j T ; Þ4 that permits to obtain
+high predictive accuracy for unlabeled test samples
+drawn from the same distribution P ðx; yÞ by exploiting
+the available training set T . The discrimination capability
+depends on the classifier model, which is described by a
+vector of parameters  that is specific for each family of
+classifiers.
+In the framework of domain adaptation, the problem is
+more complex as test patterns are drawn from a targetdomain distribution P t ðx; yÞ ¼ P t ðy j xÞ  P t ðxÞ different
+from the source-domain distribution of training samples
+P s ðx; yÞ ¼ P s ðy j xÞ  P s ðxÞ. Obtaining a good adaptation
+requires an adequate modeling of the relationship between
+source and target domains Ds and Dt . There are two
+extreme cases for domain adaptation problems: 1) If
+P s ðx; yÞ  P t ðx; yÞ, adaptation is not necessary and standard supervised learning algorithms can be employed and
+2) if P s ðx; yÞ and P t ðx; yÞ are uncorrelated, then sourcedomain data are useless for building a model for Dt .
+Nevertheless, in real applications, Ds and Dt are generally
+neither identical nor uncorrelated. In these situations, it is
+reasonable to assume the existence of an intrinsic relationship between the two domains that makes it possible
+adaptation. We expect that the probability to succeed in the
+adaptation process is associated with the complexity of the
+problem, which depends on the correlation between
+P s ðx; yÞ and P t ðx; yÞ.
+In this context, let us consider two sets X s ¼ fxsl gN
+l¼1 and
+X t ¼ fxtu gM
+u¼1 composed of N source-domain and M targetdomain patterns, respectively. Let xs and xt be the
+d-dimensional feature vectors related to Ds and Dt ,
+respectively (d represents the dimensionality of the input
+space). The proposed techniques are formulated under the
+following assumptions:
+The same set of L classes  ¼ f!i gLi¼1 characterizes
+Ds and Dt .
+. A set of true labels Y s ¼ fysl gN
+l¼1 for X s is available,
+thus, it is possible to define a training set T s ¼
+fX s ; Y s g ¼ fðxsl ; ysl ÞgN
+l¼1 for Ds .
+. A set of true labels Y t ¼ fytu gM
+u¼1 for X t is not
+available, thus, it is not possible to define a training
+set for Dt .
+Under such a hypothesis, our goals are:
+.
+
+1.
+
+to define a domain adaptation classifier gðx j
+T s ; X t ; Þ based on SVMs which permits us to
+
+4. This notation has been adopted for pointing out all the input variables
+(data and learning parameters) that affect the output of a classifier.
+
+2.
+
+4
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+obtain an accurate classification for target-domain
+samples by exploiting labeled training samples T s
+from Ds and unlabeled samples X t from Dt (as for
+supervised classifiers, the model adopted for classification is described by a vector of parameters ,
+which is specific for each family of domain adaptation classifiers);
+to develop a strategy for validating the learning of
+the domain adaptation classifier without labeled
+target-domain data.
+
+PROPOSED DASVM TECHNIQUE
+
+In this section, for simplicity, we describe the proposed
+DASVM technique in the case of a two-class problem.
+Unlike transductive and semi-supervised SVMs, the
+DASVM algorithm takes into account that unlabeled
+target-domain samples are drawn from a distribution
+P t ðx; yÞ different from the one of source-domain training
+patterns P s ðx; yÞ. Therefore, source-domain samples are
+only exploited for initializing the discriminant function for
+the target-domain problem, while they are successively
+gradually erased in order to obtain a final separation
+hyperplane defined only on the basis of target-domain
+samples. This represents an important conceptual difference with respect to both transductive and semi-supervised
+SVMs techniques, which recover information from unlabeled samples under the assumption that the labeled and
+unlabeled samples are drawn from the same domain. Thus,
+they cannot be used for solving domain adaptation
+problems. On the contrary, the DASVM technique, by
+iteratively deleting source-domain samples and adapting
+the discriminant function step by step to the target-domain
+instances, can recover useful information and properly seize
+the target-domain classification problem.
+The proposed DASVM algorithm is made up of three
+main phases: 1) initialization (only T s is used for initializing
+the discriminant function), 2) iterative domain adaptation
+(T s and X t are used for gradually adapting the discriminant
+function to Dt ), and 3) convergence (only X t is used for
+defining the final discriminant function). In the following,
+ðiÞ
+we will denote by T ðiÞ and X t the training set and the
+unlabeled set (i.e., the set containing the target-domain
+samples that have not been inserted into the training set
+T ðiÞ ) at the generic iteration i, respectively. These phases are
+described in the following.
+
+4.1 Phase 1: Initialization
+In the first phase, an initial separation hyperplane is
+determined on the basis of source-domain training data
+alone. We have that T ð0Þ ¼ fX s ; Y s g ¼ fðxsl ; ysl ÞgN
+l¼1 and
+ð0Þ
+X t ¼ fxtu gM
+.
+As
+for
+standard
+supervised
+SVMs,
+the
+u¼1
+bound cost function to minimize is the following:
+
+8
+X 
+1
+ð0Þ
+2
+>
+>
+min
+ls
+k w k þC
+<
+w;b;
+2
+l
+ ð0Þ s
+
+s
+ð0Þ
+
+
+>
+ 1  ls
+>
+: yl w  xl sþ b
+8l ¼ 1; . . . ; N; xsl ; ysl 2 T ð0Þ ;
+l  0
+ð1Þ
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+775
+
+Fig. 1. Separation hyperplane (solid line) and margin bounds (dashed lines) at different stages of the DASVM algorithm for a toy data set. Labeled
+source-domain patterns are shown as white and black circles. Semilabeled target-domain patterns are shown as white and black squares,
+respectively. Unlabeled target-domain patterns are represented as gray squares. Feature space structure obtained: (a) at the first iteration (the
+dashed circles highlight the  semilabeled patterns selected from both sides of the margin; in the example  ¼ 3); (b) at the second iteration and (c) at
+the last iteration, respectively, in an ideal situation (the dashed gray lines represent both the separation hyperplane and the margin bounds at the
+beginning of the learning process).
+
+where wð0Þ is a vector normal to the separation hyperplane
+hð0Þ : wð0Þ  x þ bð0Þ ¼ 0, b is a constant such that bð0Þ =kwð0Þ k2
+represents the distance of the hyperplane from the origin, i
+are slack variables, and C is a penalization parameter (also
+called regularization parameter).
+
+4.2 Phase 2: Iterative Domain Adaptation
+At the generic iteration i, all the original unlabeled targetð0Þ
+domain samples xtu 2 X t are associated with an estimated
+ðiÞ t
+label y^tðiÞ
+u ¼ sgn½f ðxu Þ, determined according to the
+current decision function f ðiÞ ðxtu Þ ¼ wðiÞ  xtu þ bðiÞ . Then, a
+ðiÞ
+subset of the (remaining) unlabeled samples X t is
+iteratively selected and moved (with the corresponding
+estimated labels) into the training set T ðiþ1Þ . On one hand,
+the higher the distance from the separation hyperplane
+hðiÞ : wðiÞ  x þ bðiÞ ¼ 0, the higher the probability for an
+unlabeled sample to be correctly classified. On the other
+hand, the current unlabeled samples falling into the margin
+band MðiÞ ¼ fx j 1 f ðiÞ ðxÞ 1g are those with the highest probability to be associated with nonzero Lagrange
+multipliers (and thus, to affect the position of hðiþ1Þ ) once
+inserted in T ðiþ1Þ with their current estimated label
+(patterns falling outside the margin band are more likely
+to be associated with null multipliers). According to these
+two observations, at each iteration, we progressively take
+into account the unlabeled target-domain samples falling
+into MðiÞ closest to the margin bounds. Let us define the
+following two subsets:
+ 
+
+
+
+ t tðiÞ  t
+ðiÞ
+HðiÞ
+xu ; y^u j xu 2 X t ; 1  f ðiÞ xtu  f ðiÞ xtuþ1  0 ;
+up ¼
+ t
+ 
+
+
+
+
+ðiÞ
+ðiÞ
+Hlow ¼ xtu ; y^tðiÞ
+j xu 2 X t ; 1 f ðiÞ xtu
+f ðiÞ xtuþ1 < 0 ;
+u
+ð2Þ
+ðiÞ
+Hlow
+
+where HðiÞ
+are made up of the patterns of the
+up and
+ðiÞ
+current unlabeled set X t (considered with their corresponding estimated labels) lying in the upper and lower sides of
+ðiÞ
+the margin band MðiÞ , respectively. Samples of HðiÞ
+up and Hlow
+
+are sorted in ascending order with respect to their distance
+from the upper and lower bound of the margin, respectively.
+The DASVM approach exploits a strategy inspired by the
+PTSVM algorithm [21] in which, at each iteration of the
+learning process, the unlabeled samples inside the margin
+band MðiÞ with the maximum and minimum values of the
+decision function are moved into the training set. As two
+patterns may not be sufficiently representative for tuning the
+position of the hyperplane, in the proposed DASVM, at each
+iteration, the first  patterns (where the parameter   1 is
+ðiÞ
+defined a priori by the user) belonging to HðiÞ
+up and to Hlow ,
+whose current estimated labels y^tðiÞ
+are “þ1” and “1,”
+u
+respectively, are selected and inserted into the training
+set T ðiÞ (see Figs. 1a and 1b). Such samples are defined as
+ðiÞ
+semilabeled patterns. As the cardinality of HðiÞ
+up and Hlow may
+be lower than , the subset of target-domain patterns
+selected at the generic iteration i becomes
+
+
+
+2 HðiÞ
+HðiÞ ¼ xtu ; y^tðiÞ
+u ðiÞ
+u
+up j 1
+ð3Þ
+
+
+
+ðiÞ
+2 Hlow j 1 u ðiÞ ;
+[ xtu ; y^tðiÞ
+u
+ðiÞ
+
+ðiÞ
+where ðiÞ ¼ minð; jHðiÞ
+¼ minð; jHlow jÞ. Patterns
+up jÞ and 
+ðiÞ
+belonging to H are then merged with T ðiÞ . A dynamical
+adjustment is necessary for taking into account that the
+position of the separation hyperplane hðiÞ changes at each
+iteration. Let
+
+
+^tði1Þ
+ð4Þ
+S ðiÞ ¼ ðxtu ; y^tði1Þ
+Þ 2 T ðiÞ j y^tðiÞ
+u
+u 6¼ y
+u
+
+represent the set of semilabeled samples belonging to T ðiÞ
+whose labels at iteration i are different from those at
+iteration i  1. If the label of a semilabeled pattern at
+iteration i is different from the one at iteration i  1 (label
+inconsistency), such a label is erased and the semilabeled
+ðiþ1Þ
+pattern is reset to the unlabeled state and moved to X t .
+In this way, it is possible to reconsider this pattern in the
+following iterations of the learning procedure.
+
+776
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+Let J ðiÞ represent the set containing all the semilabeled
+patterns at the ith iteration. J ðiÞ is partitioned into a finite
+number of subsets  2 IN0 ,
+ðiÞ
+
+ðiÞ
+
+J ðiÞ ¼ J 1 [ J 2 [    [ J ðiÞ
+
+8 ðiÞ
+ðiÞ
+>
+J ¼H
+>
+< 1
+ðiÞ
+ði1Þ
+J k ¼ J k1  S ðiÞ ; 8k ¼ 2; . . . ;   1
+>
+>
+
+: ðiÞ
+ði1Þ 
+[ J 1  S ðiÞ ;
+J  ¼ J ði1Þ
+
+
+ð5Þ
+
+where each kth subset includes all of the semilabeled
+samples that do not change their label after the tuning of the
+separation hyperplane at the ith iteration and that belonged
+to the subset with index k  1 at iteration i  1. As will be
+pointed out in the following, the DASVM algorithm aims at
+gradually increasing the regularization parameter for the
+semilabeled patterns according to a time-dependent criterion; accordingly,  is defined as the maximum number of
+iterations for which the user allows the regularization
+parameter for semilabeled samples to increase.
+As the main purpose of the proposed technique is to
+define and solve a bound minimization problem with
+respect only to the target-domain samples, at each iteration
+a subset QðiÞ of the original source-domain training patterns
+is deleted. The higher the distance from the separation
+hyperplane hðiÞ , the lower the influence in affecting its
+position. Accordingly, it is reasonable to erase from T ðiÞ the
+source-domain samples lying farther from hðiÞ (see Fig. 1a).
+Let us define the following two subsets:
+ 
+
+
+
+ s s 
+xl ; yl 2 T ðiÞ j f ðiÞ xsl  f ðiÞ xslþ1  0 ;
+QðiÞ
+up ¼
+ð6Þ
+
+
+ 
+
+
+
+ðiÞ
+Qlow ¼ xsl ; ysl 2 T ðiÞ j f ðiÞ xsl
+f ðiÞ xslþ1 < 0 ;
+ðiÞ
+
+where QðiÞ
+up and Qlow contain the unlabeled target-domain
+patterns that lie above and under the separation hyperplane, respectively, sorted in descending order with respect
+to their distance from hðiÞ . At the ith iteration, the number of
+ðiÞ
+patterns to erase from QðiÞ
+up and Qlow is set equal to the
+number of semilabeled patterns selected from the upper
+and lower sides of the margin band (i.e., ðiÞ and ðiÞ ),
+respectively. If none of the remaining unlabeled samples
+fall into the margin band ðHðiÞ ¼ Þ, the number of patterns
+to delete is set to . As a consequence, we have:
+
+
+
+l  ðiÞ
+QðiÞ ¼ xsl ; ysl 2 QðiÞ
+up j 1
+ð7Þ
+
+
+
+ðiÞ
+ðiÞ
+;
+[ xsl ; ysl 2 Qlow j1 l
+where
+
+
+ if HðiÞ 6¼ 
+min ðiÞ ; QðiÞ
+up
+¼
+and
+  ðiÞ 
+if HðiÞ ¼ 
+min ; Qup 
+(
+ ðiÞ 
+
+min ðiÞ ; Qlow  if HðiÞ 6¼ ;
+¼
+  ðiÞ 
+if HðiÞ ¼ :
+min ; Qlow 
+
+ ðiÞ
+ðiÞ
+
+
+
+Let ðiÞ ¼ jT ðiÞ j  jJ ði1Þ j and ðiÞ ¼ jJ ði1Þ j represent the
+number of original source-domain and semilabeled samples
+belonging to the current training set T ðiÞ , respectively. For
+i  1, the bound minimization problem can be written as
+
+MAY 2010
+
+
+
+8
+P
+P
+2
+>
+>
+minw;b;s ;t 12 wðiÞ þ C ðiÞ l ls þ u Cu ut
+>
+>
+>
+>
+
+ ðiÞ s
+>
+s
+ðiÞ
+>
+>
+ 1  ls
+< y l  w  xl þ b
+
+
+8l ¼ 1; . . . ; ðiÞ ; xsl ; ysl 2 T ðiÞ
+
+
+>
+>
+>
+y^tði1Þ
+ wðiÞ  xtu þ bðiÞ  1  ut
+>
+u
+>
+
+
+>
+>
+>
+2 T ðiÞ
+8u ¼ 1; . . . ; ðiÞ ; xtu ; y^tði1Þ
+>
+u
+:
+s t
+l ; u  0:
+
+ð8Þ
+
+The semilabeled samples ðxtu ; y^tði1Þ
+Þ 2 T ðiÞ are associated
+u
+with a regularization parameter Cu ¼ Cu ðkÞ 2 IRþ that
+ði1Þ
+depends on the kth subset J k
+which they belong to at
+iteration i  1. The original source-domain patterns, instead, are associated with a regularization parameter C ðiÞ
+that directly depends on the ith iteration. The purpose of
+C ðiÞ and Cu is to control the number of misclassified
+samples of the current training set T ðiÞ drawn from Ds and
+Dt , respectively. On increasing their values, the penalty
+associated with errors increases. In other words, the larger
+the regularization parameter, the higher the influence of the
+associated samples on the selection of the separation
+hyperplane. As P t ðx; yÞ in general could be rather different
+compared to P s ðx; yÞ, unlabeled samples should be considered gradually in the learning process in order to avoid
+instabilities. For this reason, the algorithm adopts a
+weighting strategy based on a temporal criterion. The
+regularization parameter for the semilabeled patterns
+increases in a quadratic way, depending on the number of
+iterations k they had last inside the set containing the
+semilabeled patterns J ðiÞ (see Fig. 2a):
+
+
+8u ¼ 1; . . . ; J ðiÞ ;
+
+
+C max  C
+ðiÞ
+2 Jk ;
+Cu ¼
+ðk  1Þ2 þ C , xtu ; y^tðiÞ
+ð9Þ
+u
+2
+ð  1Þ
+k ¼ 1; . . . ; ;
+where C is the initial regularization value for semilabeled
+samples (this is a user-defined parameter), and C max is the
+maximum cost value of semilabeled samples and is related
+to that of training patterns (i.e., C max ¼  C, 0 <
+1
+being a constant; a reasonable choice has proved to be
+¼ 0:5). The greater k is, the higher the reliability of a
+semilabeled sample is expected to be.
+Likewise, the algorithm makes the cost factor for the
+original source-domain labeled samples C ðiÞ to decrease in a
+quadratic way (see Fig. 2b). At the beginning, the position of
+the separation hyperplane strongly depends on sourcedomain patterns ðxsl ; ysl Þ, but their influence always gets
+lower as the number of iterations increases (until i ¼ ):
+C ðiÞ ¼ max
+
+(
+
+VOL. 32, NO. 5,
+
+
+
+C C 2
+i þ C; C
+2
+
+:
+
+ð10Þ
+
+The second phase ends when the convergence criterion
+described below is satisfied.
+
+4.3 Phase 3: Convergence
+From a theoretical viewpoint, it can be assumed that
+convergence is reached if none of the remaining targetdomain samples lies into the margin band, HðiÞ ¼ , after
+all of the source-domain labeled samples have been erased,
+QðiÞ ¼  (see Fig. 1c). Nevertheless, such a choice might
+result in a high computational load. Moreover, it may
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+ðiÞ
+
+777
+
+ðiÞ
+
+Fig. 2. (a) Behavior of Cu , regularization parameter for the semilabeled patterns belonging to J ðiÞ ¼ J 1 [ J 2 [ . . . [ J ðiÞ
+ , versus k (index
+ðiÞ
+corresponding to the subset J k , which is related to the number of iterations in which a semilabeled pattern is associated with the same
+label). (b) Behavior of the regularization parameter for the original source-domain labeled patterns, C ðiÞ , versus the number of iterations i.
+
+happen that even if the margin band is empty, the number
+of inconsistent patterns is not negligible. For these reasons,
+the following empirical stopping criterion has been defined:
+8
+< QðiÞ ¼ ;
+ð11Þ
+jHðiÞ j d  Me;
+: ðiÞ
+d  Me
+jS
+where M is the number of target-domain samples and is a
+constant fixed a priori that tunes the sensitivity of the
+learning process. This means that convergence is reached if
+both the number of mislabeled and remaining unlabeled
+patterns lying in the margin band at the current iteration is
+lower than or equal to d  Me. The final minimization
+problem at the last iteration i becomes
+8
+
+
+P
+>
+1
+2
+>
+>
+k
+w
+k
+þ
+C
+
+min
+w;b; 2
+>
+u u u
+>
+<
+
+
+
+tði1Þ
+t
+ð12Þ
+ w  xu þ b  1  u
+y^
+ ðiÞ   t tði1Þ
+> u
+
+
+
+>
+ðiÞ
+
+
+>
+^
+2
+T
+8u
+¼
+1;
+.
+.
+.
+;
+T
+;
+y
+;
+x
+>
+u u
+>
+:
+u  0:
+At the end, all of the target-domain patterns xtu 2 X t are
+labeled according to the resulting separation hyperplane,
+ytu ¼ sgn½w  xtu þ bgM
+i.e., Y^t ¼ f^
+u¼1 .
+The above-described algorithm is defined for two-class
+problems. When a multiclass problem has to be investigated,
+a One-Against-All (OAA) strategy [41] can be employed.
+
+5
+
+PROPOSED CIRCULAR VALIDATION STRATEGY
+
+In this section, we present a novel general empirical
+strategy for validating the solutions obtained with a domain
+adaptation classifier when no labeled data related to the
+target domain are available. This method can also be used
+with the DASVM presented in the previous section.
+
+5.1
+
+Background and Rationale of the Proposed
+Strategy
+The proposed strategy is based on the two following
+assumptions.
+1.
+
+Assumption 1: Under the assumption that P s ðx; yÞ
+and P t ðx; yÞ are neither uncorrelated nor identical, it
+is reasonable to assume the existence of an intrinsic
+relationship between solutions that are satisfactory
+
+for the two domains. This relationship is associated
+with the intrinsic structure of the considered
+problem (which is related to the correlation between
+P s ðx; yÞ and P t ðx; yÞ). We expect that an adequately
+trained domain adaptation algorithm seizes the
+structure of the problem and can move from
+modeling the source-domain problem to modeling
+the target-domain problem, and vice versa. On the
+contrary, if the learning process fails, the considered
+domain adaptation algorithm completely loses the
+structure of the problem and results in an unpredictable behavior that involves a random solution.
+This solution has no relation to the considered
+problem. In this condition, it is no more possible to
+recover the intrinsic structure of the problem, and
+thus, moving from modeling the target-domain
+problem to modeling the source-domain problem.
+2. Assumption 2: The only labeled samples available are
+those related to the source domain Ds . Thus, for
+validating the learning for Dt , we should devise an
+indirect procedure based on the training set T s .
+On the basis of these observations, the proposed strategy
+relies on the following rationale: Let us consider that,
+starting from a reliable estimated distribution P^ns ðx; yÞ for
+Ds (and thus, from an acceptable classification accuracy on
+source-domain patterns), the nth generic domain adaptation classifier results in an accurate estimate P^nt ðx; yÞ for
+P t ðx; yÞ (and hence, in a satisfactory classification accuracy
+for the instances related to Dt ). In such a case, the domain
+adaptation classifier seizes the structure of the targetdomain problem. In this condition, we assume that, by
+again applying the same learning algorithm in the reverse
+sense (using the classification labels in place of the missing
+prior knowledge for target-domain patterns X t , keeping the
+same learning parameters, and considering the problem of
+classifying source-domain patterns X s ), it is possible to infer
+an accurate estimate for P s ðx; yÞ (thus obtaining a good
+discrimination capability also for the source-domain problem). On the contrary, if the domain adaptation algorithm
+does not identify an acceptable solution for Dt , this means
+that it does not capture the relationship between the two
+domains but converges to a solution which is not related to
+the investigated problem (i.e., the resulting P^nt ðx; yÞ does not
+
+778
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+than th for source and target-domain samples (nonconsistent
+solutions), respectively. th represents the smallest value for
+ such that a solution can be considered acceptable for the
+problem under investigation.
+Each classifier gn ðxÞ is associated with an estimate of the
+joint probability distribution P^n ðx; yÞ ¼ P^n ðy j xÞ  P^ðxÞ for
+the considered domain. Indeed, while P^ðxÞ directly depends on the instances available for the considered domain,
+the estimated conditional posterior distribution P^n ðy j xÞ is
+related to the information class associated by the classifier to
+the generic sample x, i.e., P^n ðy j xÞ ¼ P^ðgn ðxÞ j xÞ. Accordingly, both the source and target-domain estimated joint
+distributions can be written as
+Fig. 3. Diagram of all the possible state transitions exploited from the
+proposed circular validation strategy.
+
+represent an adequate estimation of the real distribution
+P t ðx; yÞ). In this condition, by again applying the algorithm
+in the reverse sense (from target to source), it seems
+impossible to recover a reliable solution for the sourcedomain problem, but rather, it is reasonable to expect a
+poor estimate for P s ðx; yÞ. This reasoning has some
+analogies with the definition of specific trajectories that
+model transitions between different states in chaotic
+systems. On the basis of these expected properties, we can
+use the accuracy evaluated on the original training samples
+from Ds for validating the solution obtained for targetdomain instances after a circular (forward and backward)
+application of the considered domain adaptation algorithm.
+
+5.2
+
+Formulation of the Proposed Circular Validation
+Strategy
+Given a classification accuracy measure ðY j ; Y^jn Þ that
+evaluates the similarity between a set of labels Y^jn (i.e., a
+solution) predicted by the generic classifier gn ðxÞ and the
+corresponding set of true labels Y j , and given a threshold
+th for , let us define the following four sets of classifiers
+(see Fig. 3):
+A ¼ fgn ðxÞ j ðY s ; Y^sn Þ  th g;
+
+ð13Þ
+
+B ¼ fgn ðxÞ j ðY t ; Y^tn Þ  th g;
+
+ð14Þ
+
+C ¼ fgn ðxÞ j ðY s ; Y^sn Þ < th g;
+
+ð15Þ
+
+D ¼ fgn ðxÞ j ðY t ; Y^tn Þ < th g;
+
+ð16Þ
+
+ysin ¼ gn ðxsi Þg and Y^tn ¼ f^
+ytin ¼ gn ðxti Þg are the
+where Y^sn ¼ f^
+labels predicted by gn ðxÞ for source and target-domain
+samples, respectively. It is worth noting that the subscript n
+points out a classification model obtained starting from the
+same classification technique using different values of
+parameters in the training phase (e.g., a DASVM classifier
+with different values of learning parameters). On one hand,
+A and B contain all of the classifiers that permit to obtain
+solutions whose accuracy is higher than or equal to th for
+source and target-domain samples (consistent solutions),
+respectively. On the other hand, C and D contain all of the
+classifiers that provide solutions whose accuracy is lower
+
+P^ns ðx; yÞ ¼ P^ns ðy j xÞ  P^s ðxÞ ¼ P^s ðgn ðxÞ j xÞ  P^s ðxÞ;
+
+ð17Þ
+
+P^nt ðx; yÞ ¼ P^nt ðy j xÞ  P^t ðxÞ ¼ P^t ðgn ðxÞ j xÞ  P^t ðxÞ:
+
+ð18Þ
+
+Therefore, it is possible to relate the quality of these
+estimated distributions with the four sets of classifiers
+described above:
+If gn ðxÞ 2 A, we assume that P^ns ðx; yÞ is consistent
+
+with P s ðx; yÞ (the system is in state A).
+. If gn ðxÞ 2 B, we assume that P^nt ðx; yÞ is consistent
+
+with P t ðx; yÞ (the system is in state B).
+. If gn ðxÞ 2 C, we assume that P^ns ðx; yÞ is not consistent
+
+with P s ðx; yÞ (the system is in state C).
+t
+^
+. If gn ðxÞ 2 D, we assume that Pn ðx; yÞ is not consis
+tent with P t ðx; yÞ (the system is in state D).
+
+Starting from state A, with a proper choice of the learning
+parameters, a domain adaptation classifier is expected to
+ (thus belonging to B). On the contrary, if the
+move to state B
+choice of the parameters is not adequate (or P t ðx; yÞ is too
+ (thus
+different from P s ðx; yÞ), the classifier moves to state D
+belonging to D). Let us now consider the solution obtained
+for the target-domain samples. We can address the reverse
+domain adaptation problem (from target to source) with the
+same classifier keeping the same learning parameters and
+jointly exploiting the classification labels Y^tn (instead of the
+training set, thus defining T^t ¼ fX t ; Y^tn g) and sourcedomain samples X s (considered without their labels Y s ).
+As the true labels fysi gN
+i¼1 for source-domain instances are
+known, we can compute the value for  associated with the
+results obtained after the circular learning process. If
+ < th , the classification accuracy for the source-domain
+problem is considered nonacceptable, then the backward
+classifier moves to state C (thus belonging to C). On the
+contrary, if   th , the solution is consistent, thus the
+backward classifier belongs to A and the system moves
+
+back to state A.
+Our assumption is that, when the domain adaptation
+ the
+classifier starting from state C is able to return into state A,
+classification accuracy for target-domain data is satisfactory
+and P^nt ðx; yÞ is a good approximation of P t ðx; yÞ. This aspect is
+crucial because it means that, in such situations, we are able to
+assess that target-domain data are classified with a proper
+accuracy even if no prior knowledge is available. The two
+main hypotheses under which the proposed validation
+technique is effective are the following:
+.
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+ the system must never move back to
+Starting from state D
+ If the solution obtained in the forward sense
+state A.
+(from source to target) for target-domain instances is
+not satisfactory (i.e., P^nt ðx; yÞ is not consistent with
+P t ðx; yÞ), by applying the considered algorithm in
+the backward sense (from target to source), it must
+never be possible to obtain an acceptable solution for
+source-domain instances (i.e., the resulting P^ns ðx; yÞ
+is always not consistent with P s ðx; yÞ).
+ If
+ the system can return to state A.
+. Starting from state B
+there exists a set of satisfactory solutions obtained in
+the forward sense (from source to target) for targetdomain instances (i.e., the related P^nt ðx; yÞ are
+consistent with P t ðx; yÞ), by applying the domain
+adaptation classifier in the backward sense (from
+target to source), it must be possible to obtain for at
+least one of them an acceptable solution for sourcedomain samples (i.e., the related P^ns ðx; yÞ is consistent with P s ðx; yÞ).
+It is worth noting that, under the aforementioned assumptions, the system may reject some solutions that are actually
+consistent with the target-domain problem as the learning
+parameters are not optimized for the backward process and
+we cannot assume a perfect symmetry between the domain
+adaptation problems from source to target, and vice versa.
+Nevertheless, the very important aspect is that the system
+never accepts and validates solutions that are nonconsistent, which is definitely a more critical aspect of validation
+in operational problems.
+.
+
+6
+
+EXPERIMENTAL RESULTS
+
+In order to assess the effectiveness of both the proposed
+DASVM technique and the presented circular validation
+strategy, we carried out several experiments on different
+data sets. We analyzed three different domain adaptation
+problems: 1) a series of two-dimensional toy problems
+having different complexity, 2) a real problem in the
+framework of brain computer interface, and 3) a real
+problem in the context of remote sensing. For all of the
+data sets, true labels were available for both source and
+target-domain instances. However, prior information related to the target domain Dt was considered only for an
+objective and quantitative assessment of the performances
+of the proposed techniques. In the following, we will
+describe the common procedure adopted for analyzing the
+considered data sets; then, in the next sections, we will
+present in detail the results obtained for each of them.
+In all of the trials, we employed Gaussian kernel
+functions (ruled by the free parameter ) as they proved
+effective in addressing different kinds of problems. We
+chose the percentage overall accuracy OA% (i.e., the
+percentage of correctly labeled samples over the whole
+number of considered samples) as reference classification
+accuracy measure  and fixed th ¼ OA%th ¼ 85 in the
+validation strategy. This means that, both for the sourceand target-domain classification problems, we assumed that
+a solution was consistent if OA%  85.
+In order to estimate the complexity of the investigated
+domain adaptation problems, we first analyzed the “distance” between source and target-domain distributions. To
+
+779
+
+this aim, a common choice in the literature is to compute the
+Kullback-Leibler (KL) [10] divergence, which is defined as
+X
+pn
+D½P ðxÞ k QðxÞ ¼
+pn log ;
+ð19Þ
+qn
+n
+where pn and qn are point probabilities of the two
+considered source and target distributions P and Q,
+respectively [11]. Note that D½P ðxÞkQðxÞ 2 ½0; 1Þ. Even if
+KL divergence is generally considered as a kind of distance
+between two distributions, it is not symmetric (i.e.,
+D½P ðxÞkQðxÞ 6¼ D½QðxÞkP ðxÞ). Therefore, in our experiments, we considered the Jensen-Shannon divergence
+(DJS ), which is a symmetrized and smoothed version of
+the KL divergence [11]. DJS is defined as
+DJS ½P ðxÞ; QðxÞ ¼   D½P ðxÞ k MðxÞ
+þ
+
+ D½QðxÞ k MðxÞ;
+
+ð20Þ
+
+where MðxÞ ¼   P ðxÞ þ  QðxÞ. In particular, we considered the case where  ¼ ¼ 0:5, (referred in the
+literature as specific DJS ) for which it holds that
+DJS ½P ðxÞ; QðxÞ 2 ½0; log 2. The existence of both a lower
+and an upper bound for DJS is particularly important as it
+permits us to understand how different the two considered
+distributions are. If DJS ½P ðxÞ; QðxÞ ¼ 0, then P and Q are
+considered identical, whereas if DJS ¼ log 2 ’ 0:693, P and
+Q are considered uncorrelated. Besides the distance
+DJS ½P s ðxÞ; P t ðxÞ evaluated between general distributions,
+we also analyzed the distance DJS ½P s ðxj!i Þ; P t ðxj!i Þ
+between class conditional distributions.
+In all experiments, we trained several supervised SVMs
+on the labeled source-domain samples T s ¼ fX s ; Y s g, in
+order to identify the models (and thus, the values of the
+supervised parameters  and C) that resulted in accurate
+(consistent) solutions for source-domain samples. Successively, we trained a number of DASVMs using T s as labeled
+set and target-domain instances X t as unlabeled set. In the
+learning phase, we assigned to  and C pairs of values
+associated with solutions consistent with Ds . On the
+remaining learning parameters (i.e., C , , and  ), we
+applied a grid search. Note that, for the sake of comparison,
+we also evaluated the performances obtained by other two
+state-of-the-art domain adaptation techniques: 1) the retraining technique for maximum likelihood classifiers
+presented in [36] (denoted by MLretrain ) and 2) the
+maximum likelihood cascade classifier proposed in [37]
+(denoted by MLcascade ).
+For validating the potentialities of the proposed domain
+adaptation technique, we identified the DASVM that
+provided the highest overall accuracy on the basis of the
+available target-domain true labels (which were not taken
+into account in the learning phase). This accuracy value
+represents an upper bound for the performances of the
+presented method. In order to assess the effectiveness of the
+empirical circular validation strategy introduced in Section 4,
+for all of the considered DASVMs, we applied the proposed
+domain adaptation algorithm in the reverse sense. Starting
+from the corresponding set of target-domain predicted
+labels, Y^tn , for the generic nth DASVM, we defined an
+estimated training set T^tn ¼ fX t ; Y^tn g for Dt and trained the
+correspondent nth “backward” DASVM using T^tn as labeled
+
+780
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+Fig. 4. Problem I: (a) original source-domain data; (b) decision regions obtained for the source-domain problem by a supervised SVM trained
+according to a 10-fold CV strategy. Decision regions obtained for the target-domain problem by the proposed DASVM technique with optimal
+selection of learning parameters when (c)  ¼ 10 , (d)  ¼ 20 , (e)  ¼ 30 , (f)  ¼ 40 , and (g)  ¼ 50 . (h) Superimposition of source data and target
+data for  ¼ 50 (the dashed circles point out regions, where target data that belong to class !1 overlap source data that belong to class !2 , and vice
+versa) and decision regions obtained for the source-domain problem by a supervised SVM trained according to a 10-fold CV strategy.
+
+set and source-domain samples X s (considered without their
+labels) as unlabeled set (the same learning parameters
+employed in the forward learning were used). By exploiting
+available prior information for Ds , we determined whether
+the final solution Y^sn was consistent or not and, accordingly,
+inferred the correctness of the related solution to the targetdomain problem Y^tn . By using the available target-domain
+true labels, we could compute the average percentage overall
+accuracy of the solutions correctly identified as consistent
+with Dt by the circular validation strategy. This value is very
+important as it represents an average measure for the quality
+of the solutions consistent with Dt identified by the proposed
+validation strategy without any prior information on X t .
+Note that, in order to obtain significant estimations, for all of
+the considered problems, we trained 350 backward DASVMs
+both starting from consistent and nonconsistent solutions
+with the target-domain problem. For the sake of comparison,
+we also evaluated the accuracies exhibited on target-domain
+samples by a supervised SVM trained on source-domain
+data according to a 10-fold cross validation (CV).
+In all experiments, we employed the Sequential Minimal
+Optimization algorithm [42] for training both the supervised SVMs and, with proper modifications, the proposed
+DASVMs. As pointed out in Section 4, we fixed ¼ 0:5.
+Concerning the convergence criterion, a reasonable empirical choice has proven to be ¼ 3102 .
+
+6.1 Problem I: Synthetic Data Set
+The first set of experiments was aimed at characterizing the
+behavior of both the DASVM algorithm and the circular
+
+validation strategy when addressing a well-defined problem in a controlled environment at different levels of
+complexity. This analysis is particularly important for
+empirically understanding the operational conditions for
+which we can expect to obtain satisfactory performances
+with the proposed methods. We considered as sourcedomain data a toy data set made up of 300 samples
+generated according to a bidimensional pattern of two
+intertwining moons associated with two specific information classes (150 samples each), as shown in Fig. 4a. Target
+data were generated by rotating anticlockwise the original
+source data set 11 times by 10, 15, 20, 25, 30, 35, 40, 45, 50,
+55, and 60 degrees, respectively. Due to rotation, source
+and target-domain data exhibit different distributions (i.e.,
+P s ðxÞ 6¼ P t ðxÞ and P s ðy j xÞ 6¼ P t ðy j xÞ). In particular, the
+greater the rotation angle (), the more complex the
+resulting domain adaptation problem, as confirmed by
+the values for DJS reported in Table 2.
+The proposed DASVM algorithm proved to be particularly effective for solving this kind of problem and involved
+very high accuracies even in very critical conditions. From
+Table 3, one can observe that, for an optimal selection of
+learning parameters (DASVMbest ), we could obtain perfect
+separation between information classes when  2 ½10 ; 50 
+(see Figs. 4c, 4d, 4e, 4f, and 4g). The accuracies are always
+higher than those exhibited by the supervised SVM trained
+according to a 10-fold CV on source-domain data (the OA%
+grows almost quadratically with respect to the rotation
+angle, i.e., from þ0:33 for  ¼ 10 to þ67:33 for  ¼ 50 ).
+Only for greater values of  (i.e., 55 and 60 ) the DASVM
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+781
+
+TABLE 2
+Problem I: Jensen-Shannon Divergence Values for Different Rotation Angles
+
+was not able to find a solution consistent with Dt . Nevertheless, this behavior seems reasonable due to the complexity
+of the corresponding domain adaptation problems. In these
+cases, the initial separation hyperplane determined according to source-domain samples resulted in an average OA%
+on target-domain data smaller than 30. Accordingly, it was
+not possible to recover correct classification labels as more
+than 70 percent of target-domain samples were misclassified
+at the first iteration of the DASVM algorithm. The complexity
+of this problem is also confirmed from the high values of DJS .
+It should be pointed out that, as soon as the rotation
+angle becomes greater than 35 , target-domain data that
+actually belong to the class !1 overlap source-domain data
+belonging to the class !2 , and vice versa (see, for instance,
+Fig. 4h). Note that, due to rotation, there are target-domain
+instances that coincide with source-domain instances but
+with different true labels. This represents a strong limitation
+for other state-of-the-art domain adaptation techniques
+reported in Section 2. The proposed DASVM technique,
+due do to the fact that iteratively erases original training
+samples in the iterative learning phase, does not suffer from
+this drawback and is able to obtain satisfactory performances also in such critical cases. It is worth noting that
+DASVMs outperformed both MLretrain and MLcascade : the
+greater the rotation angle  (and thus, the greater the
+problem complexity), the higher the gap in terms of
+classification accuracy (see Table 3). In particular, for
+ ¼ 50 , the increase in OA% is around 30, thus further
+
+confirming the effectiveness of the proposed technique in
+addressing also very critical situations.
+With regard to the presented circular validation strategy,
+we obtained very promising results. In particular, for all of
+the considered cases, the proposed strategy was always
+able to correctly reject solutions that were not consistent
+with Dt , thus satisfying the most critical assumption for the
+operational employment of the proposed technique. As
+expected, when the DASVM started from a solution that
+did not adequately model the source-domain classification
+problem, the system could not recover a solution consistent
+ j DÞ
+ ¼ 0. Table 3 also reports the
+with Ds , thus P ðA
+probability of correct validation of solutions consistent
+ j BÞ,
+ for the cases in which it was possible to
+with Dt , P ðA
+obtain at least one of them in the forward learning phase
+(i.e.,  2 ½10 ; 50 ). It is possible to notice that, for small
+values of , the proposed circular strategy identified more
+than one half of correct solutions, while, by increasing 
+values, the number of correct solutions properly recognized
+gradually decreased. This is a reasonable behavior if we
+consider that the distance between distributions sharply
+increases and learning parameters are not optimized for the
+backward process.
+Fig. 5 shows some examples of the empirical estimated
+probability distribution P^ðOA%Þ of the OA% for the
+solutions obtained for source-domain data at the end of the
+backward learning process when the system starts from both
+ (black line) and state D
+ (gray line). If we consider as
+state B
+
+TABLE 3
+Problem I: Percentage Overall Accuracy Exhibited on Target-Domain Instances for Different Rotation Angles
+
+(a) Percentage OA exhibited by: 1) A supervised SVM trained on source-domain samples according to a 10-fold CV strategy (SV M CV ); 2) the
+proposed DASVM technique with optimal selection of learning parameters (DASV M best ). The average accuracy associated with the consistent
+solutions obtained by the proposed DASVM technique and correctly identified by the circular validation strategy (DASV M ave ) and the probability
+ j BÞ
+ of identifying consistent solutions with the proposed circular validation strategy are also given. (b) Percentage OA exhibited by: 1) The
+P ðA
+retraining technique for maximum likelihood classifier (MLretrain ); 2) the maximum likelihood cascade classifier (MLcascade ).
+
+782
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+Fig. 5. Problem I: Empirical estimated probability distribution P^ðOA%Þ of the percentage overall accuracy (OA%) for the solutions obtained on the
+ (black line) and state D
+ (gray line) for (a)  ¼ 10 , (b)  ¼ 20 , (c)  ¼ 30 , (d)  ¼ 40 , and
+source domain when the system starts from both state B
+
+ if OA%  85, the system moves to state A.
+(e)  ¼ 50 . If OA% < 85, the system moves to state C;
+
+an example Fig. 2b (which refers to the case  ¼ 20 ), we can
+see that q0:85 ðOA%Þ (i.e., the quantile corresponding to
+OA%th ¼ 85) is equal to 0.48. Accordingly, as the systems
+ BÞ
+ ¼
+move to state C if OA% < OA%th , we have that P ðCj
+
+
+
+
+q0:85 ðOA%Þ ¼ 0:48; therefore, P ðAjBÞ ¼ 1  P ðCjBÞ, which
+ in the
+means that the classifier can go back to state A
+52 percent of the cases. The very important conclusion of this
+analysis is that even in critical situations, the proposed
+circular validation strategy was able to identify correct
+solutions without considering any prior information on the
+labels of target-domain data. Moreover, if we consider the
+average OA% of solutions correctly identified as consistent
+with Dt , we can see that it is comparable with that obtained
+with optimal selection of leaning parameters, thus confirming the effectiveness of the proposed circular validation
+strategy.
+
+6.2 Problem II: Brain Computer Interface Data Set
+The second data set considered refers to a Brain Computer
+Interface (BCI) problem. A BCI is an assistive communication system, which helps people with severe disabilities to
+realize the control of motor neuroprotheses. The data set we
+considered was made up of electrocorticogram (ECoG)
+signals recorded from the same subject performing the
+same task in two different days (i.e., at times t1 and t2 ) with
+about one week in between. In the considered case, the
+subject had to perform imagined movements of either the
+left small finger or the tongue (associated with the classes !1
+and !2 , respectively) for at least 3 seconds. For greater
+details about this data set, the reader is referred to [43], [44].
+It is worth noting that the design of a classifier for a BCI
+system is very challenging when a classifier trained on data
+
+acquired on a certain day should classify data recorded in
+other days without retraining. On one hand, the patient
+might be in a different state concerning motivation, fatigue,
+etc. Therefore, his brain will show different electrical
+activity. On the other hand, the recording system might
+have undergone slight changes concerning electrode positions and impedances.
+Fig. 6a presents the system designed for extracting the
+features used in our experiments. Original ECoG signals
+were first low-pass (0-3 Hz) and band-pass (8-30 Hz)
+filtered in order to acquire movement-related potentials
+(MRD) and event-related desynchronization (ERD) signals,
+respectively, which are electrical physiological phenomena
+activated by limb movements or imagined movements [45],
+[46]. Then, we used the common spatial subspace decomposition (CSSD) technique, which allows us to extract signal
+components specific to one condition and eliminate background activities [47]. For both frequency intervals, we
+selected the two components that, according to the CSSD
+technique, are more related to the considered information
+classes. The final data set is obtained by merging together
+these two pairs of features. For the source domain at time t1 ,
+the brain activity was monitored for 278 events (139
+associated with each information class), whereas, for the
+target domain at time t2 , 100 events were considered (50 for
+each information class).
+The resulting domain adaptation problem proved to be
+particularly challenging, as confirmed by the values for the
+DJS reported in Table 4. Source and target-domain overall
+distributions were rather different (0.408), but the gap was
+even more relevant for the conditional class distributions
+(0.625 for the class !1 and 0.616 for the class !2 ). Even in such
+critical conditions, the DASVM algorithm proved effective
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+783
+
+Fig. 6. Problem II: (a) Architecture of the system employed for extracting the features used in the experiments. (b) Empirical estimated probability
+distribution P^ðOA%Þ of the percentage overall accuracy (OA%) for the solutions obtained on the source domain when the system starts from both
+
+ if OA%  85, the system moves to state A.
+ (black line) and state D
+ (gray line). If OA% < 85, the system moves to state C;
+state B
+
+TABLE 4
+Problem II: Jensen-Shannon Divergence Values
+
+TABLE 5
+Problem II: Percentage Overall Accuracy (OA%) Exhibited on Target-Domain Instances by:
+1) a Supervised SVM Trained on Source-Domain Instances According to a 10-Fold CV Strategy (SVMCV );
+2) the Proposed DASVM Technique with Optimal Selection of Learning Parameters (DASVMbest );
+3) the Maximum Likelihood Classifier (MLretrain ); and 4) the Maximum Likelihood Cascade Classifier (MLcascade )
+
+The average accuracy associated with the consistent solutions obtained by the proposed DASVM technique and correctly identified by the circular
+validation strategy (DASVMave ) is also given.
+
+(see Table 5). In particular, in the best case, we were able to
+obtain an OA% equal to 93.00, which corresponds to an
+increase of þ14:00 with respect to the OA% yielded with the
+standard supervised SVM trained according to the 10-fold
+CV strategy at time t1 . Moreover, DASVMs provided also
+higher OA% than both MLretrain (þ5) and MLcascade (þ6). The
+proposed technique exhibited a very good capability of
+seizing the structure of the investigated domain adaptation
+problem, as it is possible to infer from the behavior of
+P^ðOA%Þ (see Fig. 6b). In particular, with the circular
+validation strategy, we were able to correctly identify
+66 percent of solutions consistent at time t2 (i.e.,
+q0:85 ðOA%Þ ¼ 0:44) with an average OA% equal to 91.65
+(þ11:65 with respect to the supervised SVM). This means
+that it was possible to recover a satisfactory accuracy for
+source-domain data only starting from high accuracies for
+target-domain data, thus confirming that solutions are
+correctly validated as consistent only if the target-domain
+problem is well modeled. Accordingly, also for this data set,
+ thus
+ to state A,
+the system never moved back from state D
+exhibiting the crucial property to be always able to reject
+wrong solutions.
+
+6.3 Problem III: Remote Sensing Data Set
+The third set of experiments was carried out on a multiclass
+problem in the context of a remote sensing application. We
+investigated the task of automatic updating of land-cover
+
+maps by classification of remote sensing images acquired
+over the same geographical area at two different times t1
+and t2 . We considered two coregistered multispectral
+images acquired in September 1995 and July 1996 by the
+Thematic Mapper (TM) sensor of the Landsat 5 Satellite (see
+Figs. 7a and 7b). The selected test site was a section of about
+11:7 km 10:8 km (i.e., 412 382 pixels) of a scene including Lake Mulargia on the Island of Sardinia, Italy. The five
+information classes that characterized the investigated site
+at both times were taken into account, i.e., forest, pasture,
+urban area, water body, and vineyard. For both source and
+target-domain problems, the same number of samples was
+considered for each information class (see Table 6). It is
+worth noting that, due to many differences at the two
+acquisition times (e.g., different acquisition system state,
+dissimilar illumination conditions, alterations in the phenologic state of vegetation, changes occurred on the ground,
+etc.), the distance between spectral distributions of the two
+images is considerable.
+Among the seven available spectral bands, as commonly
+done in the literature, we did not take into account band 6,
+which corresponds to the low-resolution channel acquired
+in the thermal infrared. In order to characterize the texture
+properties of the considered classes and to exploit the
+distribution-free nature of SVMs, we extracted five texture
+features based on the gray-level co-occurrence matrix (i.e.,
+
+784
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+Fig. 7. Problem III: Spectral channel 5 of the multispectral Landsat-5 Thematic Mapper images used in the experiments. (a) Image acquired in
+September 1995. (b) Image acquired in July 1996. (c) Empirical estimated probability distribution P^ðOA%Þ of the percentage overall accuracy (OA%)
+ (black line) and state D
+ (gray line). If OA% < 85, the
+for the solutions obtained on the source domain when the system starts from both state B
+
+ if OA%  85, the system moves to state A.
+system moves to state C;
+
+TABLE 6
+Problem III: Number of Both Source-Domain (September 1995 Image) and Target-Domain (July 1996 Image) Patterns
+and Jensen-Shannon Divergence Values
+
+TABLE 7
+Problem III: Percentage Overall Accuracy (OA%), Producer’s Accuracies (PA%), and User’s Accuracies (UA%) Exhibited on
+Target-Domain Instances by: 1) a Supervised SVM Trained on Source-Domain Instances
+According to a 10-Fold CV Strategy (SVMCV ); 2) the Proposed DASVM Technique with Optimal Selection of Learning Parameters
+(DASVMbest ); 3) the Retraining Technique for the Maximum Likelihood Classifier (MLretrain );
+and 4) the Maximum Likelihood Cascade Classifier (MLcascade )
+
+The average accuracies associated with the consistent solutions obtained by the proposed DASVM technique and correctly identified by the circular
+validation strategy (DASVMave ) are also given.
+
+correlation, sum average, sum variance, difference variance, and entropy) and added them to the six TM
+channels. As the images were acquired in different periods
+of the year, the resulting overall DJS distance between
+source-domain distribution at time t1 and target-domain
+distribution at time t2 was considerable (i.e., 0.391). The
+complexity of the investigated domain adaptation problem
+is stressed up by the distances between conditional class
+distribution at the two dates, which assume high values, in
+particular, for the classes pasture (i.e., 0.517) and vineyard
+(i.e., 0.567). As pointed out in Section 3, one of the
+constraints imposed by the DASVM algorithm is the use of
+the OAA multiclass architecture; therefore, we adopted the
+same multiclass strategy also when dealing with supervised SVMs used for comparisons.
+
+Table 7 shows the results obtained in terms of OA% and
+both percentage producer’s and user’s accuracies5 (i.e.,
+PA% and UA%, respectively) for each information class.
+Taking into account the complexity of the problem under
+investigation, the obtained classification accuracies confirmed also in this case the good adaptation capabilities of
+the proposed DASVM technique, which was able to
+sharply increase the accuracy with respect to the supervised SVM trained according to a 10-fold CV on sourcedomain samples. In particular, in the best case, the OA%
+5. For each specific information class: 1) Producer’s accuracy is defined
+as the ratio between the number of samples correctly classified as belonging
+to that class and the total number of reference samples available for that
+class; 2) user’s accuracy is defined as the ratio between the number of
+samples correctly classified as belonging to that class and the total number
+of samples classified as belonging to that class.
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+increased up to 94.78 (i.e., þ19:05). Moreover, the improvement in the PA% is huge for pasture (i.e., þ63:78)
+and remarkable for vineyard (þ9:12), whereas the increase
+in the UA% is noteworthy for vineyard (i.e., þ42:27), forest
+(þ17:62), and pasture (þ9:07).
+Also, in this case, DASVMs exhibited higher accuracies
+than MLretrain and MLcascade (þ2:02 and þ3:03 in terms of
+OA% for optimal selection of learning parameters), thus
+confirming their effectiveness also when addressing multiclass problems.
+Fig. 7c points out the effectiveness of the proposed
+circular validation strategy also on this data set. This
+strategy allowed us to correctly reject all of the solutions
+that were not consistent with Dt . In addition, when the
+ we had q0:85 ðOA%Þ ¼ 0:51,
+system started from state B,
+which corresponds to almost one-half (i.e., 49 percent) of
+consistent solutions properly validated without any prior
+information for the image at time t2 . It is worth noting that,
+
+in most part of the cases, the system moved back to state A
+when the classification accuracy at t2 was particularly high.
+This is confirmed by the high average OA% obtained for
+target-domain instances for the solutions correctly identified as consistent by the validation strategy. The average
+OA% is equal to 90.88 (þ15:15 with respect to the
+supervised SVM), whereas as concerns both PA% and
+UA%, the behavior is similar to that obtained for the best
+case described above. In particular, the increase in pasture
+PA% and vineyard UA% is considerable (i.e., þ52:93 and
+þ29:00, respectively).
+
+7
+
+DISCUSSION AND CONCLUSION
+
+In this paper, we have addressed domain adaptation
+problems by introducing two main novel contributions: 1) a
+domain adaptation classifier based on SVMs (DASVM) and
+2) a circular strategy aimed at validating the results obtained
+with a domain adaptation classifier.
+The proposed DASVM technique extends the principles
+of SVMs to the domain adaptation framework by taking into
+account that unlabeled test samples are drawn from a target
+domain Dt different from the source domain Ds of training
+samples. Labeled patterns drawn from Ds are used only for
+constraining the learning phase of the classifier, but the final
+solution only models the structure of Dt . In particular,
+labeled source-domain data are employed for determining
+an initial discriminant function for the target-domain
+problem; then, unlabeled samples from Dt are exploited for
+properly adjusting the decision function, while samples from
+Ds are gradually erased. The final classification function is
+determined only on the basis of semilabeled samples, i.e.,
+originally unlabeled target-domain instances that obtain
+labels during the learning process. For better controlling the
+behavior and stability of the classifier, an adaptive weighting
+strategy for the regularization parameters based on a
+temporal criterion is adopted. This permits us to tune the
+influence of unlabeled patterns and, in general, prevents the
+system from converging to improper solutions.
+It is worth noting that the proposed DASVM is designed
+for addressing a problem conceptually different from those
+faced by transductive and semi-supervised SVMs, which
+have been defined for handling problems where labeled
+
+785
+
+and unlabeled data are drawn from the same domain. Thus,
+they are ineffective in domain adaptation, where training
+data are assumed to be available only for a source domain
+different (even if related) from the target domain of the
+(unlabeled) test samples.
+As for transductive and semi-supervised SVMs, also for
+DASVMs it is not possible to guarantee for obtaining reliable
+solutions to the classification problem. In fact, if the accuracy
+after the initialization phase is particularly low (i.e., most of
+the unlabeled target-domain samples are incorrectly classified at the beginning of the learning process), it becomes
+difficult to obtain satisfactory performances. The convergence of the algorithm to a consistent solution depends on
+the intrinsic correlation between the two domains: The
+farther Dt is from Ds , the harder the resulting domain
+adaptation problem. This correlation can be measured by
+computing similarity metrics between Ds and Dt .
+In the framework of domain adaptation, due to the
+absence of prior information for target-domain instances,
+standard statistical validation strategies proposed in the
+literature cannot be used for assessing the effectiveness of
+learning and the validity of the resulting classifier. In this
+context, we proposed an indirect circular validation
+strategy based on the idea that an intrinsic structure relates
+the solutions consistent with Ds and Dt . A solution for Dt
+(for which no prior information is available) is assumed to
+be consistent if the solution obtained by applying the same
+domain adaptation learning algorithm in the reverse sense
+(i.e., using the classification labels in place of missing prior
+knowledge for target-domain instances) to source-domain
+data (considered as unlabeled in the reverse domain
+adaptation learning) is associated with an acceptable
+accuracy (which can be evaluated due to the available true
+labels for source-domain samples).
+From the analysis of experimental results obtained on a
+series of two-dimensional toy problems and on two real
+problems defined in the context of brain computer interface
+and remote sensing, we can conclude that the presented
+DASVM resulted in high and satisfactory classification
+accuracy, outperforming other state-of-the-art domain
+adaptation techniques. Several trials also confirmed the
+effectiveness of the proposed circular validation strategy,
+which always proved able to reject solutions that were not
+consistent with the investigated classification task and
+identified acceptable solutions for Dt even in very critical
+conditions. In this framework, the joint use of both the
+proposed DASVM classification technique and the circular
+validation strategy seems particularly suitable to define
+systems capable of solving real application problems.
+As a final remark, it is worth noting that, from a
+computational viewpoint, each iteration of the DASVMs
+requires a time equivalent to that taken from the learning of
+a supervised SVM. In fact, as the number of target-domain
+semilabeled patterns increases, the number of sourcedomain labeled patterns decreases; therefore, the cardinality of the training set does not increase with the number of
+iterations. Accordingly, it is possible to state that the
+computational load grows linearly with the number of
+iterations. In general, the computational time is comparable
+to the one of semi-supervised methods and higher than the
+
+786
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE,
+
+one required by supervised SVMs (on average, a hundred
+of iterations for each binary DASVM are needed). Nevertheless, taking into account both the very promising results
+obtained and the complexity of the investigated problems,
+we can consider this cost reasonable.
+
+ACKNOWLEDGMENTS
+The authors would like to thank the associate editor and the
+anonymous reviewers for their valuable comments.
+
+REFERENCES
+[1]
+[2]
+[3]
+[4]
+[5]
+[6]
+
+[7]
+[8]
+[9]
+[10]
+[11]
+[12]
+[13]
+[14]
+[15]
+
+[16]
+
+[17]
+[18]
+[19]
+[20]
+[21]
+[22]
+
+R. Caruana, “Multitask Learning,” Machine Learning J., vol. 28,
+no. 1, pp. 41-75, 1997.
+S. Thrun and L.Y. Pratt, Learning to Learn. Kluwer Academic
+Publishers, 1998.
+S. Ben-David and R. Schuller, “Exploiting Task Relatedness for
+Multiple Task Learning,” Proc. 16th Ann. Conf. Learning Theory,
+2003.
+B. Zadrozny, “Learning and Evaluating Classifiers under Sample
+Selection Bias,” Proc. 21st Int’l Conf. Machine Learning, 2004.
+M. Dudik, R.E. Schapire, and J.S. Philips, “Correcting Sample
+Selection Bias in Maximum Entropy Density Estimation,” Advances
+in Neural Information Processing Systems 17, MIT Press, 2005.
+J. Huang, A. Smola, A. Gretton, K.M. Borgwardt, and B.
+Schölkopf, “Correcting Sample Selection Bias by Unlabeled Data,”
+Advances in Neural Information Processing Systems 20, MIT Press,
+2007.
+H. Shimodaira, “Improving Predictive Inference under Covariate
+Shift by Weighting the Loglikelihood Function” J. Statistical
+Planning and Inference, vol. 90, pp. 227-244, 2000.
+M. Sugiyama and K.R. Müller, “Input-Dependent Estimation of
+Generalization Error under Covariate Shift,” Statistics and Decisions, vol. 23, pp. 249-279, 2005.
+H. Jeffreys, “An Invariant Form for the Prior Probability in
+Estimation Problems,” Proc. Royal Soc. London, vol. 186, pp. 453461, 1946.
+S. Kullback and R. Leibler, “On Information and Sufficiency,”
+Annals of Math. Statistics, vol. 22, pp. 79-86, 1951.
+J. Lin, “Divergence Measures Based on the Shannon Entropy,”
+IEEE Trans. Information Theory, vol. 37, pp. 145-151, 1991.
+V.N. Vapnik, Statistical Learning Theory. John Wiley & Sons, Inc.,
+1998.
+V.N. Vapnik, The Nature of Statistical Learning Theory, second ed.
+Springer-Verlag, 1995.
+M. Pontil and A. Verri, “Support Vector Machines for 3D Object
+Recognition,” IEEE Trans. Pattern Analysis and Machine Intelligence,
+vol. 20, no. 6, pp. 637-646, June 1998.
+G. Ratsch, S. Mika, B. Schölkopf, and K.R. Muller, “Constructing
+Boosting Algorithms from SVMs: An Application to One-Class
+Classification,” IEEE Trans. Pattern Analysis and Machine Intelligence, vol. 24, no. 9, pp. 1184-1199, Sept. 2002.
+K. In Kim, K. Jung, S.H. Park, and H.J. Kim, “Support Vector
+Machines for Texture Classification,” IEEE Trans. Pattern
+Analysis and Machine Intelligence, vol. 24, no. 11, pp. 1542-1550,
+Nov. 2002.
+K.P. Bennett and A. Demiriz, “Semi-Supervised Support Vector
+Machines,” Advances in Neural Information Processing Systems,
+vol. 10, pp. 368-374, MIT Press, 1998.
+G. Fung and O.L. Mangasarian, “Semi-Supervised Support Vector
+Machines for Unlabeled Data Classification,” Optimization Methods
+and Software, vol. 15, no. 1, 2001.
+X. Zhu, “Semi-Supervised Learning Literature Survey,” TR-1530,
+Computer Sciences, Univ. of Wisconsin-Madison, 2005.
+T. Joachims, “Transductive Inference for Text Classification Using
+Support Vector Machines,” Proc. 16th Int’l Conf. Machine Learning,
+1999.
+Y. Chen, G. Wang, and S. Dong, “Learning with Progressive
+Transductive Support Vector Machine,” Pattern Recognition Letters,
+vol. 24, no. 12, pp. 1845-1855, 2003.
+R. Hwa, “Supervised Grammar Induction Using Training Data
+with Limited Constituent Information,” Proc. 37th Ann. Meeting of
+the Assoc. for Computational Linguistics, 1999.
+
+VOL. 32, NO. 5,
+
+MAY 2010
+
+[23] D. Gildea, “Corpus Variation and Parser Performance,” Proc. 2001
+Conf. Empirical Methods in Natural Language Processing, 2001.
+[24] B. Roark and M. Bacchiani, “Supervised and Unsupervised PCFG
+Adaptation to Novel Domains,” Proc. 2003 Conf. North Am. Chapter
+of the Assoc. for Computational Linguistics and Human Language
+Technology, 2003.
+[25] X. Li and J. Bilmes, “A Bayesian Divergence Prior for Classifier
+Adaptation,” Proc. 11th Int’l Conf. Artificial Intelligence and
+Statistics, 2007.
+[26] C. Chelba and A. Acero, “Adaptation of Maximum Entropy
+Capitalizer: Little Data Can Help a Lot,” Proc. 2004 Conf. Empirical
+Methods in Natural Language Processing, 2004.
+[27] H. Daumè III and D. Marcu, “Domain Adaptation for Statistical
+Classifiers,” J. Artificial Intelligence Research, vol. 26, pp. 101-126,
+2006.
+[28] J. Jiang and C. Zhai, “Instance Weighting for Domain Adaptation
+in NLP,” Proc. 45th Ann. Meeting of the Assoc. for Computational
+Linguistics, 2007.
+[29] R. Florian, H. Hassan, A. Ittycheriah, H. Jing, N. Kambhatla, X.
+Luo, N. Nicolov, and S. Roukos, “A Statistical Model for
+Multilingual Entity Detection and Tracking,” Proc. 2004 Conf.
+North Am. Chapter of the Assoc. for Computational Linguistics and
+Human Language Technology, 2004.
+[30] H. Daumè III, “Frustratingly Easy Domain Adaptation,” Proc. 45th
+Ann. Meeting of the Assoc. for Computational Linguistics, 2007.
+[31] J. Blitzer, R. McDonald, and F. Pereira, “Domain Adaptation with
+Structural Correspondence Learning,” Proc. 2006 Conf. Empirical
+Methods in Natural Language Processing, 2006.
+[32] S. Ben-David, J. Blitzer, K. Crammer, and F. Pereira, “Analysis of
+Representation for Domain Adaptation,” Advances in Neural
+Information Processing Systems 19, MIT Press, 2006.
+[33] S. Satpal and S. Sarawagi, “Domain Adaptation of Conditional
+Probability Models via Feature Subsetting,” Proc. 11th European
+Conf. Principles and Practice of Knowledge Discovery in Databases,
+2007.
+[34] W. Dai, G.R. Xue, Q. Yang, and Y. Yu, “Transferring Naı̈ve Bayes
+Classifier for Text Classification,” Proc. 22nd Nat’l Conf. Artificial
+Intelligence, 2007.
+[35] W. Dai, G.R. Xue, Q. Yang, and Y. Yu, “Co-Clustering Based
+Classification for Out-of-Domain Documents,” Proc. ACM
+SIGKDD, 2007.
+[36] L. Bruzzone and D. Fernàndez Prieto, “Unsupervised Retraining
+of a Maximum-Likelihood Classifier for the Analysis of Multitemporal Remote-Sensing Images,” IEEE Trans. Geosciences and
+Remote Sensing, vol. 39, pp. 456-460, 2001.
+[37] L. Bruzzone and D. Fernàndez Prieto, “A Partially Unsupervised
+Approach to the Automatic Classification of Multitemporal
+Remote-Sensing Images,” Pattern Recognition Letters, vol. 33,
+no. 9, pp. 1063-1071, 2002.
+[38] L. Bruzzone and R. Cossu, “A Multiple-Cascade-Classifier System
+for a Robust and Partially Unsupervised Updating of Land-Cover
+Maps,” IEEE Trans. Geosciences and Remote Sensing, vol. 40, no. 9,
+pp. 1984-1996, Sept. 2002.
+[39] L. Bruzzone, R. Cossu, and G. Vernazza, “Combining Parametric
+and Non-Parametric Algorithms for a Partially Unsupervised
+Classification of Multitemporal Remote-Sensing Images,” Information Fusion, vol. 3, no. 4, pp. 289-297, 2002.
+[40] S. Tajudin and D. Landgrebe, “Robust Parameter Estimation for
+Mixture Model,” IEEE Trans. Geoscience and Remote Sensing, vol. 38,
+pp. 439-445, 2000.
+[41] N. Cristianini and J. Shawe-Taylor, An Introduction to Support
+Vector Machines. Cambridge Univ. Press, 2000.
+[42] J. Platt, “Fast Training of Support Vector Machines Using
+Sequential Minimal Optimization,” Advances in Kernel Methods:
+Support Vector Learning, B. Schölkopf, C. Burges, and A. Smola,
+eds., pp. 185-208, MIT Press, 1998.
+[43] http://ida.first.fraunhofer.de/projects/bci/competition_iii/,
+2008.
+[44] T. Lal, T. Hinterberger, G. Widman, M. Schröder, J. Hill, W.
+Rosenstiel, C. Elger, B. Schölkopf, and N. Birbaumer, “Methods
+Towards Invasive Human Brain Computer Interfaces,” Advances
+in Neural Information Processing Systems 17, MIT Press, 2004.
+[45] C. Toro, G. Deuschl, R. Thatcher, S. Sato, C. Kufta, and M. Hallett,
+“Event-Related Desynchronization and Movement-Related Cortical Potentials on the ECoG and EEG,” Electroencephalography and
+Clinical Neurophysiology, vol. 93, pp. 380-389, 1994.
+
+BRUZZONE AND MARCONCINI: DOMAIN ADAPTATION PROBLEMS: A DASVM CLASSIFICATION TECHNIQUE AND A CIRCULAR...
+
+[46] C. Babiloni, F. Carducci, F. Cincotti, P.M. Rossini, C. Neuper, G.
+Pfurtscheller, and F. Babiloni, “Human Movement-Related Potentials vs Desynchronization of EEG Alpha Rhythm: A HighResolution EEG Study,” Neuroimage, vol. 10, pp. 658-665, 1999.
+[47] Y. Wang, P. Berg, and M. Scherg, “Common Spatial Subspace
+Decomposition Applied to Analysis of Brain Responses Under
+Multiple Task Conditions: A Simulation Study,” Clinical Neurophysiology, vol. 110, pp. 604-614, 1999.
+Lorenzo Bruzzone received the laurea (MS)
+degree in electronic engineering (summa cum
+laude) and the PhD degree in telecommunications from the University of Genoa, Italy, in 1993
+and 1998, respectively. He is currently a full
+professor of telecommunications at the University of Trento, Italy, where he teaches remote
+sensing, pattern recognition, radar, and electrical communications. His current research
+interests are in the areas of remote sensing,
+signal processing, and pattern recognition (analysis of multitemporal
+images, feature extraction and selection, classification, regression and
+estimation, data fusion, machine learning). He conducts and supervises
+research on these topics within the frameworks of several national and
+international projects. He is the author (or coauthor) of 86 scientific
+publications in refereed international journals (58 in IEEE journals), more
+than 140 papers in conference proceedings, and 11 book chapters. He
+is editor/coeditor of nine books/conference proceedings. He is a referee
+for many international journals and has served on the scientific
+committees of several international conferences. He is a member of
+the managing committee of the Italian Interuniversity Consortium on
+Telecommunications and a member of the scientific committee of the
+India-Italy Center for Advanced Research. Since 2009, he has been a
+member of the administrative committee of the IEEE Geoscience and
+Remote Sensing Society. He ranked first place in the Student Prize
+Paper Competition of the 1998 IEEE International Geoscience and
+Remote Sensing Symposium (Seattle, July 1998). He was a recipient of
+the Recognition of the IEEE Transactions on Geoscience and Remote
+Sensing Best Reviewers in 1999 and was a guest coeditor of several
+special issues of the IEEE Transactions on Geoscience and Remote
+Sensing. He was the general chair and cochair of the First and Second
+IEEE International Workshops on the Analysis of Multitemporal Remote
+Sensing Images (MultiTemp), and is currently a member of the
+permanent steering committee of this series of workshops. Since
+2003, he has been the chair of the SPIE Conference on Image and
+Signal Processing for Remote Sensing. From 2004 to 2006, he served
+as an associate editor of the IEEE Geoscience and Remote Sensing
+Letters and currently is an associate editor for the IEEE Transactions on
+Geoscience and Remote Sensing and the Canadian Journal of Remote
+Sensing. In 2008 he was appointed a member of the joint NASA/ESA
+Science Definition Team for Outer Planet Flagship Missions. He is also a
+member of the International Association for Pattern Recognition and the
+Italian Association for Remote Sensing (AIT). He is a fellow of the IEEE.
+
+787
+
+Mattia Marconcini received the “laurea” (BS)
+and the “laurea specialistica” (MS) degrees in
+telecommunication engineering (summa cum
+laude) and the PhD degree in communication
+and information technologies from the University
+of Trento, Italy, in 2002, 2004, and 2008,
+respectively. He is presently with the Remote
+Sensing Laboratory in the Department of Information Engineering and Computer Science,
+University of Trento. His current research
+activities are in the area of machine learning, pattern recognition, and
+remote sensing. In particular, his interests are related to transfer
+learning and domain adaptation classification and image segmentation
+problems. He conducts research on these topics within the frameworks
+of several national and international projects. He was a finalist in the
+Student Prize Paper Competition of the 2007 IEEE International
+Geoscience and Remote Sensing Symposium (Barcelona, July 2007).
+He is a member of the IEEE.
+
+. For more information on this or any other computing topic,
+please visit our Digital Library at www.computer.org/publications/dlib.
+
+

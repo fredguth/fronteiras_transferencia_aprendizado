@@ -1,0 +1,11 @@
+Domain Transfer Multiple Kernel Learning
+Cross-domain learning methods have shown promising results by leveraging labeled patterns from the auxiliary domain to
+learn a robust classifier for the target domain which has only a limited number of labeled samples. To cope with the considerable
+change between feature distributions of different domains, we propose a new cross-domain kernel learning framework into which many
+existing kernel methods can be readily incorporated. Our framework, referred to as Domain Transfer Multiple Kernel Learning
+(DTMKL), simultaneously learns a kernel function and a robust classifier by minimizing both the structural risk functional and the
+distribution mismatch between the labeled and unlabeled samples from the auxiliary and target domains. Under the DTMKL
+framework, we also propose two novel methods by using SVM and prelearned classifiers, respectively. Comprehensive experiments
+on three domain adaptation data sets (i.e., TRECVID, 20 Newsgroups, and email spam data sets) demonstrate that DTMKL-based
+methods outperform existing cross-domain learning and multiple kernel learning methods.
+Cross-domain learning, domain adaptation, transfer learning, support vector machine, multiple kernel learning.

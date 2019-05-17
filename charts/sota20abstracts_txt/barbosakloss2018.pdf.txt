@@ -1,0 +1,24 @@
+
+
+Face Veriﬁcation: Strategies for Employing Deep Models
+
+
+Features extracted with deep learning have now
+achieved state-of-the-art results in many tasks. However, to
+reuse a learned deep model, transfer learning with ﬁne-tuning
+needs to be employed, which requires to re-train the whole
+model or part of it to extract useful features in the new
+domain. This step is burdensome and requires heavy computing
+power. Therefore, this work investigates alternatives in transfer learning that do not involve performing ﬁne-tuning for a model
+with the new domain. Namely, we explore the correlation of
+depth and scale in deep models, and look for the layer/scale
+that yields the best results for the new domain, we also
+explore metrics for the verification task, using locally connected
+convolutions to learn distance metrics. Our experiments use a
+model pre-trained in face identification and adapt it to the
+face verification task with different data, but still on the face
+domain. We achieve 96.65% mean accuracy on the Labeled
+Faces in the Wild dataset and 93.12% mean accuracy on the
+Youtube Faces dataset comparable to the state-of-the-art.
+Keywords-Transfer Learning, Artificial Neural Networks,
+Face Verification, Metric Learning

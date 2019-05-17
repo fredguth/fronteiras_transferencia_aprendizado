@@ -1,0 +1,1512 @@
+2013 IEEE International Conference on Computer Vision
+
+Transfer Feature Learning with Joint Distribution Adaptation
+Mingsheng Long†‡ , Jianmin Wang† , Guiguang Ding† , Jiaguang Sun† , and Philip S. Yu§
+†
+School of Software, TNLIST, Tsinghua University, Beijing, China
+‡
+Department of Computer Science, Tsinghua University, Beijing, China
+§
+Department of Computer Science, University of Illinois at Chicago, IL, USA
+longmingsheng@gmail.com, {jimwang,dinggg,sunjg}@tsinghua.edu.cn, psyu@uic.edu
+
+Source Domain
+
+Abstract
+Transfer learning is established as an effective technology in computer vision for leveraging rich labeled data in the
+source domain to build an accurate classiﬁer for the target
+domain. However, most prior methods have not simultaneously reduced the difference in both the marginal distribution and conditional distribution between domains. In this
+paper, we put forward a novel transfer learning approach,
+referred to as Joint Distribution Adaptation (JDA). Speciﬁcally, JDA aims to jointly adapt both the marginal distribution and conditional distribution in a principled dimensionality reduction procedure, and construct new feature representation that is effective and robust for substantial distribution difference. Extensive experiments verify that JDA can
+signiﬁcantly outperform several state-of-the-art methods on
+four types of cross-domain image classiﬁcation problems.
+
+10
+
+5
+
+5
+
+0
+0
+
+5
+
+10
+
+0
+0
+
+5
+
+10
+
+Figure 1. In our problem, labeled source and unlabeled target domains are different in both marginal and conditional distributions.
+
+[21, 15, 18], or re-weight source data in order to minimize
+the distribution difference and then learn a classiﬁer on the
+re-weighted source data [3, 4]. Most of existing methods
+measure the distribution difference based on either marginal
+distribution or conditional distribution. However, Figure 1
+demonstrates the importance of matching both marginal and
+conditional distributions for robust transfer learning. Some
+very recent works started to match both the marginal and
+conditional distributions using sample selection [26], kernel density estimation [18], or two-stage re-weighting [23],
+but they may require either some labeled data in the target
+domain, or multiple source domains for consensus learning.
+
+1. Introduction
+
+In this paper, we address a challenging scenario in which
+the source and target domains are different in both marginal
+and conditional distributions, and the target domain has no
+labeled data. We put forward a novel transfer learning solution, referred to as Joint Distribution Adaptation (JDA),
+to jointly adapt both the marginal and conditional distributions in a principled dimensionality reduction procedure.
+Speciﬁcally, we extend the nonparametric Maximum Mean
+Discrepancy (MMD) [8] to measure the difference in both
+marginal and conditional distributions, and integrate it with
+Principal Component Analysis (PCA) to construct feature
+representation that is effective and robust for substantial distribution difference. We present the underlying assumption
+and learning algorithm for the JDA optimization problem.
+
+In computer vision, labeled information is crucial for a
+variety of recognition problems. For highly-evolving visual
+domains where labeled data are very sparse, one may expect
+to leverage abundant labeled data readily available in some
+related source domains for training accurate classiﬁers to be
+reused in the target domain. Recently, the literature has witnessed an increasing interest in developing transfer learning [16] algorithms for cross-domain knowledge adaptation
+problems. Transfer learning has proven to be promising in
+image classiﬁcation [24, 12] and tagging [19, 25], object
+recognition [14, 2, 7, 10], and feature learning [13, 11, 17].
+In cross-domain problems, the source and target data
+are usually sampled from different probability distributions.
+Therefore, a major computational issue of transfer learning
+is to reduce the distribution difference between domains.
+Recent works aim to discover a shared feature representation which can reduce the distribution difference and preserve the important properties of input data simultaneously
+1550-5499/13 $31.00 © 2013 IEEE
+DOI 10.1109/ICCV.2013.274
+
+Target Domain
+
+10
+
+We perform comprehensive experiments on four types of
+real-world datasets: digit (USPS, MNIST), face (PIE), and
+object (COIL20, Ofﬁce+Caltech [20]). From these datasets,
+we construct 36 cross-domain image datasets, each under a
+2200
+
+different difﬁculty in knowledge adaptation. Our empirical
+results demonstrate a signiﬁcant improvement of 7.57% in
+terms of classiﬁcation accuracy, obtained by the proposed
+JDA approach over several state-of-the-art transfer learning
+methods. Our results reveal substantial effects of matching
+both marginal and conditional distributions across domains.
+
+Table 1. Notations and descriptions used in this paper.
+Notation
+Description
+Notation
+Description
+Ds , Dt
+source/target domain
+X
+input data matrix
+A
+adaptation matrix
+ns , nt #source/target examples
+#shared features/classes
+Z
+embedding matrix
+m, C
+#subspace bases
+H
+centering matrix
+k
+regularization parameter
+Mc
+MMD matrices, c ∈ {0, . . . , C}
+λ
+
+which the distribution differences between 1) Ps (xs ) and
+Pt (xt ), 2) Qs (ys |xs ) and Qt (yt |xt ) are explicitly reduced.
+
+2. Related Work
+In this section, we discuss prior works on transfer learning that are related to ours, and highlight their differences.
+According to the literature survey [16], existing transfer
+learning methods can be roughly organized into two categories: instance reweighting [3, 4] and feature extraction.
+Our work belongs to the feature extraction category, which
+can be further reorganized into two rough subcategories.
+1) Property preservation, which shares latent factors
+across domains by preserving important properties of data,
+e.g. statistical property [17, 11], geometric structure [19, 6].
+2) Distribution adaptation, which explicitly minimizes
+predeﬁned distance measures to reduce the difference in the
+marginal distribution [22, 15], conditional distribution [21],
+or both [26, 23, 18]. However, to match conditional distributions, these methods require either some labeled target
+data, or multiple source domains for consensus learning.
+To our knowledge, our work is among the ﬁrst attempts
+to jointly adapt both marginal and conditional distributions
+between domains, and no labeled data are required in the
+target domain. Our work is a principled dimensionality reduction procedure with MMD-based distribution matching,
+which is different from feature re-weighting methods [1, 5].
+
+3.2. Proposed Approach
+In this paper, we propose to adapt the joint distributions
+by a feature transformation T so that the joint expectations
+of the features x and labels y are matched between domains:
+
+2
+min EP (x ,y ) [T (xs ) , ys ] − EP (x ,y ) [T (xt ) , yt ]
+T
+
+s
+
+s
+
+t
+
+t
+
+
+2
+≈ EPs (xs ) [T (xs )] − EPt (xt ) [T (xt )]
+
+2
++ EQs (ys |xs ) [ys |T (xs )] − EQt (yt |xt ) [yt |T (xt )]
+(1)
+The problem is nontrivial, since there are no labeled data in
+the target domain, and Qt (yt |xt ) cannot be estimated exactly. The best approximation is to assume that Qt (yt |xt ) ≈
+Qs (yt |xt ) [1]. This can be executed by applying a classiﬁer
+f trained on the labeled source data to the unlabeled target
+data. In order to achieve a more accurate approximation for
+Qt (yt |xt ), we propose an iterative pseudo label reﬁnement
+strategy to iteratively reﬁne the transformation T and classiﬁer f . The proposed approach is technically detailed later.
+3.2.1 Feature Transformation
+
+3. Joint Distribution Adaptation
+
+Dimensionality reduction methods can learn a transformed
+feature representation by minimizing the reconstruction error of the input data. For simplicity and generality, we will
+choose Principal Component Analysis (PCA) for data reconstruction. Denote X = [x1 , . . . , xn ] ∈ Rm×n the input
+data matrix, and H = I − n1 1 the centering matrix, where
+n = ns + nt and 1 the n × n matrix of ones, then the covariance matrix can be computed as XHXT . The learning
+goal of PCA is to ﬁnd an orthogonal transformation matrix
+A ∈ Rm×k such that embedded data variance is maximized
+
+
+max tr AT XHXT A
+(2)
+
+In this section, we present in detail the Joint Distribution
+Adaptation (JDA) approach for effective transfer learning.
+
+3.1. Problem Deﬁnition
+We begin with the deﬁnitions of terminologies. For clarity, the frequently used notations are summarized in Table 1.
+Deﬁnition 1 (Domain) A domain D is composed of an mdimensional feature space X and a marginal probability
+distribution P (x), i.e., D = {X , P (x)}, where x ∈ X .
+
+AT A=I
+
+Deﬁnition 2 (Task) Given domain D, a task T is composed of a C-cardinality label set Y and a classiﬁer f (x),
+i.e., T = {Y, f (x)}, where y ∈ Y, and f (x) = Q(y|x) can
+be interpreted as the conditional probability distribution.
+
+where tr(·) denotes the trace of a matrix. This optimization
+problem can be efﬁciently solved by eigendecomposition
+XHXT A = AΦ, where Φ = diag(φ1 , . . . , φk ) ∈ Rk×k
+are the k largest eigenvalues. Then we ﬁnd the optimal kdimensional representation by Z = [z1 , . . . , zn ] = AT X.
+
+Problem 1 (Joint Distribution Adaptation) Given
+labeled source domain Ds = {(x1 , y1 ), . . . , (xns , yns )} and
+unlabeled target domain Dt = {xns +1 , . . . , xns +nt } under
+the assumptions that Xs = Xt , Ys = Yt , Ps (xs ) = Pt (xt ),
+Qs (ys |xs ) = Qt (yt |xt ), learn a feature representation in
+
+3.2.2 Marginal Distribution Adaptation
+However, even through the PCA-induced k-dimensional
+representation, the distribution difference between domains
+2201
+
+w.r.t. each class c ∈ {1, . . . , C} in the label set Y. Here we
+modify MMD to measure the distance between the classconditional distributions Qs (xs |ys = c) and Qt (xt |yt = c)
+
+will still be signiﬁcantly large. Thus a major computational issue is to reduce the distribution difference by explicitly
+minimizing proper distance measures. Since parametrically
+estimating the probability density for a distribution is often
+a nontrivial problem, we resort to explore the sufﬁcient statistics instead. To reduce the difference between marginal
+distributions Ps (xs ) and Pt (xt ), we follow [8, 15, 23] and
+adopt the empirical Maximum Mean Discrepancy (MMD)
+as the distance measure to compare different distributions,
+which computes the distance between the sample means of
+the source and target data in the k-dimensional embeddings:
+
+ns
+
+1
+ 1  T
+A xi −
+
+ ns
+n
+t
+i=1
+
+n
+s +nt
+j=ns +1
+
+
+
+
+ 1
+ (c)
+ ns
+
+
+
+(c)
+xi ∈Ds
+
+AT xi −
+
+1
+(c)
+nt
+
+2
+
+
+
+AT xj  =tr(AT XMc XT A)
+
+(c)
+
+xj ∈Dt
+
+
+(5)
+(c)
+where Ds = {xi : xi ∈ Ds ∧ y (xi ) = c} is the set of examples belonging to class c in the source data, y (xi ) is
+(c)
+(c)
+the true label of xi , and ns = |Ds |. Correspondingly,
+(c)
+Dt = {xj : xj ∈ Dt ∧ y (xj ) = c} is the set of examples
+belonging to class c in the target data, y (xj ) is the pseudo
+(c)
+(c)
+(predicted) label of xj , and nt = |Dt |. Thus the MMD
+matrices Mc involving class labels are computed as follows
+⎧
+(c)
+1
+⎪
+xi , xj ∈ Ds
+(c) (c) ,
+⎪
+⎪
+n
+n
+s
+s
+⎪
+⎪
+(c)
+1
+⎪
+xi , xj ∈ Dt
+⎪
+(c) ,
+⎨ n(c)
+t nt
+(c)
+(c)
+(Mc )ij =
+(6)
+xi ∈ Ds , xj ∈ Dt
+−1
+⎪
+⎪
+,
+(c) (c)
+⎪
+(c)
+(c)
+⎪ ns nt
+xj ∈ Ds , xi ∈ Dt
+⎪
+⎪
+⎪
+⎩
+0,
+otherwise
+
+2
+
+
+
+
+A xj  = tr AT XM0 XT A
+
+T
+
+(3)
+
+where M0 is the MMD matrix and is computed as follows
+⎧
+1
+⎪
+⎨ ns ns , xi , xj ∈ Ds
+(4)
+(M0 )ij = nt1nt , xi , xj ∈ Dt
+⎪
+⎩ −1
+ns nt , otherwise
+By minimizing Equation (3) such that Equation (2) is maximized, the marginal distributions between domains are
+drawn close under the new representation Z = AT X. Note
+that we have just developed JDA to be similar to TCA [15].
+
+By minimizing Equation (5) such that Equation (2) is maximized, the conditional distributions between domains are
+drawn close under the new representation Z = AT X. With
+this important improvement, JDA can be robust for crossdomain problems with changes in conditional distributions.
+It is important to note that, although many of the pseudo
+target labels are incorrect due to the differences in both the
+marginal and conditional distributions, we can still leverage
+them to match the conditional distributions with the revised
+MMD measure deﬁned in Equation (5). The justiﬁcation is
+that we match the distributions by exploring the sufﬁcient statistics instead of the density estimates. In this way, we can
+leverage the source classiﬁer to improve the target classiﬁer.
+We will verify this argument thoroughly in the experiments.
+
+3.2.3 Conditional Distribution Adaptation
+However, reducing the difference in the marginal distributions does not guarantee that the conditional distributions
+between domains can also be drawn close. Indeed, minimizing the difference between the conditional distributions
+Qs (ys |xs ) and Qt (yt |xt ) is crucial for robust distribution
+adaptation [23]. Unfortunately, it is nontrivial to match the
+conditional distributions, even by exploring sufﬁcient statistics of the distributions, since there are no labeled data in
+the target domain, i.e., Qt (yt |xt ) cannot be modeled directly. Some very recent works started to match the conditional
+distributions via sample selection in a kernel mapping space
+[26], circular validation [3], co-training [4], and kernel density estimation [18]. But they all require some labeled data
+in the target domain, and thus cannot address our problem.
+In this paper, we propose to explore the pseudo labels of
+the target data, which can be easily predicted by applying
+some base classiﬁers trained on the labeled source data to
+the unlabeled target data. The base classiﬁer can be either
+standard learners, e.g., Support Vector Machine (SVM), or
+transfer learners, e.g., Transfer Component Analysis (TCA) [15]. Since the posterior probabilities Qs (ys |xs ) and
+Qt (yt |xt ) are quite involved, we resort to explore the sufﬁcient statistics of class-conditional distributions Qs (xs |ys )
+and Qt (xt |yt ) instead. Now with the true source labels and
+pseudo target labels, we can essentially match the classconditional distributions Qs (xs |ys = c) and Qt (xt |yt = c)
+
+3.2.4 Optimization Problem
+In JDA, to achieve effective and robust transfer learning, we
+aim to simultaneously minimize the differences in both the
+marginal distributions and conditional distributions across
+domains. Thus, we incorporate Equations (3) and (5) into
+Equation (2), which leads to the JDA optimization problem:
+min
+
+AT XHXT A=I
+
+C
+c=0
+
+
+
+2
+tr AT XMc XT A + λ AF (7)
+
+where λ is the regularization parameter to guarantee the optimization problem to be well-deﬁned. Based on the generalized Rayleigh quotient, minimizing Equations (3) and (5)
+such that Equation (2) is maximized is equivalent to minimizing Equations (3) and (5) such that Equation (2) is ﬁxed.
+2202
+
+It is obvious that TCA can be viewed as a special case of
+JDA with C = 0. With JDA, we can simultaneously adapt
+both the marginal distributions and conditional distributions
+between domains to facilitate joint distribution adaptation.
+A fascinating property of JDA is its capability to effectively
+explore the conditional distributions only using principled
+unsupervised dimensionality reduction and base classiﬁer.
+Thus JDA can be easy to implement and deploy practically.
+Kernelization: For nonlinear problems, consider kernel
+mapping ψ : x → ψ(x), or ψ(X) = [ψ(x1 ), . . . , ψ(xn )],
+and kernel matrix K = ψ(X)T ψ(X) ∈ Rn×n . We utilize
+the Representer theorem to formulate Kernel-JDA as
+
+
+C
+2
+min
+tr AT KMc KT A + λ AF (8)
+AT KHKT A=I
+
+Algorithm 1: JDA: Joint Distribution Adaptation
+
+1
+2
+3
+4
+
+5
+
+6
+7
+8
+
+c=0
+
+In this section, we conduct extensive experiments for image classiﬁcation problems to evaluate the JDA approach.
+Datasets and codes will be available online on publication.
+
+3.2.5 Iterative Reﬁnement
+It is worth noting that, with JDA, we can usually obtain a
+more accurate labeling for the target data. Thus, if we use
+this labeling as the pseudo target labels and run JDA iteratively, then we can alternatingly improve the labeling quality until convergence. This EM-like pseudo label reﬁnement
+procedure is empirically effective as shown in experiments.
+
+4.1. Data Preparation
+USPS+MNIST, COIL20, PIE, and Ofﬁce+Caltech (refer
+to Figure 2 and Table 2) are six benchmark datasets widely
+adopted to evaluate visual domain adaptation algorithms.
+USPS dataset consists of 7,291 training images and
+2,007 test images of size 16 × 16.
+MNIST dataset has a training set of 60,000 examples
+and a test set of 10,000 examples of size 28 × 28.
+From Figure 2, we see that USPS and MNIST follow
+very different distributions. They share 10 classes of digits.
+To speed up experiments, we construct one dataset USPS
+vs MNIST by randomly sampling 1,800 images in USPS to
+form the source data, and randomly sampling 2,000 images
+in MNIST to form the target data. We switch source/target
+pair to get another dataset MNIST vs USPS. We uniformly
+rescale all images to size 16 × 16, and represent each one by
+a feature vector encoding the gray-scale pixel values. Thus
+the source and target data can share the same feature space.
+COIL20 contains 20 objects with 1,440 images. The
+images of each object were taken 5 degrees apart as the object is rotated on a turntable and each object has 72 images.
+Each image is 32 × 32 pixels with 256 gray levels per pixel.
+In experiments, we partition the dataset into two subsets
+COIL1 and COIL2: COIL1 contains all images taken in
+the directions of [0◦ , 85◦ ] ∪ [180◦ , 265◦] (quadrants 1 and
+3); COIL2 contains all images taken in the directions of
+[90◦ , 175◦ ] ∪ [270◦ , 355◦] (quadrants 2 and 4). In this way,
+subsets COIL1 and COIL2 will follow relatively different
+distributions. We construct one dataset COIL1 vs COIL2 by
+selecting all 720 images in COIL1 to form the source data,
+and all 720 images in COIL2 to form the target data. We
+switch source/target to get another dataset COIL2 vs COIL1.
+PIE, which stands for “Pose, Illumination, Expression”,
+
+3.3. Learning Algorithm
+According to the constrained optimization theory, we denote Φ = diag(φ1 , . . . , φk ) ∈ Rk×k as the Lagrange multiplier, and derive the Lagrange function for problem (7) as
+C
+
+Setting
+
+∂L
+∂A
+
+X
+
+(9)
+
+= 0, we obtain generalized eigendecomposition
+C
+c=0
+
+Mc XT + λI A = XHXT AΦ
+
+Construct MMD matrices {Mc }C
+c=1 by Equation (6).
+until Convergence
+s
+Return an adaptive classiﬁer f trained on {Axi , yi }n
+i=1 .
+
+4. Experiments
+
+where A ∈ Rn×k is the adaptation matrix for Kernel-JDA.
+
+L = tr AT X
+Mc XT + λI A
+c=0
+ 
+
++ tr I − AT XHXT A Φ
+
+Input: Data X, ys ; #subspace bases k, regularization parameter λ.
+Output: Adaptation matrix A, embedding Z, adaptive classiﬁer f .
+begin
+Construct MMD matrix M0 by Eq. (4), set {Mc := 0}C
+c=1 .
+repeat
+Solve the generalized eigendecomposition problem in
+Equation (10) and select the k smallest eigenvectors to
+construct the adaptation matrix A, and Z := AT X.
+
+ns
+Train a standard classiﬁer f on (AT xi , yi ) i=1
+to
+s +nt
+update pseudo target labels {
+yj := f (AT xj )}n
+j=ns +1 .
+
+(10)
+
+Finally, ﬁnding the optimal adaptation matrix A is reduced
+to solving Equation (10) for the k smallest eigenvectors. A
+complete procedure of JDA is summarized in Algorithm 1.
+
+3.4. Computational Complexity
+We analyze the computational complexity of Algorithm 1 using the big O notation. We denote T the number of
+iterations, then typical values of k are not greater than 500,
+T not greater than 50, so k
+min(m, n), T
+min(m,
+n).
+
+The computational cost is detailed as follows: O T km2
+for solving the generalized eigendecomposition
+problem
+
+
+with dense matrices, i.e., Line 4; O T Cn2 for constructing the MMD matrices, i.e., Lines 2 and 6; O (T mn) for
+all other steps. In summary, the overall computational com
+plexity of Algorithm 1 is O T km2 + T Cn2 + T mn) .
+2203
+
+Table 2. Statistics of the six benchmark digit/face/object datasets.
+Dataset
+USPS
+MNIST
+COIL20
+PIE
+Ofﬁce
+Caltech
+
+•
+•
+•
+•
+•
+
+Figure 2. USPS, MNIST, COIL20, PIE, Ofﬁce, and Caltech-256.
+
+Type
+Digit
+Digit
+Object
+Face
+Object
+Object
+
+#Examples
+1,800
+2,000
+1,440
+11,554
+1,410
+1,123
+
+#Features
+256
+256
+1,024
+1,024
+800
+800
+
+#Classes
+10
+10
+20
+68
+10
+10
+
+Subsets
+USPS
+MNIST
+COIL1, COIL2
+PIE1, . . . , PIE5
+A, W, D
+C
+
+1-Nearest Neighbor Classiﬁer (NN)
+Principal Component Analysis (PCA) + NN
+Geodesic Flow Kernel (GFK) [6] + NN
+Transfer Component Analysis (TCA) [15] + NN
+Transfer Subspace Learning (TSL) [22] + NN
+
+is a benchmark face database. The database has 68 individuals with 41,368 face images of size 32×32. The face images
+were captured by 13 synchronized cameras (different poses)
+and 21 ﬂashes (different illuminations and/or expressions).
+In these experiments, to thoroughly evaluate that our approach can perform robustly across different distributions,
+we adopt ﬁve subsets of PIE, each corresponding to a different pose. Speciﬁcally, we choose PIE1 (C05, left pose),
+PIE2 (C07, upward pose), PIE3 (C09, downward pose),
+PIE4 (C27, frontal pose), PIE5 (C29, right pose). In each
+subset (pose), all the face images are taken under different
+lighting, illumination, and expression conditions. By randomly selecting two different subsets (poses) as the source
+domain and target domain respectively, we can construct
+5 × 4 = 20 cross-domain face datasets, e.g., PIE1 vs PIE2,
+PIE1 vs PIE3, PIE1 vs PIE4, PIE1 vs PIE5, . . . , PIE5 vs
+PIE4. In this way, the source and target data are constructed
+using face images from different poses, and thus will follow
+signiﬁcantly different distributions. Moreover, the distribution differences in these datasets may vary a lot, since for
+example, the difference between the left and right poses is
+larger than the difference between the left and frontal poses.
+Ofﬁce [20, 6] is an increasingly popular benchmark for
+visual domain adaptation. The database contains three realworld object domains, Amazon (images downloaded from
+online merchants), Webcam (low-resolution images by a
+web camera), and DSLR (high-resolution images by a digital SLR camera). It has 4,652 images and 31 categories.
+Caltech-256 [9] is a standard database for object recognition. The database has 30,607 images and 256 categories.
+In these expriments, we adopt the public Ofﬁce+Caltech
+datasets released by Gong et al. [6]. SURF features are extracted and quantized into an 800-bin histogram with codebooks computed with Kmeans on a subset of images from
+Amazon. Then the histograms are standardized by z-score.
+Speciﬁcally, we have four domains, C (Caltech-256), A (Amazon), W (Webcam), and D (DSLR). By randomly selecting two different domains as the source domain and target
+domain respectively, we construct 4 × 3 = 12 cross-domain
+object datasets, e.g., C → A, C → W, C → D, . . . , D → W.
+
+where Dt is the set of test data, y(x) is the truth label of x,
+y(x) is the label predicted by the classiﬁcation algorithm.
+
+4.2. Baseline Methods
+
+4.4. Experimental Results
+
+We compare our JDA approach with ﬁve state-of-the-art
+(related) baseline methods for image classiﬁcation problem.
+
+The classiﬁcation accuracies of JDA and the ﬁve baseline methods on the 36 cross-domain image (digit, face, and
+
+Speciﬁcally, TCA and TSL can both be viewed as a special
+case of JDA with C = 0. TSL adopts Bregman divergence
+instead of MMD as the distance for comparing distributions.
+As suggested by [6], NN is chosen as the base classiﬁer
+since it does not require tuning cross-validation parameters.
+
+4.3. Implementation Details
+Following [6, 15], NN is trained on the labeled source
+data, and tested on the unlabeled target data; PCA, TSL,
+TCA, and JDA are performed on all data as a dimensionality
+reduction procedure, then an NN classiﬁer is trained on the
+labeled source data for classifying the unlabeled target data.
+Under our experimental setup, it is impossible to tune
+the optimal parameters using cross validation, since labeled
+and unlabeled data are sampled from different distributions.
+Thus we evaluate all methods by empirically searching the
+parameter space for the optimal parameter settings, and report the best results of each method. For subspace learning
+methods, we set #bases by searching k ∈ [10, 20, . . . , 200].
+For transfer learning methods, we set adaptation regularization parameter λ by searching λ ∈ {0.01, 0.1, 1, 10, 100}.
+The JDA approach involves only two model parameters:
+#subspace bases k and regularization parameter λ. In the
+coming sections, we provide empirical analysis on parameter sensitivity, which veriﬁes that JDA can achieve stable
+performance under a wide range of parameter values. In the
+comparative study, we set k = 100 and 1) λ = 0.1 for the
+digit/face datasets, 2) λ = 1.0 for the object datasets. The
+number of iterations for JDA to converge is T = 10. We do
+not run JDA repeatedly since it has no random initialization.
+We use classiﬁcation Accuracy on test data as the evaluation metric, which is widely used in literature [22, 15, 6]
+Accuracy =
+
+2204
+
+|x : x ∈ Dt ∧ y (x) = y (x)|
+|x : x ∈ Dt |
+
+(11)
+
+100
+
+100
+NN
+
+PCA
+
+GFK
+
+TCA
+
+TSL
+
+NN
+
+PCA
+
+GFK
+
+TCA
+
+TSL
+
+JDA
+
+NN
+
+80
+
+80
+70
+60
+
+PCA
+
+GFK
+
+TCA
+
+TSL
+
+JDA
+
+80
+Accuracy (%)
+
+Accuracy (%)
+
+Accuracy (%)
+
+100
+
+JDA
+
+90
+
+60
+40
+
+60
+
+40
+50
+40
+
+20
+USPS vs MNIST MNIST vs USPS COIL1 vs COIL2 COIL2 vs COIL1
+Dataset
+
+2
+
+4
+
+6
+
+8
+10
+12
+14
+Dataset Index (PIE)
+
+16
+
+18
+
+20
+
+20
+
+1
+
+2
+
+3
+
+4
+5
+6
+7
+8
+9
+Dataset Index (Office+Caltech)
+
+10
+
+11
+
+12
+
+Figure 3. Accuracy (%) on the 4 types of 36 cross-domain image datasets, each under different difﬁculty in knowledge adaptation.
+Table 3. Accuracy (%) on 4 types of cross-domain image datasets.
+Dataset
+USPS vs MNIST
+MNIST vs USPS
+COIL1 vs COIL2
+COIL2 vs COIL1
+PIE1 vs PIE2 (1)
+PIE1 vs PIE3 (2)
+PIE1 vs PIE4 (3)
+PIE1 vs PIE5 (4)
+PIE2 vs PIE1 (5)
+PIE2 vs PIE3 (6)
+PIE2 vs PIE4 (7)
+PIE2 vs PIE5 (8)
+PIE3 vs PIE1 (9)
+PIE3 vs PIE2 (10)
+PIE3 vs PIE4 (11)
+PIE3 vs PIE5 (12)
+PIE4 vs PIE1 (13)
+PIE4 vs PIE2 (14)
+PIE4 vs PIE3 (15)
+PIE4 vs PIE5 (16)
+PIE5 vs PIE1 (17)
+PIE5 vs PIE2 (18)
+PIE5 vs PIE3 (19)
+PIE5 vs PIE4 (20)
+C→A (1)
+C→W (2)
+C→D (3)
+A→C (4)
+A→W (5)
+A→D (6)
+W→C (7)
+W→A (8)
+W→D (9)
+D→C (10)
+D→A (11)
+D→W (12)
+Average
+
+Standard Learning
+NN
+PCA
+44.7
+44.95
+65.94
+66.22
+83.61
+84.72
+82.78
+84.03
+26.09
+24.80
+26.59
+25.18
+30.67
+29.26
+16.67
+16.30
+24.49
+24.22
+46.63
+45.53
+54.07
+53.35
+26.53
+25.43
+21.37
+20.95
+41.01
+40.45
+46.53
+46.14
+26.23
+25.31
+32.95
+31.96
+62.68
+60.96
+73.22
+72.18
+37.19
+35.11
+18.49
+18.85
+24.19
+23.39
+28.31
+27.21
+31.24
+30.34
+23.70
+36.95
+25.76
+32.54
+25.48
+38.22
+26.00
+34.73
+29.83
+35.59
+25.48
+27.39
+19.86
+26.36
+22.96
+31.00
+59.24
+77.07
+26.27
+29.65
+28.50
+32.05
+63.39
+75.93
+37.46
+39.84
+
+GFK
+46.45
+67.22
+72.50
+74.17
+26.15
+27.27
+31.15
+17.59
+25.24
+47.37
+54.25
+27.08
+21.82
+43.16
+46.41
+26.78
+34.24
+62.92
+73.35
+37.38
+20.35
+24.62
+28.49
+31.33
+41.02
+40.68
+38.85
+40.25
+38.98
+36.31
+30.72
+29.75
+80.89
+30.28
+32.05
+75.59
+41.19
+
+Transfer Learning
+TCA
+TSL
+51.05
+53.75
+56.28
+66.06
+88.47
+88.06
+85.83
+87.92
+40.76
+44.08
+41.79
+47.49
+59.63
+62.78
+29.35
+36.15
+41.81
+46.28
+51.47
+57.60
+64.73
+71.43
+33.70
+35.66
+34.69
+36.94
+47.70
+47.02
+56.23
+59.45
+33.15
+36.34
+55.64
+63.66
+67.83
+72.68
+75.86
+83.52
+40.26
+44.79
+26.98
+33.28
+29.90
+34.13
+29.90
+36.58
+33.64
+38.75
+38.20
+44.47
+38.64
+34.24
+41.40
+43.31
+37.76
+37.58
+37.63
+33.90
+33.12
+26.11
+29.30
+29.83
+30.06
+30.27
+87.26
+87.26
+31.70
+28.50
+32.15
+27.56
+86.10
+85.42
+47.22
+49.80
+
+datasets, but poorly on the other datasets. In GFK, the subspace dimension should be small enough to ensure different
+subspaces transit smoothly along the geodesic ﬂow, which,
+however, may not represent input data accurately. JDA performs much better by learning an accurate shared subspace.
+Thirdly, JDA signiﬁcantly outperforms TCA, which is
+a state-of-the-art transfer learning method based on feature
+extraction. A major limitation of TCA is that the difference
+in the conditional distributions is not explicitly reduced. JDA avoids this limitation and achieves much better results.
+Lastly, JDA achieves much better performance than TSL, which depends on the kernel density estimation (KDE)
+to match the marginal distributions. Theoretically, TSL can
+adapt the marginal distributions better than TCA, which is
+validated by the empirical results. However, TSL also does
+not explicitly reduce the difference in the conditional distributions. One possible difﬁculty for TSL to adapt the conditional distributions is that TSL relies on the distribution
+density, which is hard to manipulate with partially incorrect
+pseudo labels. JDA succeeds in matching the conditional
+distributions through exploring only the sufﬁcient statistics.
+
+JDA
+59.65
+67.28
+89.31
+88.47
+58.81
+54.23
+84.50
+49.75
+57.62
+62.93
+75.82
+39.89
+50.96
+57.95
+68.45
+39.95
+80.58
+82.63
+87.25
+54.66
+46.46
+42.05
+53.31
+57.01
+44.78
+41.69
+45.22
+39.36
+37.97
+39.49
+31.17
+32.78
+89.17
+31.52
+33.09
+89.49
+57.37
+
+4.5. Effectiveness Veriﬁcation
+We further verify the effectiveness of JDA by inspecting
+the distribution distance and the similarity of embeddings.
+Distribution Distance: We run NN, PCA, TCA, and
+JDA on dataset PIE1 vs PIE2 using their optimal parameter settings. Then we compute the aggregate MMD distance of each method on their induced embeddings by Equation (7). Note that, in order to compute the true distance
+in both the marginal and conditional distributions between
+domains, we have to use the groundtruth labels instead of
+the pseudo labels. However, the groundtruth target labels
+are only used for veriﬁcation, not for learning procedure.
+Figure 4(a) shows the distribution distance computed for
+each method, and ﬁgure 4(b) shows the classiﬁcation accuracy. We can have these observations. 1) Without learning
+a feature representation, the distribution distance of NN in
+the original feature space is the largest. 2) PCA can learn
+a new representation in which the distribution distance is slightly reduced, but not much, thus it cannot help much for
+cross-domain problems. 3) TCA can substantially reduce
+the distribution distance by explicitly reducing the differ-
+
+object) datasets are illustrated in Table 3. The results are
+visualized in Figure 3 for better interpretation. We observe
+that JDA achieves much better performance than the ﬁve
+baseline methods with statistical signiﬁcance. The average
+classiﬁcation accuracy of JDA on the 36 datasets is 57.37%
+and the performance improvement is 7.57% compared to
+the best baseline method TSL, i.e., a signiﬁcant error reduction of 15.07%. Note that, the adaptation difﬁculty in the
+36 datasets varies a lot, since the standard NN classiﬁer can
+only achieve an average classiﬁcation accuracy of 37.46%,
+and may perform very poorly on many of the datasets. This
+veriﬁes that JDA can construct more effective and robust
+representation for cross-domain image classiﬁcation tasks.
+Secondly, GFK performs pretty well on Ofﬁce+Caltech
+
+2205
+
+70
+
+NN
+PCA
+TCA
+JDA
+
+10
+5
+0
+
+NN
+PCA
+TCA
+JDA
+
+50
+40
+30
+
+5
+
+10
+15
+#iterations
+
+20
+
+(a) MMD distance w.r.t. #iterations
+
+20
+
+50
+
+50
+
+100
+
+100
+Example
+
+15
+
+Example
+
+60
+Accuracy (%)
+
+MMD Distance
+
+20
+
+150
+200
+
+10
+15
+#iterations
+
+250
+
+300
+
+300
+350
+100
+
+20
+
+(b) Accuracy (%) w.r.t. #iterations
+
+200
+
+250
+
+350
+5
+
+150
+
+200
+Example
+
+300
+
+(c) Similarity of TCA embedding
+
+100
+
+200
+Example
+
+300
+
+(d) Similarity of JDA embedding
+
+Figure 4. Effectiveness veriﬁcation: MMD distance, classiﬁcation accuracy, and similarity of embeddings on the PIE1 vs PIE2 dataset.
+
+ence in the marginal distributions, so it can achieve better
+classiﬁcation accuracy. 4) JDA can reduce the difference in
+both the marginal and conditional distributions, thus it can
+extract a most effective and robust representation for crossdomain problems. By iteratively reﬁning the pseudo labels,
+JDA can reduce the difference in conditional distributions
+in each iteration to improve the classiﬁcation performance.
+Similarity of Embeddings: We run TCA and JDA on
+dataset PIE1 vs PIE2 using their optimal parameter settings.
+Then we compute the 20-nearest neighbor similarity matrix
+on the embedding Z = AT X obtained by TCA and JDA
+respectively. For better illustration, we only use the 365
+face images corresponding to the ﬁrst 5 classes, in which
+the ﬁrst 245 images are from the source data, the last 120
+images are from the target data. Correspondingly, in the
+similarity matrix, the top-left and bottom-right submatrices
+indicate within-domain similarity, the top-right and bottomleft submatrices indicate between-domain similarity. Also,
+the diagonal blocks of the similarity matrix indicate withinclass similarity in the same domain, the diagonal blocks of
+the top-right and bottom-left submatrices indicate withinclass similarity across domains, while all other blocks of
+the similarity matrix indicate between-class similarity.
+Figures 4(c) and 4(d) illustrate the similarity matrix of
+TCA embedding and JDA embedding respectively. To be
+an effective and robust embedding for cross-domain classiﬁcation problems, 1) the between-domain similarity should
+be high enough to establish knowledge transfer, and 2) the
+between-class similarity should be low to facilitate category
+discrimination. In this sense, we see that TCA cannot extract a good embedding on which the between-domain similarity is high while the between-class similarity is low. This
+proves that only adapting the marginal distributions is not
+enough for transfer learning. It is interesting to observe that
+JDA can indeed learn the ideal embedding, which can lead
+to better generalization capability across different domains.
+
+Table 4. Time complexity of JDA and all the baseline methods.
+Method
+NN
+TCA
+
+Runtime (s)
+4.85
+3.80
+
+Method
+PCA
+TSL
+
+Runtime (s)
+2.63
+1789
+
+Method
+GFK
+JDA
+
+Runtime (s)
+4.58
+46.32
+
+eter values. We only report the results on USPS vs MNIST,
+PIE1 vs PIE2, and A → D datasets, while similar trends on
+all other datasets are not shown due to space limitation.
+We run JDA with varying values of k. It can be chosen
+such that the low-dimensional representation is accurate for
+data reconstruction. We plot classiﬁcation accuracy w.r.t. different values of k in Figure 5(a), and choose k ∈ [60, 200].
+We run JDA with varying values of λ. Theoretically,
+larger values of λ can make shrinkage regularization more
+important in JDA. When λ → 0, the optimization problem
+is ill-deﬁned. When λ → ∞, distribution adaptation is not
+performed, and JDA cannot construct robust representation
+for cross-domain classiﬁcation. We plot classiﬁcation accuracy w.r.t. different values of λ in Figure 5(b), which indicates that λ ∈ [0.001, 1.0] can be optimal parameter values,
+where JDA generally does much better than the baselines.
+
+4.7. Convergence and Time Complexity
+We also empirically check the convergence property of
+JDA. Figures 5(c) and 5(d) show that classiﬁcation accuracy (distribution distance) increases (decreases) steadily with
+more iterations and converges within only 10 iterations.
+We check the time complexity by running all algorithms
+on the PIE1 vs PIE2 dataset with 1,024 features and 4,961
+images, and show the results in Table 4. We observe that
+JDA is T -times worse than TCA but much better than TSL.
+
+5. Conclusion and Future Work
+In this paper, we propose a Joint Distribution Adaptation
+(JDA) approach for robust transfer learning. JDA aims to
+simultaneously adapt both marginal and conditional distributions in a principled dimensionality reduction procedure.
+Extensive experiments show that JDA is effective and robust for a variety of cross-domain problems, and can significantly outperform several state-of-the-art adaptation methods even if the distribution difference is substantially large.
+
+4.6. Parameter Sensitivity
+We conduct sensitivity analysis to validate that JDA can
+achieve optimal performance under a wide range of param-
+
+2206
+
+50
+40
+30
+20
+
+USPS vs MNIST
+PIE1 vs PIE2
+A→D
+
+10
+20 40 60 80 100120140160180200
+k
+
+(a) #subspace bases k
+
+50
+40
+30
+20
+
+USPS vs MNIST
+PIE1 vs PIE2
+A→D
+
+10
+0.0001 0.001 0.01
+
+λ
+
+0.1
+
+1
+
+4
+
+50
+40
+30
+
+USPS vs MNIST
+PIE1 vs PIE2
+A→D
+
+20
+10
+
+10
+
+(b) regularization parameter λ
+
+USPS vs MNIST
+PIE1 vs PIE2
+A→D
+
+x
+
+60
+
+MMD Distance (e )
+
+70
+
+60
+Accuracy (%)
+
+70
+
+60
+Accuracy (%)
+
+Accuracy (%)
+
+70
+
+5
+
+10
+15
+#iterations
+
+(c) accuracy w.r.t. #iterations
+
+20
+
+3
+2
+1
+0
+
+5
+
+10
+15
+#iterations
+
+20
+
+(d) distance w.r.t. #iterations
+
+Figure 5. Parameter sensitivity and convergence study for JDA on three types of datasets (dashed lines show the best baseline results).
+
+In the future, we plan to extend our distance measure to
+other representation learning methods, e.g., Sparse Coding.
+
+6. Acknowledgments
+This work is supported by the National HGJ Key Project
+(2010ZX01042-002-002-01), the National High-Tech R&D
+Program (863 Program) (2012AA040911), the National Basic Research Program (973 Program) (2009CB320700), and
+the National Natural Science Foundation of China (NSFC)
+(61073005, 61271394). Philip S. Yu is supported in part by
+US NSF through grants IIS-0905215, CNS-1115234, IIS0914934, DBI-0960443, OISE-1129076, and US Department of Army through grant W911NF-12-1-0066.
+
+References
+[1] A. Arnold, R. Nallapati, and W. W. Cohen. A comparative
+study of methods for transductive transfer learning. In Proceedings of ICDMW, 2007.
+[2] Y. Aytar and A. Zisserman. Tabula rasa: Model transfer for
+object category detection. In Proceedings of ICCV, 2011.
+[3] L. Bruzzone and M. Marconcini. Domain adaptation problems: A dasvm classiﬁcation technique and a circular validation strategy. IEEE TPAMI, 32(5), 2010.
+[4] M. Chen, K. Q. Weinberger, and J. C. Blitzer. Co-training
+for domain adaptation. In Proceedings of NIPS, 2011.
+[5] N. FarajiDavar, T. de Campos, J. Kittler, and F. Yan. Transductive transfer learning for action recognition in tennis
+games. In Proceedings of ICCVW, 2011.
+[6] B. Gong, Y. Shi, F. Sha, and K. Grauman. Geodesic ﬂow
+kernel for unsupervised domain adaptation. In Proceedings
+of CVPR, 2012.
+[7] R. Gopalan, R. Li, and R. Chellappa. Domain adaptation for
+object recognition: An unsupervised approach. In Proceedings of ICCV, 2011.
+[8] A. Gretton, K. M. Borgwardt, M. J. Rasch, B. Scholkopf, and
+A. J. Smola. A kernel method for the two-sample problem.
+In Proceedings of NIPS, 2006.
+[9] G. Grifﬁn, A. Holub, and P. Perona. Caltech-256 object category dataset. Technical report, Caltech, 2007.
+[10] M. Guillaumin and V. Ferrari. Large-scale knowledge transfer for object localization in imagenet. In Proceedings of
+CVPR, 2012.
+
+[11] I.-H. Jhuo, D. Liu, D.-T. Lee, and S.-F. Chang. Robust visual domain adaptation with low-rank reconstruction. In Proceedings of CVPR, 2012.
+[12] L. Jie, T. Tommasi, and B. Caputo. Multiclass transfer learning from unconstrained priors. In Proc. of ICCV, 2011.
+[13] C. H. Lampert and O. Krömer. Weakly-paired maximum
+covariance analysis for multimodal dimensionality reduction
+and transfer learning. In Proceedings of ECCV, 2010.
+[14] C. H. Lampert, H. Nickisch, and S. Harmeling. Learning to
+detect unseen object classes by between-class attribute transfer. In Proceedings of CVPR, 2009.
+[15] S. J. Pan, I. W. Tsang, J. T. Kwok, and Q. Yang. Domain adaptation via transfer component analysis. IEEE TNN,
+22(2):199–210, 2011.
+[16] S. J. Pan and Q. Yang. A survey on transfer learning. IEEE
+TKDE, 22:1345–1359, 2010.
+[17] Q. Qiu, V. M. Patel, P. Turaga, and R. Chellappa. Domain
+adaptive dictionary learning. In Proceedings of ECCV, 2012.
+[18] B. Quanz, J. Huan, and M. Mishra. Knowledge transfer with
+low-quality data: A feature extraction issue. IEEE TKDE,
+24(10), 2012.
+[19] S. D. Roy, T. Mei, W. Zeng, and S. Li. Socialtransfer: Crossdomain transfer learning from social streams for media applications. In Proceedings of ACM MM, 2012.
+[20] K. Saenko, B. Kulis, M. Fritz, and T. Darrell. Adapting visual category models to new domains. In Proceedings of
+ECCV, 2010.
+[21] S. Satpal and S. Sarawagi. Domain adaptation of conditional
+probability models via feature subsetting. In Proceedings of
+PKDD, 2007.
+[22] S. Si, D. Tao, and B. Geng. Bregman divergence-based regularization for transfer subspace learning. IEEE TKDE, 2010.
+[23] Q. Sun, R. Chattopadhyay, S. Panchanathan, and J. Ye.
+A two-stage weighting framework for multi-source domain
+adaptation. In Proceedings of NIPS, 2011.
+[24] H. Wang, F. Nie, H. Huang, and C. Ding. Dyadic transfer
+learning for cross-domain image classiﬁcation. In Proceedings of ICCV, 2011.
+[25] S. Wang, S. Jiang, Q. Huang, and Q. Tian. Multi-feature metric learning with knowledge transfer among semantics and
+social tagging. In Proceedings of CVPR, 2012.
+[26] E. Zhong, W. Fan, J. Peng, K. Zhang, J. Ren, D. Turaga,
+and O. Verscheure. Cross domain distribution adaptation via
+kernel mapping. In Proceedings of KDD, 2009.
+
+2207
+
+

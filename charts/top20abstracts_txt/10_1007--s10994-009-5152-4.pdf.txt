@@ -1,0 +1,11 @@
+A theory of learning from different domains
+
+Discriminative learning methods for classification perform well when training
+and test data are drawn from the same distribution. Often, however, we have plentiful labeled
+training data from a source domain but wish to learn a classifier which performs well on
+a target domain with a different distribution and little or no labeled training data. In this
+work we investigate two questions. First, under what conditions can a classifier trained from
+source data be expected to perform well on target data? Second, given a small amount of
+labeled target data, how should we combine it during training with the large amount of
+labeled source data to achieve the lowest target error at test time?
+

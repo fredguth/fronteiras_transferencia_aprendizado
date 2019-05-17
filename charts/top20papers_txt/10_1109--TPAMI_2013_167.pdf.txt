@@ -1,0 +1,1937 @@
+1134
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+Learning with Augmented Features for
+Supervised and Semi-Supervised
+Heterogeneous Domain Adaptation
+Wen Li, Student Member, IEEE, Lixin Duan, Dong Xu, Senior Member, IEEE, and Ivor W. Tsang
+Abstract—In this paper, we study the heterogeneous domain adaptation (HDA) problem, in which the data from the source domain
+and the target domain are represented by heterogeneous features with different dimensions. By introducing two different projection
+matrices, we first transform the data from two domains into a common subspace such that the similarity between samples across
+different domains can be measured. We then propose a new feature mapping function for each domain, which augments the
+transformed samples with their original features and zeros. Existing supervised learning methods (e.g., SVM and SVR) can be readily
+employed by incorporating our newly proposed augmented feature representations for supervised HDA. As a showcase, we propose
+a novel method called Heterogeneous Feature Augmentation (HFA) based on SVM. We show that the proposed formulation can be
+equivalently derived as a standard Multiple Kernel Learning (MKL) problem, which is convex and thus the global solution can be
+guaranteed. To additionally utilize the unlabeled data in the target domain, we further propose the semi-supervised HFA (SHFA)
+which can simultaneously learn the target classifier as well as infer the labels of unlabeled target samples. Comprehensive
+experiments on three different applications clearly demonstrate that our SHFA and HFA outperform the existing HDA methods.
+Index Terms—Heterogeneous domain adaptation, domain adaptation, transfer learning, augmented features
+
+1
+
+I NTRODUCTION
+
+I
+
+N real-world applications, it is often expensive and timeconsuming to collect the labeled data. Domain adaptation, as a new machine learning strategy, has attracted
+growing attention because it can learn robust classifiers
+with very few or even no labeled data from the target
+domain by leveraging a large amount of labeled data from
+other existing domains (a.k.a., source/auxiliary domains).
+Domain adaptation methods have been successfully
+used for different research fields such as natural language
+processing and computer vision [1]–[7]. According to the
+supervision information in the target domain, the domain
+adaptation methods can generally be divided into three categories: supervised domain adaptation by only using the
+labeled data in the target domain, semi-supervised domain
+adaptation by using both the labeled and unlabeled data
+in the target domain, and unsupervised domain adaptation by only using unlabeled data in the target domain.
+
+• W. Li, and D. Xu are with the School of Computer Engineering, Nanyang
+Technological University, Singapore 639798.
+E-mail: wli1@e.ntu.edu.sg; dongxu@ntu.edu.sg.
+• L. Duan is with the Institute for Infocomm Research, Singapore 138632.
+E-mail: lxduan@gmail.com.
+• I. W. Tsang is with the Center for Quantum Computation & Intelligent
+Systems, University of Technology, Sydney, Australia.
+E-mail:ivor.tsang@gmail.com.
+Manuscript received 21 Jan. 2013; revised 15 June 2013; accepted 2 Aug.
+2013. Date of publication 28 Aug. 2013; date of current version 12 May
+2014.
+Recommended for acceptance by K. Borgwardt.
+For information on obtaining reprints of this article, please send e-mail to:
+reprints@ieee.org, and reference the Digital Object Identifier below.
+Digital Object Identifier 10.1109/TPAMI.2013.167
+
+However, most existing methods assume that the data from
+different domains are represented by the same type of
+features with the same dimension. Thus, they cannot deal
+with the problem where the dimensions of data from the
+source and target domains are different, which is known as
+heterogeneous domain adaptation (HDA) [8], [9].
+In the literature, a few approaches have been proposed
+for the HDA problem. To discover the connection between
+different features, some work exploited an auxiliary dataset
+which encodes the correspondence between different types
+of features. Dai et al. [8] proposed to learn a feature translator between two features from two domains, which is
+modeled by the conditional probability of one feature given
+the other one. Such feature translator is learnt from an
+auxiliary dataset which contains the co-occurrence of these
+two types of features. A similar assumption was also used
+in [9], [10] for text-aid image clustering and classification.
+Others proposed to use an explicit feature correspondence,
+for example, the bilingual dictionary in cross-language text
+classification task. Based on the structural correspondence
+learning (SCL) [1], two methods [11], [12] were recently proposed to extract the so-called pivot features from the source
+and target domains, which are specifically designed for the
+cross-language text classification task. These pivot features
+are constructed by text words which have explicit semantic
+meanings. They either directly translated the pivot features
+from one language to the other or modified the original
+SCL to select pairs of pivot words from different languages.
+However, it is unclear how to build such correspondence
+for more general HDA tasks such as the object recognition
+task where only the low-level visual features are provided.
+
+c 2013 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+0162-8828 
+See http://www.ieee.org/publications_standards/publications/rights/index.html for more information.
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+1135
+
+Fig. 1. Samples from different domains are represented by different features, where red crosses, blue strips, orange triangles and green circles denote source positive samples, source negative samples, target positive samples and target negative samples, respectively. By using two
+projection matrices P and Q, we transform the heterogenous samples from two domains into an augmented feature space.
+
+For more general HDA tasks, Shi et al. [13] proposed a
+method called Heterogeneous Spectral Mapping (HeMap)
+to discover a common feature subspace by learning two feature mapping matrices as well as the optimal projection of
+the data from both domains. Harel and Mannor [14] learnt
+rotation matrices to match source data distributions to that
+of the target domain. Wang and Mahadevan [15] used the
+class labels of training data to learn the manifold alignment
+by simultaneously maximizing the intra-domain similarity and the inter-domain dissimilarity. By kernelizing the
+method in [16], Kulis et al. [17] proposed to learn an asymmetric kernel transformation to transfer feature knowledge
+between the data from the source and target domains.
+However, these existing HDA methods were designed for
+the supervised learning scenario. For these methods, it is
+unclear how to learn the projection matrices or transformation metric by utilizing the abundant unlabeled data
+in the target domain which is usually available in many
+applications.
+In this work, we first propose a new method called
+Heterogeneous Feature Augmentation (HFA) for supervised heterogeneous domain adaptation. As shown in
+Fig. 1, considering the data from different domains are represented by features with different dimensions, we first
+transform the data from the source and target domains
+into a common subspace by using two different projection matrices P and Q. Then, we propose two new feature
+mapping functions to augment the transformed data with
+their original features and zeros. With the new augmented
+feature representations, we propose to learn the projection matrices P and Q by using the standard SVM with
+the hinge loss function in a linear case. We also describe
+its kernelization in order to efficiently cope with the data
+with very high dimension. To simplify the nontrivial optimization problem in HFA, we introduce an intermediate
+variable H called as a transformation metric to combine
+P and Q. In our preliminary work [18], we proposed an
+alternating optimization algorithm to iteratively learn an
+individual transformation metric H and a classifier for each
+class. However, the global convergence remains unclear and
+there may be pre-mature convergence. In this work, we
+equivalently reformulate it into a convex optimization problem by decomposing H into a linear combination of a set
+of rank-one positive semi-definite (PSD) matrices, which
+shares a similar formulation with the well-known Multiple
+Kernel Learning (MKL) problem [19]. Therefore, the global
+
+solution can be obtained easily by using the existing MKL
+solvers.
+Moreover, we further extend our HFA to semisupervised HFA or SHFA in short by additionally utilizing
+the unlabeled data in the target domain. While learning the
+transformation metric H, we also infer the labels for the
+unlabeled target samples. Considering we need to solve
+a non-trivial mixed integer programming problem when
+inferring the labels of unlabeled target training data, we
+first relax the objective of SHFA into a problem of finding
+the optimal linear combination of all possible label candidates. Then we also use the linear combination of these
+rank-one PSD matrices to replace H as in HFA. Finally,
+we further rewrite the problem as a convex MKL problem
+which can be readily solved by existing MKL solvers.
+The remainder of this paper is organized as follows.
+The proposed HFA method and SHFA are introduced in
+Section 2 and Section 3, respectively. Extensive experimental results are presented in Section 4, followed by
+conclusions and future work in Section 5.
+
+2
+
+H ETEROGENEOUS F EATURE AUGMENTATION
+
+In the remainder of this paper, we use the superscript  to
+denote the transpose of a vector or a matrix. We define In
+as the n × n identity matrix and On×m as the n × m matrix
+of all zeros. We also define 0n , 1n ∈ Rn as the n × 1 column
+vectors of all zeros and all ones, respectively. For simplicity,
+we also use I, O, 0 and 1 instead of In , On×m , 0n and 1n
+when the dimension is obvious. The p -norm of a vector
+1
+
+p p
+n
+a = [a1 , . . . , an ] is defined as ap =
+a
+. We also
+i=1 i
+use a to denote the 2 -norm. The inequality a ≤ b means
+that ai ≤ bi for i = 1, . . . , n. Moreover, a ◦ b denotes the
+element-wise product between the vectors a and b, i.e., a ◦
+b = [a1 b1 , . . . , an bn ] . And H  0 means that H is a positive
+semi-definite (PSD) matrix.
+In this work, we assume there are only one source
+domain and one target domain. We are provided
+with
+ns
+} from the
+a set of labeled training samples { (xsi , ysi )i=1
+source domain as
+nt well as a limited number of labeled
+} from the target domain, where
+samples { (xti , yti )i=1
+ysi and yti are the labels of the samples xsi and xti ,
+respectively, and ysi , yti ∈ {1, −1}. The dimensions of
+xsi and xti are ds and dt , respectively. Note that in
+the HDA problem, ds = dt . We also define Xs =
+
+1136
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+[xs1 , . . . , xsns ] ∈ Rds ×ns and Xt = [xt1 , . . . , xtnt ] ∈ Rdt ×nt
+as the data matrices for the source and target domains,
+respectively.
+
+Formally, we present the formulation of our HFA method
+as follows:
+min min
+
+2.1 Heterogeneous Feature Augmentation
+Daume III [3] proposed Feature Replication (FR) to augment the original feature space Rd into a larger space
+R3d by replicating the source and target data for homogeneous domain adaptation. Specifically, for any data point
+x ∈ Rd , the feature mapping functions ϕs and ϕt for the
+source and target domains are defined as ϕs (x) = [x , x , 0d ]
+and ϕt (x) = [x , 0d , x ] . Note that it is not meaningful to
+directly use the method in [3] for the HDA task by simply
+padding zeros to make the dimensions of the data from two
+domains become the same, because there would be no correspondences between the heterogeneous features in this
+case.
+To effectively utilize the heterogeneous features from
+two domains, we first introduce a common subspace for
+the source and target data so that the heterogeneous features from two domains can be compared. We define the
+common subspace as Rdc , and any source sample xs and
+target sample xt can be projected onto it by using two projection matrices P ∈ Rdc ×ds and Q ∈ Rdc ×dt , respectively.
+Note that promising results have been shown by incorporating the original features into the augmented features [3]
+to enhance the similarities between data from the same
+domain. Motivated by [3], we also incorporate the original features in this work and then augment any source
+and target domain samples xs ∈ Rds and xt ∈ Rdt by
+using the augmented feature mapping functions ϕs and ϕt
+as follows:
+⎡ s⎤
+⎡ t⎤
+Px
+Qx
+(1)
+ϕs (xs ) = ⎣ xs ⎦ and ϕt (xt ) = ⎣ 0ds ⎦ .
+0d t
+xt
+After introducing P and Q, the data from two domains
+can be readily compared in the common subspace. It is
+worth mentioning that our newly proposed augmented features for the source and target samples in (1) can be readily
+incorporated into different methods (e.g., SVM and SVR),
+making these methods applicable for the HDA problem.
+Specifically, we use the standard SVM formulation
+with the hinge loss as a showcase for the supervised
+heterogeneous domain adaptation, which is referred as
+Heterogeneous Feature Augmentation (HFA). To additionally utilize the unlabeled data in the target domain, we also
+develop the semi-supervised HFA (SHFA) method based on
+ρ-SVM with the squared hinge loss for the semi-supervised
+heterogeneous domain adaptation task. Details of the two
+methods are introduced below.
+
+2.2 Proposed Method
+We define the feature weight vector w = [wc , ws , wt ] ∈
+Rdc +ds +dt for the augmented feature space, where wc ∈
+Rdc , ws ∈ Rds and wt ∈ Rdt are also the weight vectors
+defined for the common subspace, the source domain and
+the target domain, respectively. We then propose to learn
+the projection matrices P and Q as well as the weight vector w by minimizing the structural risk functional of SVM.
+
+P,Q w,b,ξ s ,ξ t
+i i
+
+s.t.
+
+1
+w2 + C
+2
+
+ns
+
+nt
+
+ξis +
+
+ξit ,
+
+(2)
+
+i=1
+
+i=1
+ysi (w ϕs (xsi ) + b) ≥ 1 − ξis , ξis ≥ 0;
+yti (w ϕt (xti ) + b) ≥ 1 − ξit , ξit ≥ 0;
+P2F ≤ λp , Q2F ≤ λq ,
+
+(3)
+(4)
+
+where C > 0 is a tradeoff parameter which balances the
+model complexity and the empirical losses on the training
+samples from two domains, and λp , λq > 0 are predefined parameters to control the complexities of P and Q,
+respectively.
+To solve (2), we first derive the dual form of the inner
+optimization problem in (2). Specifically, we introduce dual
+s
+t
+variables {αis |ni=1
+} and {αit |ni=1
+} for the constraints in (3)
+and (4), respectively. By setting the derivatives of the
+Lagrangian of (2) with respect to w, b, ξis and ξit to zeros, we
+obtain
+Karush-Kuhn-Tucker (KKT) conditions as: w =
+ns sthe
+s ϕ (xs ) + nt α t yt ϕ (xt ), ns α s ys + nt α t yt = 0
+α
+y
+s
+i=1 i i
+i=1 i i t i
+i=1 i i
+i=1 i i
+i
+and 0 ≤ αis , αit ≤ C. With the KKT conditions, we arrive at
+the dual problem as follows:
+1
+min max 1 α − (α ◦ y) KP,Q (α ◦ y),
+α
+2
+P,Q
+s.t. y α = 0, 0 ≤ α ≤ C1,
+
+(5)
+
+P2F ≤ λp , Q2F ≤ λq ,
+where α = [α1s , . . . , αns s , α1t , . . . , αnt t ] ∈ Rns +nt is a vector
+of the dual variables, y = [ys , yt ] ∈ {+1, −1}ns +nt is the
+label vector of all training samples, ys = [ys1 , . . . , ysns ] ∈
+{+1, −1}ns is the label vector of samples from the source
+domain, yt = [yt1 , . . . , ytnt ] ∈ {+1, −1}nt is the label vector of samples from the target
+ domain, and KP,Q =
+Xs (Ids + P P)Xs
+Xs P QXt
+∈ R(ns +nt )×(ns +nt ) is the
+Xt Q PXs
+Xt (Idt + Q Q)Xt
+derived kernel matrix for the samples from both domains.
+To solve the optimization problem in (5), the dimension of the common subspace (i.e., dc ) must be given
+beforehand. However, it is usually nontrivial to determine
+the optimal dc . Observing that in the kernel matrix KP,Q
+in (5), the projection matrices P and Q always appear
+in the forms of P P, P Q, Q P and Q Q, we then replace
+these multiplications by defining an intermediate variable
+H = [P, Q] [P, Q] ∈ R(ds +dt )×(ds +dt ) . Obviously, H is positive
+semidefinite, i.e., H  0. With the introduction of H, we can
+throw away the parameter dc . Moreover, the common subspace becomes latent, because we do not need to explicitly
+solve for P and Q any more.
+With the definition of H, we reformulate the optimization problem in (5) as follows:
+1
+min max 1 α − (α ◦ y) KH (α ◦ y),
+α
+H0
+2
+s.t. y α = 0, 0 ≤ α ≤ C1,
+trace(H) ≤ λ,
+where KH
+
+=
+
+X (H + I)X, X
+
+R(ds +dt )×(ns +nt ) and λ = λp + λq .
+
+=
+
+Xs Ods ×nt
+Odt ×ns Xt
+
+(6)
+
+
+∈
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+Thus far, we have successfully converted our original
+HDA problem, which learns two projection matrices P and
+Q, into a new problem of learning a transformation metric H.
+We emphasize that this new problem has two main advantages: i) it avoids determining the optimal dimension of the
+common subspace beforehand; and ii) as the common subspace becomes latent after the introduction of H, we only
+need to optimize α and H for our proposed method.
+However, there are still two major limitations for the current formulation of HFA in (6): i) The transformation metric
+H is linear, which may not be effective for some recognition
+tasks. ii) The size of H grows with the dimensions of the
+source and target data (i.e., ds and dt ). It is computationally expensive to learn the linear metric H in (6) for some
+real-world applications (e.g., text categorization) with very
+high dimensional data. In order to effectively deal with high
+dimensional data, inspired by [17], in the next subsection
+we will apply kernelization to the data from the source and
+target domains and show that (6) can be solved in a kernel
+space by learning a nonlinear transformation metric with
+its size independent from the feature dimensions.
+
+2.3 Nonlinear Feature Transformation
+Note that the size of the linear transformation metric H
+is related to the feature dimension, and thus it is computationally expensive for very high dimension data. In this
+subsection, we will show that by applying kernelization,
+the transformation metric is independent from the feature
+dimension and grows only with respect to the number of
+training data from both domains.
+Let us denote the kernel on the source domain samples
+as Ks = s s ∈ Rns ×ns where s = [φs (xs1 ), . . . , φs (xsns )]
+and φs (·) is the nonlinear feature mapping function induced
+by Ks . Similarly, we denote the kernel on the target
+domain samples as Kt = t t ∈ Rnt ×nt where t =
+[φt (xt1 ), . . . , φt (xtnt )] and φt (·) is the nonlinear feature mapping function induced by Kt . As in the linear case, we
+can correspondingly define the augmented features ϕs (xs )
+and ϕt (xt ) in (1) for the nonlinear features of two domains
+by replacing xs and xt with φs (xs ) and φt (xt ), respectively. Denoting the dimensions of the nonlinear features
+φs (xs ) and φt (xt ) as d̃s and d̃t , we can also derive an
+optimization problem as in (6) to solve a transformation
+metric H ∈ R(d̃s +d̃t )×(d̃s +d̃t ) which maps the different nonlinear features from two domains into a common feature
+space. Correspondingly,the kernel can
+ be written as KH =
+
+O
+s
+d̃s ×nt ∈ R(d̃s +d̃t )×(ns +nt ) .
+ (H + I) where  =
+Od̃t ×ns t
+However, we usually do not know about the explicit
+forms of the nonlinear feature mapping functions φs (·) and
+φt (·) and hence the dimensions of H cannot be determined.
+Even in some special cases that the explicit forms of φs (·)
+and φt (·) can be derived, the dimensions of the nonlinear
+features, i.e. d̃s and d̃t , are usually very high and hence it is
+very computationally expensive to solve H.
+Inspired by [17], we define a nonlinear transformathat H =
+tion matrix H̃ ∈ R(ns +nt )×(ns +nt ) which satisfies
+
+Ks Ons ×nt
+− 12
+− 12 
+(n
++n
+s
+t )×(ns +nt )
+∈R
+K H̃K  where K =
+Ont ×ns Kt
+1
+and K 2 is the symmetric square root of K. Now we show
+
+1137
+
+that the kernelization version of (6) can be derived as an
+optimization problem on H̃ rather than H.
+It is easy to verify that trace(H̃) = trace(H) ≤ λ.
+Moreover, the kernel matrix can be written as KH =
+1
+1
+ (H + I) = K 2 (H̃ + I)K 2 = KH̃ . Then we arrive at the
+formulation of our proposed HFA method after applying
+kernelization as follows:
+1
+(7)
+min max 1 α − (α ◦ y) KH̃ (α ◦ y),
+α
+2
+H̃0
+s.t. y α = 0, 0 ≤ α ≤ C1,
+trace(H̃) ≤ λ.
+Hence, we optimize H̃ in (7) rather than directly solving
+H. Note the size of H̃ is independent from the feature
+dimensions d̃s and d̃t .
+Intuitively, one can observe that the main differences
+between the formulations of the nonlinear HFA in (7) and
+1
+the linear HFA in (6) are: i) we use K 2 in the nonlinear HFA
+to replace X in the linear case; ii) we also define a new nonlinear transformation metric H̃ which only depends on the
+numbers of training samples ns and nt instead of using H
+which depends on the feature dimensions ds and dt . Despite
+the above differences, the two formulations share the same
+form from the perspective of optimization. Therefore, we
+will only discuss the nonlinear case in the remainder of
+this paper while the linear case can be similarly derived by
+1
+replacing K 2 ∈ R(ns +nt )×(ns +nt ) and H̃ ∈ R(ns +nt )×(ns +nt ) with
+X ∈ R(ds +dt )×(ns +nt ) and H ∈ R(ds +dt )×(ds +dt ) , respectively. We
+also use H instead of H̃ below for better presentation.
+
+2.4 A Convex Formulation
+To solve the optimization problem in (7), in our preliminary work [18], we proposed an alternating optimization
+approach in which we iteratively solve an SVM problem with respect to α and a semi-definite programming
+(SDP) problem with respect to H. However, the global convergence remains unclear and there may be pre-mature
+convergence. In this subsection, we show that (7) can be
+equivalently reformulated as a convex MKL problem so
+that the global solution can be guaranteed by using the
+existing MKL solvers [19].
+As pointed in [19], the Ivanov regularization can be
+replaced with some Tikhonov regularization and vice verse
+with the appropriate choice of regularization parameter,
+which means we can write the trace norm regularization
+in (7) either as a constraint or as a regularizer term in
+the objective function. Formally, let us denote μ(H) =
+maxα∈A 1 α − 12 (α ◦ y) KH (α ◦ y) where A = {α|y α = 0, 0 ≤
+α ≤ C1}, then the problem in (7) can also be reformulated
+as:
+min μ(H) + η trace(H),
+H0
+
+(8)
+
+where η is a tradeoff parameter. By properly setting η, the
+above optimization problem yields the same solution as the
+original problem in (7) [19].
+To avoid solving the non-trivial SDP problem as in [18],
+we propose to decompose H as a linear combination of a set
+of positive semi-definite (PSD) matrices. Inspired by [20],
+in this work, we use the set of rank-one normalized PSD
+
+1138
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+matrices which is defined as M = {Mr |∞
+r=1 } where Mr =
+hr hr , hr ∈ R(ns +nt ) and hr hr = 1. Then, any PSD matrix H in
+(8) can be represented as a linear combination
+ of the rankone PSD matrices in M, i.e., H = Hθ = ∞
+r=1 θr Mr where
+the linear combination coefficient vector θ = [θ1 , . . . , θ∞ ] ,
+θ ≥ 0. Although there are an infinite number of matrices in
+M (i.e., the index r goes from 1 to ∞), only considering the
+linear combination vector θ with a finite number of nonzero entries is sufficient to represent H as shown
+∞ in [20].
+Note
+that
+we
+have
+trace(H)
+=
+trace(
+r=1 θr Mr ) =
+∞
+
+r=1 θr trace(Mr ) = 1 θ . Instead of directly solving for the
+optimal H in (8), we show in the following theorem that it
+is equivalent to solving for the optimal linear combination
+coefficient vector θ :
+Theorem 1. Given that θ ∗ is the optimal solution to the following optimization problem,
+min μ(Hθ ) + η 1 θ ,
+θ≥0
+
+(9)
+
+Hθ ∗ is also the optimum to the optimization problem in (8).
+Proof. Let us denote the objective function in (8) as F(H) =
+μ(H) + η trace(H) and the objective function in (9) as
+G(θ ) = μ(Hθ )+η 1 θ , and denote the optimums to (8) and
+(9) as H∗ = arg minH0 F(H) and θ ∗ = arg minθ≥0 G(θ ),
+respectively. To show Hθ ∗ is also the optimum of (8), we
+need to prove F(Hθ ∗ ) = F(H∗ ).
+On one hand, we have F(Hθ ∗ ) ≥ F(H∗ ), because H∗
+is the optimal solution to (8). On the other hand, we
+will prove it as F(H∗ ) ≥ G(θ ∗ ) = F(Hθ ∗ ). Specifically, for
+any PSD
+ matrix H and a vector θ which satisfies H =
+Hθ = ∞
+r=1 θr Mr , we have F(H) = μ(H) + η trace(H) =
+μ(Hθ ) + η 1 θ = G(θ ) ≥ G(θ ∗ ) in which G(θ ) ≥ G(θ ∗ )
+is due to the fact that θ ∗ is the optimal solution to (9).
+Thus we have F(H∗ ) ≥ G(θ ∗ ). Moreover, since G(θ ∗ ) =
+μ(Hθ ∗ ) + η 1 θ ∗ = μ(Hθ ∗ ) + η trace(Hθ ∗ ) = F(Hθ ∗ ), we
+have F(H∗ ) ≥ G(θ ∗ ) = F(Hθ ∗ ).
+Finally, we conclude that F(Hθ ∗ ) = F(H∗ ), because
+we have proved F(Hθ ∗ ) ≥ F(H∗ ) and F(H∗ ) ≥ G(θ ∗ ) =
+F(Hθ ∗ ). This completes the proof.
+By replacing the Tikhonov regularization (9) with the
+corresponding Ivanov regularization (i.e. the regularizer
+term 1 θ is rewritten as the constraint), we reformulate the
+optimization problem of HFA as:
+1
+1
+1
+min max 1 α − (α ◦ y) K 2 (Hθ + I)K 2 (α ◦ y),
+θ α∈A
+2
+
+(10)
+
+∞
+
+s.t. Hθ =
+
+θr M r ,
+
+Mr ∈ M ,
+
+r=1
+
+1 θ ≤ λ,
+
+θ ≥ 0.
+
+By setting θ ← λ1 θ , it can be further rewritten as:
+1
+min max 1 α − (α ◦ y)
+α∈
+A
+θ ∈Dθ
+2
+1
+
+1
+
+∞
+
+θr Kr (α ◦ y),
+
+(11)
+
+r=1
+
+where Kr = K 2 (λMr + I)K 2 and Dθ = {θ |1 θ ≤ 1, θ ≥ 0}. It
+is an Infinite Kernel Learning (IKL) problem with each base
+kernel as Kr , which can be readily solved with the existing
+MKL solver [19], [21].
+
+2.5 Solution
+One problem in (11) is that there are an infinite number of
+base kernels because the set M contains infinite rank-one
+matrices. However, a finite number of rank-one matrices are
+sufficient to represent the matrix H [20]. Inspired by [21],
+we solve (11) based on a small number of base kernels
+which are constructed by using the cutting-plane algorithm.
+Let us introduce a dual variable τ for θ in (11) and write
+the dual form as:
+max 1 α − τ,
+
+(12)
+
+τ,α∈A
+
+1
+(α ◦ y) Kr (α ◦ y) ≤ τ, ∀r,
+2
+which has an infinite number of constraints. With the
+cutting-plane algorithm, we can approximate (12) by iteratively adding a kernel for which the corresponding constraint is violated according to the current solution. The
+kernel associated with this constraint is called an active kernel. To find the most active kernel, we need to maximize
+the left-hand side of the constraint in (12), which is given
+as:
+1
+(13)
+max
+(α ◦ y) KM (α ◦ y),
+M∈M 2
+s.t.
+
+1
+
+1
+
+where KM = K 2 (λM + I)K 2 . It has a closed form solution
+as M = hh ∈ R(ns +nt )×(ns +nt ) with h =
+
+1
+
+K 2 (α◦y)
+1
+
+K 2 (α◦y)
+
+.
+
+We summarize the proposed algorithm in Algorithm 1.
+First, we initialize the set of rank-one PSD matrices M with
+M1 = h1 h1 where h1 is a unit vector. Based on the current
+M, we solve the MKL problem in (11) to obtain the optimal
+α and θ . After that, we find the most active kernel which is
+decided by a rank-one PSD matrix M as in (13). By using the
+closed form solution of (13), we obtain a new rank-one PSD
+matrix and add it into the current set M. Then we solve
+the MKL problem again. The above steps are repeated until
+convergence. After obtaining the optimal solution α and H
+to (11), we can predict any test sample x from the target
+domain by using the following target decision function:
+
+
+Ons ×nt
+ 12
+(14)
+f (x) = (α ◦ y) K (H + I)
+kt + b,
+−1
+Kt 2
+where kt = [k(xt1 , x), . . . , k(xtnt , x)] and k(xi , xj ) =
+φt (xi ) φt (xj ) is a predefined kernel function for two data
+samples xi and xj in the target domain.
+1
+
+Complexity Analysis: In our HFA, we first calculate K 2
+once at the beginning, which costs O(n3 ) time with n = ns +
+nt being the total number of training samples1 . After that,
+we perform the cutting-plane algorithm (i.e., Algorithm 1),
+in which we iteratively train an MKL classifier and find
+the most violated rank-one matrix as in (13). As we have
+an efficient closed form solution for solving (13), the major
+time cost of Algorithm 1 is from the training of MKL at
+each iteration. However, the time complexity of MKL has
+not been theoretically analyzed. Usually, the MKL solver
+needs to train an SVM classifier for a few iterations. The
+empirical analysis shows that optimizing the QP problem
+1
+
+1. More accurately, the time complexity for solving K 2 is O(n3s +n3t ),
+because the kernel matrix K is a block-diagonal matrix.
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+Algorithm 1 Heterogeneous Feature Augmentation
+ns
+Input: Labeled source samples { (xsi , ysi )i=1
+} and labeled
+
+n
+t
+}.
+target samples { (xti , yti )i=1
+1: Set r = 1 and initialize M1 = {M1 } with M1=h1 h1 and
+h1 = √n 1+n 1ns +nt .
+s
+t
+2: repeat
+3:
+Solve θ and α in (11) based on Mr by using the
+existing MKL solver [19].
+4:
+Obtain a rank-one
+ PSD matrix Mr+1 by solving (13).
+5:
+Set Mr+1 = Mr {Mr+1 }, and r = r + 1.
+6: until The objective converges.
+
+Output: α and H = λ r θr Mr .
+in SVM is about O(n2.3 ) [22]. Therefore, the complexity of
+MKL is O(Ln2.3 ) with L being the number of iterations in
+MKL. Thus, the total time complexity of our HFA is O(n3 +
+TLn2.3 ), where T is the number of iterations in Algorithm 1.
+In practice, both L and T are not very large.
+
+2.6 Convergence Analysis
+Let us represent
+ the objective function in (11) as F(α, θ ) =
+1 α − 12 (α ◦ y) ∞
+r=1 θr Kr (α ◦ y), and also denote the optimal
+solution to (11) as (α ∗ , θ ∗ ) = arg minθ∈Dθ maxα∈A F(α, θ ).
+We denote the optimal solution of the MKL problem at
+the r-th iteration as (α r , θ r ). Because there are at most r nonzero elements in θ r , we assume these non-zero elements are
+the first r entries in θ r for ease of presentation. Then, we
+show in the following theorem that Algorithm 1 converges
+to the global optimal solution:
+Theorem 2. With Algorithm 1, F(α r , θ r ) monotonically
+decreases as r increases, and the following inequality holds
+F(α r , θ r ) ≥ F(α ∗ , θ ∗ ) ≥ F(α r , er+1 ),
+where er+1 ∈ Dθ is the vector with all zeros except the (r +
+1)-th entry being 1. We also have F(α r , θ r ) = F(α ∗ , θ ∗ ) =
+F(α r , er+1 ) when Algorithm 1 converges at the r-th iteration.
+The theorem can be proved similarly as in [23]. We also
+give the proof in the Appendix, which is available in
+the Computer Society Digital Library at http://doi.ieee
+computersociety.org/10.1109/TPAMI.2013.167. Moreover,
+as indicated in [24], the cutting-plane algorithm stops in
+a finite number of steps under some conditions. In our
+experiments, the algorithm usually takes less than 50
+iterations to obtain a sufficient accurate solution.
+
+2.7 Discussion
+Our work is related to the existing heterogeneous domain
+adaptation methods. The pioneering works [8]–[12] are limited to some specific HDA tasks, because they required
+additional information to transfer the source knowledge
+to the target domain. For instance, Dai et al. [8] and
+Zhu et al. [10] proposed to use either labeled or unlabeled text corpora to aid image classification by assuming
+images are associated with textual annotations. Such textual annotations can be additionally utilized to mine the
+word co-occurrence from textual annotations of images and
+words in text documents, which is served as a bridge to
+transfer knowledge from the text documents to images.
+
+1139
+
+To handle more general HDA tasks, other methods
+have been proposed to explicitly discover a common subspace [13], [15], [17] without using additional information,
+such that original data from the source and target domains
+can be measured in the common subspace. Specifically,
+Shi et al. [13] proposed to learn feature mapping matrices based on a spectral transformation for domains with
+different features. Wang et al. [15] proposed to learn the feature mapping by using the manifold alignment. However,
+such manifold assumption may not be satisfied in realworld applications with very diverse data. Recently, Kulis
+et al. [17] proposed a nonlinear metric learning method to
+learn an asymmetric feature transformation for the source
+and target data with high dimensions. They assume that
+if one source sample and one target sample are from the
+same category, the learned similarity between this pair of
+samples should be large; otherwise, the similarity should
+be small.
+In contrast to [13], [15], [17], in our proposed HFA,
+we simultaneously learn the common subspace and a
+max-margin classifier by solving a convex optimization
+problem, which shares a similar form with the MKL
+formulation. We also propose the heterogeneous augmented features by incorporating the original features
+from two domains, in order to learn a more robust
+classifier (see Section 4.3 for experimental comparisons).
+Moreover, our work can also be extended to handle unlabeled samples from the target domain as shown in the
+next section.
+
+3
+
+S EMI -S UPERVISED H ETEROGENEOUS
+F EATURE AUGMENTATION
+
+The unlabeled data has been demonstrated to be helpful for training a robust classifier in many applications [25]. For the traditional semi-supervised learning,
+readers can refer to [26] for a comprehensive survey.
+There are also many works on semi-supervised homogeneous domain adaptation, such as [27]–[29]. However,
+most existing heterogeneous domain adaptation works [13],
+[15], [17] were designed for the supervised setting,
+and cannot utilize the abundant unlabeled data in
+the target domain. Thus, we further propose semisupervised HFA to utilize the unlabeled data in the target
+domain.
+s
+t
+} and {(xti , yti )|ni=1
+} to represent the
+We still use {(xsi , ysi )|ni=1
+labeled data from the source domain and the target domain,
+respectively. Let us denote the unlabeled data in the taru
+} where xui ∈ Rdt is an unlabeled
+get domain as {(xui , yui )|ni=1
+sample in the target domain, nu is the number of unlabeled
+samples, and the label yui ∈ {−1, +1} is unknown. We also
+denote yu = [yu1 , . . . , yunu ] as the label vector of all the unlabeled data. Moreover, the total number of training samples
+is denoted as n = ns + nt + nu .
+
+3.1 Formulation
+Since the labels of unlabeled data are unknown, we propose
+to infer the optimal labeling yu for the unlabeled data in the
+target domain when learning the classifier. Based on the ρSVM with the squared hinge loss, we propose the objective
+
+1140
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+for semi-supervised heterogeneous domain adaptation as
+follows:
+
+1
+w2 + b2 − ρ
+min
+yu ,w,b,ρ,
+2
+P,Q,ξis ,ξit ,ξiu
+
++
+
+C
+2
+
+ns
+
+nt
+
+(ξis )2+
+i=1
+
+(ξit )2 +
+i=1
+
+Cu
+2
+
+s.t. ysi (w ϕs (xsi ) + b) ≥ ρ − ξis ,
+
+Proposition 1. The objective of (16) is lower-bounded by the
+optimum of the following optimization problem:
+1
+max − α 
+2
+
+min
+
+(15)
+
+i=1
+
+yti (w ϕt (xti ) + b) ≥ ρ − ξit ,
+
+yui (w ϕt (xui ) + b) ≥ ρ − ξiu ,
+
+1 yu = δ, P2F ≤ λp , Q2F ≤ λq ,
+where ϕs (·) and ϕt (·) are defined in (1) for generating the
+augmented features, and the constraint 1 yu = δ is used
+as the prior information on the unlabeled data similarly
+as in Transductive SVM (T-SVM) [25]. We refer to the
+above method as Semi-supervised Heterogeneous Feature
+Augmentation, or SHFA in short.
+Similarly as in HFA, we only discuss the nonlinear case for SHFA here, and the linear case can be
+derived analogously. Let us define a kernel matrix K =
+Ks Ons ×(nt +nu )
+∈ Rn×n where Ks ∈ Rns ×ns is the kerO(nt +nu )×ns Kt
+nel of source domain samples and Kt ∈ R(nt +nu )×(nt +nu ) is
+the kernel of target domain samples. Then, by defining a
+nonlinear transformation metric H ∈ Rn×n , we can derive
+the dual form of (15) as follows:
+1
+(16)
+min max − α  (QH,y + D)α
+2
+s.t. trace(H) ≤ λ,
+
+ 1
+1
+where QH,y = K 2 (H + I)K 2 + 11 ◦ (yy ) ∈ Rn×n , y =
+[ys , yt , yu ] is the label vector in which ys and yt are
+given and yu is unknown, Y = {y ∈ {−1, +1}n |y =
+[ys , yt , yu ] , 1 yu = δ} is the domain of y, α =
+[α1s , . . . , αns s , α1t , . . . , αnt t , α1u , . . . , αnuu ] ∈ Rn with αis ’s, αit ’s
+and αiu ’s are the dual variables corresponding to the
+constraints for source samples, labeled target samples
+and unlabeled target samples, respectively, A = {α|α ≥
+0, 1 α = 1} is the domain of α and D ∈ Rn×n is a diagonal matrix with the diagonal elements as C1 for the labeled
+data from both domains and C1u for the unlabeled target
+data.
+y∈Y ,H0 α∈A
+
+3.2 Convex Relaxation
+Compared with HFA, one major challenge in (16) is
+that we need to infer the optimal label vector y, which
+is a mixed integer programming (MIP) problem. It is
+an NP problem and is computationally expensive to be
+solved [30]–[32] because there are possibly an exponential number of feasible labeling candidates y’s. Inspired
+by [30]–[32], instead of directly finding the optimal labeling y, we seek for an optimal linear combination of the
+feasible labeling candidates y’s, which leads to a lowerbound of the original optimization problem as described
+below.
+
+(17)
+
+l
+
+s.t. trace(H) ≤ λ,
+
+nu
+
+(ξiu )2
+
+γl QH,yl + D α
+
+γ ∈Dγ ,H0 α∈A
+
+where yl is the l-th feasible labeling candidate, γ =
+[γ1 , . . . , γ|Y | ] is the coefficient vector for the linear combination of all feasible labeling candidates and Dγ = {γ |γ ≥
+0, 1 γ ≤ 1} is the domain of γ .
+Proof. The proof is provided in the Appendix, available
+online.
+Another challenge in (16) or (17) is to solve the positive semi-definite matrix H. We apply a similar strategy
+here as used in HFA to solve the optimization problem in
+(17). Specifically, we decompose H into a linear combina
+tion of a set of rank-one PSD matrices, i.e., H = ∞
+r=1 θr Mr
+n×n
+where Mr ∈ R
+is a rank-one PSD matrix and θr is the
+corresponding combination coefficient, which leads to the
+following optimization problem:
+1
+min min max − α 
+2
+
+γ ∈Dγ θ ∈Dθ α∈A
+
+θr γl QMr ,yl + D α
+r
+
+(18)
+
+l
+
+
+ 1
+1
+where QMr ,yl = K 2 (λMr + I)K 2 + 11 ◦ (yl yl  ) and Dθ =
+{θ |θ ≥ 0, 1 θ ≤ 1}.
+However, there are three variables, θ , γ and α in (18).
+To efficiently solve this problem, we propose a relaxation
+by combining θ and γ into one variable d. Specifically, let
+us denote dk = θr γl where dk is the k-th entry of d. After
+combining the two indices r and l into one index k, we
+
+ 
+have 1 d = k dk = r l θr γl = (1 θ )(1 γ ) ≤ 1. Then we
+reformulate the optimization problem in (18) as:
+1
+min max − α 
+2
+
+d∈Dd α∈A
+
+dk QMk ,yk + D α
+
+(19)
+
+k
+
+
+ 1
+1
+where QMk ,yk = K 2 (λMk + I)K 2 + 11 ◦ (yk yk  ) and Dd =
+{d|1 d ≤ 1, d ≥ 0}.
+Hence, we obtain an MKL problem as in (19) where each
+base kernel is QMk ,yk , and the primal form of (19) is as
+follows:
+min
+
+d,wk ,ρ,ξi
+
+1
+2
+
+s.t.
+k
+
+
+wk 2
++C
+dk
+
+k
+wk ψk (xi )
+
+1 d ≤ 1,
+
+n
+
+νi (ξi )2 − ρ
+
+(20)
+
+i=1
+
+≥ ρ − ξi ,
+
+d ≥ 0,
+
+where d is the coefficient vector, ψk (·) is the k-th feature
+ 1 mapping function
+ induced by the kernel QMk ,yk =
+1
+
+2
+2
+K (λMk + I)K + 11 ◦(yk yk  ), and νi is the weight for the
+i-th sample which is 1 for labeled data from both domains
+and Cu /C for unlabeled target data.
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+1141
+
+3.3 Solution
+Similar to HFA, there are also an infinite number of base
+kernels in (19). We therefore employ the cutting-plane algorithm to iteratively select a small set of active kernels. We
+first write the dual form of (20) as follows:
+max −τ
+
+(21)
+
+τ,α∈A
+
+1 
+α (QMk ,yk + D)α ≤ τ, ∀k
+2
+where we have an infinite number of constraints. The
+subproblem for selecting the most active kernel is:
+s.t.
+
+1 
+α QM,y α,
+(22)
+y∈Y ,M∈M 2
+
+ 1
+1
+where QM,y = K 2 (λM + I)K 2 + 11 ◦ (yy ). Note that we
+do not need to consider the constant term α  Dα in the above
+formulation when selecting the most active kernel.
+Given any y, finding the violated M is as the same as in
+HFA. It can be obtained by solving (13) with the closed form
+max
+
+solution M = hh where h =
+M back into (22) and obtain
+
+1
+
+K 2 (α◦y)
+1
+
+K 2 (α◦y)
+
+. Then we substitute
+
+1 
+α QM,y α,
+y∈Y ,M∈M 2
+ 1
+
+1
+1
+= max
+(α ◦ y) K 2 (λM + I)K 2 + 11 (α ◦ y),
+y∈Y ,M∈M 2
+(α ◦ y) K(α ◦ y)(α ◦ y) K(α ◦ y)
+= max λ
+y∈Y
+(α ◦ y) K(α ◦ y)
+
++(α ◦ y) (K + 11 )(α ◦ y)
+max
+
+= max (α ◦ y) ((λ + 1)K + 11 )(α ◦ y),
+
+(23)
+
+y∈Y
+
+which indicates that we only need to solve an optimization
+problem on y. However, it is another MIP problem, and is
+difficult to be solved. Similar to [30], [32], we employ an
+approximated solution to (23) for finding the most violated
+y. Specifically, we first rewrite (23) as:
+
+
+max y K̃ ◦ (αα  ) y = max 
+yi αi φ̃(xi )2
+(24)
+y∈Y
+
+y∈Y
+
+i
+
+11
+
+and φ̃(·) is the feature mapping
+where K̃ = (λ + 1)K +
+function induced by K̃. Following [30], [32], we use the ∞ norm to approximate the 2 -norm in (24), and the problem
+becomes
+max 
+y∈Y
+
+yi αi φ̃(xi )∞
+i
+
+
+
+
+
+= max max
+
+y∈Y j=1,...,d̃
+
+
+
+= max
+j=1,...,d̃
+
+yi αi zij , −
+i
+
+y∈Y
+
+
+
+yi αi zij , max −
+
+max
+i
+
+y∈Y
+
+yi αi zij
+
+1
+
+K 2 (α◦y )
+
+k
+.
+Mk = hh where h =
+1
+K 2 (α◦y
+
+k )
+8:
+Set M = M {Mk }, Y = Y {yk }.
+9: until The objective converges.
+Output: α, d, Y and M.
+
+the j-th dimension, we can respectively obtain two label
+vectors by a simple sorting operation to solve the two
+inner problems in (25). Specifically, we first sort the unlabeled samples
+in descending order according to αi zij . For
+
+maxy∈Y i yi αi zij , the optimal label vector can be obtained
+by setting the first (δ + nu )/2 unlabeled samples as positive and the remainingunlabeled samples as negative;
+similarly for maxy∈Y − i yi αi zij , the optimal label vector is obtained by setting the last (δ + nu )/2 unlabeled
+samples as positive and remaining unlabeled samples as
+negative. Finally, the most violated y is the label vector
+with the maximum objective value among these 2d̃ label
+vectors.
+We summarize the algorithm for solving SHFA in
+Algorithm 2. We first initialize the set of rank-one PSD
+matrices M with M1 = h1 h1 , and also initialize the labeling candidate set Y by using a feasible label vector y1 . To
+obtain ỹu in y1 , we first sort the unlabeled training samples in descending order according to the prediction of the
+classifier trained on the labeled target samples. Then ỹu is
+obtained by setting the first (δ +nu )/2 unlabeled samples as
+positive and the remaining samples as negative. Next, we
+solve the MKL problem in (19) based on Y and M. After
+that, we find a violated y and calculate the corresponding
+M = hh where h =
+
+yi αi zij
+i
+
+Algorithm 2 Semi-supervised Heterogeneous Feature
+Augmentation
+ns
+Input: Labeled source samples { (xsi , ysi )i=1
+}, labeled tarnt
+t
+t
+
+get samples { (xi , yi ) i=1 }, and unlabeled target samples
+nu
+{ (xui , yui )i=1
+} with the unknown yui ’s.
+1: Train an SVM classifier f0 by only using the labeled
+target samples.
+2: Initialize the labeling candidate set Y = {y1 } where y1 =
+[ys , yt , ỹu ] where ỹu is a feasible label vector obtained
+by using the prediction from f0 .
+3: Initialize the rank-one matrices set M = {M1 } with
+M1 = h1 h1 and h1 = √1n 1n and set k = 1.
+4: repeat
+5:
+Set k = k + 1.
+6:
+Solve d and α in (19) based on Y and M by using
+the existing MKL solver [19].
+7:
+Find the violated yk by solving (25) and obtain
+
+(25)
+
+i
+
+where zij is the j-th entry of the feature vector φ̃(xi ) =
+[zi1 , . . . , zid̃ ] with d̃ as the feature dimension.
+To find the optimal y, we first obtain φ̃(x) by using
+SVD decomposition on the kernel matrix K̃, which is also
+known as the empirical kernel map [33]. Then we calculate αi zij for each feature dimension and each sample. For
+
+1
+
+K 2 (α◦y)
+1
+
+K 2 (α◦y)
+
+. We respectively add y and M
+
+into Y and M and solve the MKL problem again. This process is repeated until convergence. The time complexity can
+be analyzed similarly as in HFA, which is O(n3 + TLn2.3 )
+with n = ns + nt + nu being the total number of training
+samples2 .
+2. The time complexity of the sorting operation for d̃ times in finding the optimal y is d̃nu log(nu ), which is less than n2 log(n). When
+the number of training samples (i.e., n) is large as in our experiments,
+it can be ignored when compared with the time complexity O(Ln2.3 )
+for solving the MKL problem.
+
+1142
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+After obtaining the optimal solution α, d, Y and M , we
+can predict any test sample x from the target domain by
+using the following target decision function:
+
+
+Ons×(nt +nu )
+ 12
+kt +b, (26)
+f (x)= dk (α ◦ yk ) K (λMk+I)
+−1
+Kt 2
+k
+
+TABLE 1
+Summarization of the Object Dataset
+Including 31 Categories
+
+where kt =[k(xt1 , x), . . . , k(xtnt , x), k(xu1 , x), . . . , k(xunu , x)] and
+k(xi , xj ) = φt (xi ) φt (xj ) is a predefined kernel function for
+two data samples xi and xj in the target domain.
+
+3.4 p -MKL Extension
+Recall that we have formulated our SHFA as an MKL problem in (20), in which the 1 -norm constraint on the kernel
+coefficient vector d (i.e. d1 ≤ 1) is adopted. However,
+the optimization problem in (20) can be extended to more
+general p -MKL by using p -norm on d (i.e. dp ≤ 1) as
+follows:
+min
+
+d,wk ,ρ,ξi
+
+1
+2
+
+s.t.
+
+wk 2
++C
+dk
+
+k
+wk ψk (xi )
+
+k
+
+dp ≤ 1,
+
+n
+
+νi (ξi )2 − ρ
+
+(27)
+
+i=1
+
+≥ ρ − ξi ,
+
+d ≥ 0,
+
+where d, ψk (xi ) and νi are as the same as defined in (20).
+Thus, the original SHFA is a special case of (27) when
+p = 1. The p -MKL problem in (27) can also be solved by
+Algorithm 2. The only difference is that we solve an p -MKL
+problem instead of 1 -MKL in Step 6.
+
+4
+
+E XPERIMENTS
+
+In this section, we evaluate our proposed HFA and SHFA
+methods for object recognition, multilingual text categorization and cross-lingual sentiment classification. We focus on
+the heterogeneous domain adaptation problem with only
+one source domain and one target domain. For the supervised heterogeneous domain adaptation setting, we only
+utilize a limited number of labeled training samples in
+the target domain; for the semi-supervised heterogeneous
+domain adaptation setting, we additionally employ a large
+number of unlabeled training samples in the target domain.
+
+4.1 Setup
+Object recognition: We employ a recently released Office
+dataset3 used in [16], [17] for this task. This dataset contains a total of 4106 images from 31 categories collected
+from three sources: amazon (object images downloaded
+from Amazon), dslr (high-resolution images taken from
+a digital SLR camera) and webcam (low-resolution images
+taken from a web camera). We follow the same protocols
+in the previous work [17]. Specifically, SURF features [34]
+are extracted for all the images. The images from amazon
+and webcam are clustered into 800 visual words by using
+k-means. After vector quantization, each image is represented as a 800 dimensional histogram feature. Similarly,
+we represent each image from dslr as a 600-dimensional
+histogram feature.
+3. http://www.icsi.berkeley.edu/~saenko/projects.html
+
+In the experiments, dslr is used as the target domain,
+while amazon and webcam are considered as two individual source domains. We strictly follow the setting
+in [16], [17] and randomly select 20 (resp., 8) training images per category for the source domain amazon
+(resp., webcam). For the target domain dslr , 3 training
+images are randomly selected from each category, and the
+remaining dslr images are used for testing, which are
+also used as the unlabeled training samples in the semisupervised setting. See Table 1 for a summarization of this
+dataset.
+Text categorization: We use the Reuters multilingual
+dataset4 [35], which is collected by sampling parts of the
+Reuters RCV1 and RCV2 collections. It contains about 11K
+newswire articles from 6 classes (i.e., C15, CCAT, E21, ECAT,
+GCAT and M11) in 5 languages (i.e., English , French ,
+German , Italian and Spanish). While each document
+was also translated into the other four languages in this
+dataset, we do not use the translated documents in this
+work. All documents are represented by using the TF-IDF
+feature.
+We take Spanish as the target domain in the experiment
+and use each of the other four languages as an individual
+source domain. For each class, we randomly sample 100
+training documents from the source domain and m training documents from the target domain, where m = 5, 10, 15
+and 20. And the remaining documents in the target domain
+are used as the test data, among which 3, 000 documents
+are additionally sampled as the unlabeled training data in
+the semi-supervised setting. Note that the method in [15]
+cannot handle the original high dimensional TF-IDF features. In order to fairly compare our HFA method [15],
+for documents written in each language, we perform PCA
+based on the TF-IDF features with 60% energy preserved.
+We summarize this dataset in Table 2.
+Sentiment Classification: We use the Cross-Lingual
+Sentiment (CLS) dataset5 [36], which is an extended version of the Multi-Domain Sentiment Dataset [2] widely
+used for domain adaptation. It is collected from Amazon
+and contains about 800,000 reviews of three product categories: Books, DVDs and Music, and written in four
+languages: English, German, French, and Japanese. The
+English reviews were sampled from the Multi-Domain
+Sentiment Dataset and reviews in other languages are
+crawled from Amazon. For each category and each language, the dataset is officially partitioned into a training
+set, a test set and an unlabeled set, where the training set
+4. http://multilingreuters.iit.nrc.ca/ReutersMultiLingualMultiView.
+htm
+5. http://www.uni-weimar.de/cms/medien/webis/research/
+corpora/corpus-webis-cls-10.html
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+1143
+
+TABLE 2
+Summarization of the Reuters Multilingual Dataset Including 6 Classes
+
+and test set consist of 2,000 reviews, and the numbers of
+unlabeled reviews vary from 9,000 to 170,000.
+We take English as the source domain and each of the
+other three languages as an individual target domain in
+the experiment. We randomly sample 500 reviews from the
+training set of the source domain and 100 reviews from the
+training set of the target domain as the labeled data. The
+test set is the official test set for each category and each
+language. We also sample 1, 000 reviews from the unlabeled
+set as the unlabeled target training data. Similarly as for
+text categorization, we extracted the TF-IDF features and
+perform PCA with 60% energy preserved. The complete
+information of this dataset is summarized in Table 3.
+Baselines: To evaluate our proposed methods, HFA and
+SHFA, we compare them with a number of baselines under
+two settings. The first setting (i.e., the supervised HDA setting) is as the same as [18], in which there are sufficient
+labeled source samples and a limited number of labeled target samples. As the source and target data have different
+dimensions, they cannot be directly combined to train any
+classifiers for the target domain. So the baseline algorithms
+in this setting are listed as follows:
+•
+
+•
+
+•
+
+•
+
+SVM_T: It utilizes the labeled samples only from
+the target domain to train a standard SVM classifier for each category/class. This is a naive approach
+without considering the information from the source
+domain.
+HeMap [13]: It finds the projection matrices for a
+common feature subspace as well as learns the optimally projected data from both domains. We align
+the samples from different domains according to
+their labels. Since HeMap requires the same number of samples from the source and target domains,
+we randomly select min{ns , nt } samples from each
+domain for learning the subspace.
+DAMA [15]: It learns a common feature subspace
+by utilizing the class labels of the source and target
+training data for manifold alignment.
+ARC-t [17]: It uses the labeled training data from
+both domains to learn an asymmetric transformation
+metric between different feature spaces.
+TABLE 3
+Summarization of the Cross-Lingual Sentiment Dataset
+Including 3 Categories and 2 Classes
+
+In the second setting (i.e. the semi-supervised HDA setting), we addtionally employ the unlabeled samples in the
+target domain. To evaluate our SHFA, we report the results
+of one more baseline, transductive SVM (T-SVM) [25], which
+utilizes both the labeled data and unlabeled data to train
+the classifier. Note that the labeled samples in the source
+domain cannot be used in T-SVM because they have different
+features with the samples in the target domain. Moreover,
+all the above heterogenous domain adaptation methods [13],
+[15], [17] were designed for the supervised heterogeneous
+domain adaptation scenario, so it is unclear how to utilize
+the unlabeled target data to learn the projection matrices or
+transformation metric for these methods.
+For HeMap and DAMA, after learning the projection
+matrices, we apply SVM to train the final classifiers by
+using the projected training data from both domains for
+a given category/class. For ARC-t, we construct the kernel matrix based on the learned asymmetric transformation
+metric, and then SVM is also applied to train its final classifier. The RBF kernel is used for all methods with the
+bandwidth parameter as the mean distance of all training
+samples. As we only have a very limited number of labeled
+training samples in the target domain, the cross-validation
+technique cannot be effectively employed to determine the
+optimal parameters. Therefore, we set the tradeoff parameter in SVM as the default value C = 1 for all methods.
+For our HFA and SHFA methods, we empirically fix the
+parameter λ as 100 in the vision application (i.e. the object
+recognition) and 1 in the text applications ( i.e., document
+classification and sentiment classification). And we also
+empirically set the weight of unlabeled data Cu in SHFA as
+10−3 for all experiments. Moreover, we additionally report
+the results of our SHFA with the p -MKL extension (see
+Section 3.4) where we empirically set p = 1.5 for all the
+datasets which generally achieves better results.
+For other methods, we report their best results on the
+test data by varying their parameters in a wide range on
+each dataset. Specifically, we validate the parameters β in
+HeMap (see Equation (1) in [13]), μ in DAMA (see Theorem
+1 in [15]) and λ in ARC-t (see Equation (1) in [17]) from
+{0.01, 0.1, 1, 10, 100}. For T-SVM, we validate the weight of
+unlabeled data Cu from {0.001, 0.01, 0.1, 1} and the parameter s for the ramp loss from [ − 0.9, 0] with the step size as
+0.1. For both T-SVM and our SHFA, we set the parameter δ
+for the balance constraint on unlabeled samples using the
+prior information.
+Evaluation metric: Following [17], for each method
+we measure the classification accuracy over all categories/classes on three datasets. We randomly sample the
+training data for a fixed number of times (i.e., 20 for the
+
+1144
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+TABLE 4
+Means and Standard Deviations of Classification Accuracies
+(%) of All Methods on the Object Dataset by Using 3 Labeled
+Training Samples Per Class from the Target Domain dslr
+
+Results in boldface are significantly better than the others, judged by the t-test with
+a significance level at 0.05.
+
+Office dataset as in [17], and 10 for the Reuters dataset and
+the Cross-Lingual Sentiment dataset) and report the mean
+classification accuracies of all methods over all rounds of
+experiments.
+
+4.2 Classification Results
+Object recognition: We report the means and standard
+deviations of classification accuracies for all methods on
+the Office dataset [16] in Table 4. From the results, we have
+the following observations in terms of the mean classification accuracy. SVM_T outperforms HeMap by using only
+3 labeled training samples from the target domain. The
+explanation is that HeMap does not explicitly utilize the
+label information of the target training data to learn the
+feature mapping matrices. As a result, the learned common subspace cannot well preserve a similar data structure
+as in the original feature spaces of the source and target data, which results in poor classification performances.
+DAMA performs only slightly better that SVM_T, possibly due to the lack of strong manifold structure on this
+dataset. Both results of ARC-t implemented by ourselves
+and reported in [17] are only comparable with those of
+SVM_T, which shows that ARC-t is less effective for HDA
+on this dataset. Our HFA outperforms the other methods
+for both cases, which clearly demonstrate the effectiveness of our proposed method for HDA by learning with
+augmented features. Moreover, we also observe that it is
+beneficial to additionally use unlabeled data in the target
+domain to learn a more robust classifier. Specifically, when
+
+setting the parameter p in the p -norm regularizer of p MKL as p = 1, our SHFA outperforms HFA on both cases
+when amazon and webcam are used as the source domain.
+When setting p = 1.5, the improvements of SHFA over HFA
+are 1.2% and 1.6%, respectively. SHFA also outperforms TSVM which demonstrates we can train a better classifier by
+learning the transformation metric H to effectively exploit
+the source data in SHFA.
+Text categorization: Table 5 shows the means and standard
+deviations of classification accuracies for all methods on
+the Reuters multilingual dataset [35] by using m = 10 and
+m = 20 labeled training samples per class from the target
+domain. We have the following observations in terms of
+the mean classification accuracy. SVM_T still outperforms
+HeMap. DAMA and ARC-t perform better than SVM_T
+for most cases. Our proposed HFA method is better than
+other supervised HDA methods on this dataset. For the
+semi-supervised setting, T-SVM is even worse than SVM_T
+although we have tuned all the parameters in a wide range.
+One possible explanation is that T-SVM cannot effectively
+utilize these target unlabeled data on this dataset. However,
+our SHFA can effectively handle the unlabeled data in the
+target domain and the performance improvements of SHFA
+(p = 1.5) over HFA are 3.5%, 3.2%, 3.1%, 3.1% and 1.1%,
+1.1%, 1.0%, 1.1% for these four different source domains
+when m = 10 and m = 20, respectively.
+We also plot the classification results of SVM_T, DAMA,
+ARC-t and our methods HFA and SHFA by using different numbers of target training samples per class (i.e.,
+m = 5, 10, 15 and 20) for each source domain in Fig. 2.
+We do not report the results of HeMap, as they are much
+worse than the other methods. From the results, the performances of all methods increase when using a larger m.
+And the two HDA methods DAMA and ARC-t generally
+achieve better mean classification accuracies than SVM_T
+except for the setting using English as the source domain.
+Our HFA method generally outperforms all other baseline
+methods according to mean classification accuracy. When
+using the unlabeled data in the target domain, our SHFA
+(p = 1) outperforms all existing HDA methods and the performance can be further improved when setting p = 1.5.
+We also observe that SHFA has large improvements over
+HFA when the number of labeled data in the target domain
+is very small (see m = 5 in Fig. 2). When the number of
+labeled data in the target domain increases, the unlabeled
+
+TABLE 5
+Means and Standard Deviations of Classification Accuracies (%) of All Methods on the Reuters Multilingual Dataset by
+Using 10 and 20 Labeled Training Samples Per Class from the Target Domain Spanish
+
+Results in boldface are significantly better than the others, judged by the t-test with a significance level at 0.05.
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+TABLE 6
+Means and Standard Deviations of Classification Accuracies
+(%) of All Methods on the Cross-Lingual Sentiment Dataset by
+Using 100 Labeled Training Samples from the Target Domain
+
+Results in boldface are significantly better than the others, judged by the t-test with
+a significance level at 0.05.
+
+data in the target domain is less helpful, but SHFA is still
+better than HFA.
+Sentiment classification: Table 6 summarizes the means
+and standard deviations of classification accuracies for all
+methods on the Cross-Lingual Sentiment dataset by using
+m = 100 labeled training samples in the target domain.
+As in each domain there are three categories (i.e., Books,
+DVDs, Music), each mean accuracy in Table 6 is the mean
+accuracy over three categories and ten rounds. We have
+the following observations in terms of the mean classification accuracy. We observe that HeMap is worse than
+SVM_T which again indicates it cannot learn good feature
+mappings on this dataset. ARC-t is only comparable with
+SVM_T, and DAMA outperform SVM_T for all cases. Our
+HFA is better than other basline methods, except one exceptional case that HFA is worse than DAMA when using
+Japanese as the target domain. A possible explanation is
+the reviews in Japanese have good manifold correspondence with that in English . However, our HFA is still
+comparable with DAMA in this case. Moreover, we also
+have the similar observation as on the Office dataset and
+Reuters dataset, our SHFA achieves better results than HFA
+by additionally exploiting the unlabeled data in the target
+domain. With setting p = 1, the performance improvements
+of SHFA over HFA are 3.7%, 3.6% and 3.6% when using
+German , French and Japanese as the target domain,
+respectively. With setting p = 1.5, the performance improvements of SHFA over HFA are further increased to 4.4%,
+4.7% and 4.4%, respectively.
+
+1145
+
+4.3 Augmented Features v.s. Common Features
+We defined two augmented feature mapping functions
+
+ϕs (xs ) = [(Pxs ) , xs  , 0dt ] and ϕt (xt ) = [(Qxt ) , 0ds , xt ] in (1)
+by concatenating the feature representation in the learnt common subspace (referred to as common features here) with the
+original features and zeros. However, our methods are also
+applicable by only using the common feature representations
+Pxs and Qxt for the samples from source and target domains
+without using the original features and zeros. We take SHFA
+when setting p = 1.5 as an example to evaluate our work by
+only using the feature representation in the common space,
+which is referred as SHFA_commFeat . The results on the
+Reuters multilingual dataset are shown in Table 7, where we
+use the same settings as described in Section 4.1. We observe
+that SHFA_commFeat still outperforms the existing HDA
+methods HeMap, DAMA, ARC-t, and HFA on all settings
+in terms of mean accuracy, which clearly demonstrates the
+effectiveness of our proposed learning scheme. Moreover,
+SHFA using the augmented features are consistently better than SHFA_commFeat in terms of mean accuracy, which
+demonstrates it is beneficial to use our proposed new learning
+methods with the augmented features for HDA.
+4.4
+
+Performance Variations Using Different
+Parameters
+We conduct experiments on the Reuters multilingual
+dataset to evaluate the performance variations of our
+SHFA by using different parameters (i.e., λ, p, and Cu ). As
+described in Section 4.1, we still use 100 labeled samples
+per class from the source domain, as well as 20 labeled
+samples per class and 3000 unlabeled samples from the target domain. The results of our SHFA (p = 1) and SHFA
+(p = 1.5) by using the default values λ = 1 and Cu = 0.001
+have been reported in Table 5. To evaluate the performance
+variations, at each time we vary one parameter and set
+the other parameters as the default values (i.e., λ = 1,
+Cu = 0.001, and p = 1.5). The means of classification accuracies by varying different parameters on the four settings
+are plotted in Fig. 3.
+From Fig. 3, we observe that our SHFA is quite stable to
+these parameters in certain ranges. Specifically, by changing λ in the range of [0.01, 100], the performances of SHFA
+(p = 1.5) vary within 1% in terms of mean classification
+accuracy, which are still better than these baseline methods
+reported in Table 5. Also, by changing the parameter p of
+
+Fig. 2. Classification accuracies of all methods with respect to different number of target training samples per class (i.e., m = 5, 10, 15 and 20)
+on the Reuters multilingual dataset. Spanish is considered as the target domain, and in each subfigure the results are obtained by using one
+language as the source domain. (a) English. (b) French. (c) German. (d) Italian.
+
+1146
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+TABLE 7
+Means and Standard Deviations of Classification Accuracies (%) of Our SHFA (p = 1.5) and
+SHFA_commFeat (p = 1.5) on the Reuters Multilingual Dataset
+
+the p -norm in the range of {1, 1.2, 1.5, 2}, we observe that
+with a larger p, SHFA can achieve better results. However,
+our initial experiments show that a larger p usually leads
+to a slower convergence. We empirically set p = 1.5 as the
+default value in all our experiments for a good tradeoff
+between the effectiveness and efficiency. Moreover, we also
+evaluate our SHFA (p = 1.5) by varying Cu in the range
+of [10−5 , 10−1 ]. The parameter Cu controls the weights of
+unlabeled samples. Intuitively, it should not be too large
+because the inferred labels for the unlabeled samples are
+not accurate, which is also supported by our experiment as
+shown in Fig. 3(c). While we empirically set Cu = 10−3 in
+all our experiments, we observe that SHFA (p = 1.5) using
+a larger value (i.e., Cu = 10−2 ) can achieve better results on
+this dataset. However, the performances drop dramatically
+when setting it to a much larger value (say, Cu = 10−1 ).
+Nevertheless, our SHFA is generally stable and better than
+these baseline methods reported in Table 5 when setting
+Cu ∈ [10−5 , 10−2 ]. For the domain adaptation problem, it is
+difficult to perform cross-validation to choose the optimal
+parameters, because we usually only have a limited number
+of labeled samples in the target domain. We would like to
+study how to automatically decide the optimal parameters
+in the future.
+
+4.5 Time Analysis
+We take the Cross-Lingual Sentiment dataset as an example
+to evaluate the running time of all methods. The experimental setting is as the same as described in Section 4.1.
+The average per class training times of all methods are
+reported in Table 8. All the experiments are performed
+on a workstation with Xeon 3.33 GHz CPU and 16 GB of
+RAM. From Table 8, we observe that the supervised methods (i.e., SVM_T, HeMap, DAMA, ARC-t and HFA) are
+generally faster than the semi-supervised methods (i.e., TSVM and our SHFA), because additional unlabeled samples
+
+are used in the semi-supervised methods. SVM_T is very
+fast because it only utilizes the labeled training data from
+the target domain. HeMap is fast since it only needs to
+solve the eigen-decomposition problem in a very small size
+due to the limited number of labeled samples in the target domain. The training time of HFA is comparable to
+that of DAMA and ARC-t. For the semi-supervised methods, we observe that our SHFA (p = 1) is faster than
+T-SVM, and SHFA (p = 1.5) is slower than SHFA (p = 1).
+Moreover, the warm start strategy can be used to further accelerate our SHFA , which will be studied in the
+future.
+
+5
+
+C ONCLUSION AND F UTURE W ORK
+
+We have proposed a new method called Heterogeneous
+Feature Augmentation (HFA) for heterogeneous domain
+adaptation. In HFA, we augment the heterogeneous features from the source and target domains by using two
+newly proposed feature mapping functions, respectively.
+With the augmented features, we propose to find the two
+projection matrices for the source and target data and
+simultaneously learn the classifier by using the standard
+SVM with the hinge loss in both linear and nonlinear cases.
+Then we convert the learning problem into an MKL formulation which is convex and thus the global solution
+can be guaranteed. Moreover, to utilize the abundant unlabeled data in the target domain, we further extend our
+HFA method to semi-supervised HFA (SHFA). Promising
+results have demonstrated the effectiveness of HFA and
+SHFA on three real-world datasets for object recognition,
+text classification and sentiment classification.
+In the future, we will investigate how to incorporate
+other kernel learning methods such as [37] into our heterogeneous feature augmentation framework. Another important direction is to analyze the generalization bound for
+heterogeneous domain adaptation.
+
+Fig. 3. Performances of our SHFA using different parameters on the Reuters multilingual dataset. (a) Performances w.r.t. λ. (b) Performances w.r.t.
+p in lp -norm. (c) Performance w.r.t. Cu .
+
+LI ET AL.: LEARNING WITH AUGMENTED FEATURES
+
+1147
+
+TABLE 8
+Average Per Class Training Time (in Seconds) Comparisons of All
+Methods on the Cross-Lingual Sentiment Dataset
+
+ACKNOWLEDGMENTS
+This work is supported by the Singapore MOE Tier 2 Grant
+(ARC42/13).
+
+R EFERENCES
+[1] J. Blitzer, R. McDonald, and F. Pereira, “Domain adaptation with
+structural correspondence learning,” in Proc. EMNLP, Sydney,
+NSW, Australia, 2006.
+[2] J. Blitzer, M. Dredze, and F. Pereira, “Biographies, bollywood,
+boom-boxes and blenders: Domain adaptation for sentiment
+classification,” in Proc. 45th ACL, Prague, Czech Republic, 2007.
+[3] H. Daumé, III, “Frustratingly easy domain adaptation,” in Proc.
+ACL, 2007.
+[4] L. Duan, D. Xu, I. W. Tsang, and J. Luo, “Visual event recognition
+in videos by learning from web data,” IEEE Trans. Pattern Anal.
+Mach. Intell., vol. 34, no. 9, pp. 1667–1680, Sep. 2012.
+[5] L. Duan, I. W. Tsang, and D. Xu, “Domain transfer multiple kernel
+learning,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 34, no. 3,
+pp. 465–479, Mar. 2012.
+[6] L. Duan, D. Xu, and S.-F. Chang, “Exploiting web images for
+event recognition in consumer videos: A multiple source domain
+adaptation approach,” in Proc. CVPR, Providence, RI, USA, 2012,
+pp. 1338–1345.
+[7] L. Chen, L. Duan, and D. Xu, “Event recognition in videos
+by learning from heterogeneous web sources,” in Proc. CVPR,
+Portland, OR, USA, 2013, pp. 2666–2673.
+[8] W. Dai, Y. Chen, G.-R. Xue, Q. Yang, and Y. Yu, “Translated learning: Transfer learning across different feature spaces,” in Proc.
+NIPS, 2009.
+[9] Q. Yang, Y. Chen, G.-R. Xue, W. Dai, and Y. Yu, “Heterogeneous
+transfer learning for image clustering via the social web,” in Proc.
+ACL/IJCNLP, Singapore, 2009.
+[10] Y. Zhu et al., “Heterogeneous transfer learning for image classification,” in Proc. AAAI, 2011.
+[11] B. Wei and C. Pal, “Cross-lingual adaptation: An experiment on
+sentiment classifications,” in Proc. ACL, 2010.
+[12] P. Prettenhofer and B. Stein, “Cross-language text classification
+using structural correspondence learning,” in Proc. ACL, 2010.
+[13] X. Shi, Q. Liu, W. Fan, P. S. Yu, and R. Zhu, “Transfer learning on
+heterogenous feature spaces via spectral transformation,” in Proc.
+ICDM, Sydney, NSW, Australia, 2010.
+[14] M. Harel and S. Mannor, “Learning from multiple outlooks,” in
+Proc. 28th ICML, Bellevue, WA, USA, 2011.
+[15] C. Wang and S. Mahadevan, “Heterogeneous domain adaptation
+using manifold alignment,” in Proc. 22nd IJCAI, 2011.
+[16] K. Saenko, B. Kulis, M. Fritz, and T. Darrell, “Adapting visual category models to new domains,” in Proc. ECCV, Heraklion, Greece,
+2010.
+[17] B. Kulis, K. Saenko, and T. Darrell, “What you saw is not
+what you get: Domain adaptation using asymmetric kernel transforms,” in Proc. CVPR, Providence, RI, USA, 2011.
+[18] L. Duan, D. Xu, and I. W. Tsang, “Learning with augmented features for heterogeneous domain adaptation,” in Proc. 29th ICML,
+Edinburgh, Scotland, U.K., 2012, pp. 711–718.
+[19] M. Kloft, U. Brefeld, S. Sonnenburg, and A. Zien, “p -norm
+multiple kernel learning,” JMLR, vol. 12, pp. 953–997, Mar. 2011.
+[20] M. Dudik, Z. Harchaoui, and J. Malick, “Lifted coordinate
+descent for learning with trace-norm regularization,” in Proc. 15th
+AISTATS, La Palma, Spain, 2012.
+[21] P. V. Gehler and S. Nowozin, “Infinite kernel learning,” Max
+Planck Institute for Biological Cybernetics, Tech. Rep. 178, 2008.
+[22] J. C. Platt, “Fast training of support vector machines using
+sequential minimal optimization,” in Advances in Kernel Methods.
+Cambridge, MA, USA: MIT Press, 1999, pp. 185–208.
+
+[23] M. Tan, L. Wang, and I. W. Tsang, “Learning sparse SVM for
+feature selection on very high dimensional datasets,” in Proc. 27th
+ICML, Haifa, Israel, 2010.
+[24] A. Mutapcic and S. Boyd, “Cutting-set methods for robust convex optimization with pessimizing oracles,” Optim. Meth. Softw.,
+vol. 24, no. 3, pp. 381–406, Jun. 2009.
+[25] R. Collobert, F. Sinz, J. Weston, and L. Bottou, “Large scale
+transductive SVMs,” JMLR, vol. 7, pp. 1687–1712, Dec. 2006.
+[26] X. Zhu, “Semi-supervised learning literature survey,” University
+of Wisconsion-Madison, Tech. Rep. 1530, 2005.
+[27] L. Duan, D. Xu, and I. W. Tsang, “Domain adaptation from multiple sources: A domain-dependent regularization approach,” IEEE
+Trans. Neural Netw. Learn. Syst., vol. 23, no. 3, pp. 504–518, Mar.
+2012.
+[28] S. J. Pan, I. W. Tsang, J. T. Kwok, and Q. Yang, “Domain adaptation via transfer component analysis,” IEEE Trans. Neural Netw.
+Learn. Syst., vol. 22, no. 2, pp. 199–210, Feb. 2011.
+[29] H. Daumé, III, A. Kumar, and A. Saha, “Co-regularization based
+semi-supervised domain adaptation,” in Proc. NIPS, 2010.
+[30] Y.-F. Li, I. W. Tsang, J. T. Kwok, and Z.-H. Zhou, “Tighter and convex maximum margin clustering,” in Proc. AISTATS, Clearwater
+Beach, FL, USA, 2009.
+[31] W. Li, L. Duan, D. Xu, and I. W. Tsang, “Text-based image
+retrieval using progressive multi-instance learning,” in Proc.
+ICCV, Barcelona, Spain, 2011, pp. 2049–2055.
+[32] W. Li, L. Duan, I. W. Tsang, and D. Xu, “Batch mode adaptive
+multiple instance learning for computer vision tasks,” in Proc.
+CVPR, Providence, RI, USA, 2012, pp. 2368–2375.
+[33] B. Schölkopf et al., “Input space versus feature space in kernelbased methods,” IEEE Trans. Neural Netw., vol. 10, no. 5,
+pp. 1000–1017, Sep. 1999.
+[34] H. Bay, T. Tuytelaars, and L. V. Gool, “SURF: Speeded up robust
+features,” in Proc. ECCV, Graz, Austria, 2006.
+[35] M. Amini, N. Usunier, and C. Goutte, “Learning from multiple
+partially observed views – An application to multilingual text
+categorization,” in Proc. NIPS, 2009.
+[36] P. Prettenhofer and B. Stein, “Cross-language text classification
+using structural correspondence learning,” in Proc. 48th ACL,
+Uppsala, Sweden, 2010.
+[37] B. Kulis, M. Sustik, and I. Dhillon, “Low-rank kernel learning
+with Bregman matrix divergences,” JMLR, vol. 10, pp. 341–376,
+Feb. 2009.
+Wen Li received the B.S. and M.Eng. degrees
+from the Beijing Normal University, Beijing,
+China, in 2007 and 2010, respectively. Currently,
+he is pursuing the Ph.D. degree with the
+School of Computer Engineering, Nanyang
+Technological University, Singapore. His current
+research interests include ambiguous learning,
+domain adaptation, and multiple kernel learning.
+
+Lixin Duan received the B.E. degree from
+the University of Science and Technology
+of China, Hefei, China, in 2008 and the
+Ph.D. degree from the Nanyang Technological
+University, Singapore, in 2012. Currently, he is a
+research scientist with the Institute for Infocomm
+Research, Singapore. He was a recipient of
+the Microsoft Research Asia Fellowship in 2009
+and the Best Student Paper Award at the IEEE
+Conference on Computer Vision and Pattern
+Recognition 2010. His current research interests include transfer learning, multiple instance learning, and their
+applications in computer vision and data mining.
+
+1148
+
+IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 36, NO. 6, JUNE 2014
+
+Dong Xu (M’07–SM’13) received the B.E. and
+Ph.D. degrees from the University of Science
+and Technology of China, Hefei, China, in 2001
+and 2005, respectively. While pursuing the Ph.D.
+degree, he was with Microsoft Research Asia,
+Beijing, China, and the Chinese University of
+Hong Kong, Shatin, Hong Kong, for more than
+two years. He was a post-doctoral research scientist with Columbia University, New York, NY,
+USA, for one year. Currently, he is an associate
+professor with Nanyang Technological University,
+Singapore. His current research interests include computer vision,
+statistical learning, and multimedia content analysis. He was the coauthor of a paper that won the Best Student Paper Award in the IEEE
+International Conference on Computer Vision and Pattern Recognition
+in 2010.
+
+Ivor W. Tsang is an Australian Future Fellow
+and Associate Professor with the Centre for
+Quantum Computation & Intelligent Systems
+(QCIS), at the University of Technology, Sydney
+(UTS). Before joining UTS, he was the Deputy
+Director of the Centre for Computational
+Intelligence, Nanyang Technological University,
+Singapore. He received his PhD degree in computer science from the Hong Kong University of
+Science and Technology in 2007. He has more
+than 100 research papers published in refereed
+international journals and conference proceedings, including JMLR,
+TPAMI, TNN/TNNLS, NIPS, ICML, UAI, AISTATS, SIGKDD, IJCAI,
+AAAI, ACL, ICCV, CVPR, ICDM, etc. In 2009, Dr Tsang was conferred
+the 2008 Natural Science Award (Class II) by Ministry of Education,
+China, which recognized his contributions to kernel methods. In 2013,
+Dr Tsang received his prestigious Australian Research Council Future
+Fellowship for his research regarding Machine Learning on Big Data.
+Besides this, he had received the prestigious IEEE Transactions on
+Neural Networks Outstanding 2004 Paper Award in 2006, and a
+number of best paper awards and honors from reputable international
+conferences, including the Best Student Paper Award at CVPR 2010,
+the Best Paper Award at ICTAI 2011, the Best Poster Award Honorable
+Mention at ACML 2012, the Best Student Paper Nomination at the
+IEEE CEC 2012, and the Best Paper Award from the IEEE Hong Kong
+Chapter of Signal Processing Postgraduate Forum in 2006. He was
+also awarded the Microsoft Fellowship 2005, and the ECCV 2012
+Outstanding Reviewer Award.
+ For more information on this or any other computing topic,
+please visit our Digital Library at www.computer.org/publications/dlib.
+
+

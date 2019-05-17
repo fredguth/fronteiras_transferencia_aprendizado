@@ -1,0 +1,862 @@
+2017 Workshop of Computer Vision
+
+Comparison between traditional texture methods
+and deep learning descriptors for detection of
+nitrogen deﬁciency in maize crops
+Rayner Harold Montes Condori
+
+Liliane Maria Romualdo
+
+Institute of Mathematics and Computer Science
+Faculty of Animal Science and Food Engineering
+University of São Paulo São Carlos - SP, 13560-970, Brazil. University of São Paulo, Pirassununga - SP, 13630-000, Brazil.
+Email: raynerhmc@usp.br
+Email: lilianeromualdo@yahoo.com.br
+
+Odemir Martinez Bruno
+
+Pedro Henrique de Cerqueira Luz
+
+São Carlos Institute of Physics. University of São Paulo
+São Carlos - SP, 13560-970, Brazil.
+Email: bruno@ifsc.usp.br
+
+Faculty of Animal Science and Food Engineering
+University of São Paulo, Pirassununga - SP, 13630-000, Brazil.
+Email: phcerluz@usp.br
+
+stages are identiﬁed by Rk , where k represent the degree of
+maturity of maize grains.
+This paper is focused in the detection of nitrogen deﬁciency
+by analyzing scanned images of maize leaves. We consider
+three growth stages which are summarized in Table I. In this
+setting, we aim to compare traditional hand-crafted texture
+descriptors with deep learning based descriptors.
+
+Abstract—Every year, efﬁcient maize production is very important to the economy of many countries. Since nutritional
+deﬁciencies in maize plants are directly reﬂected in their grains
+productivity, early detection is needed to maximize the chances
+of proper recovery of these plants. Traditional texture methods
+recently showed interesting results in the identiﬁcation of nutritional deﬁciencies. On the other hand, deep learning techniques
+are increasingly outperforming hand-crafted features on many
+tasks. In this paper, we propose a simple transfer learning
+approach from pre-trained cnn models and compare their results
+with those from traditional texture methods in the task of
+nitrogen deﬁciency identiﬁcation. We perform experiments in
+a real-world dataset that contains digitalized images of maize
+leaves at different growth stages and with different levels of
+nitrogen fertilization. The results show that deep learning based
+descriptors achieve better success rates than traditional texture
+methods.
+Index Terms—Nutritional assessment, maize leaf analysis, deep
+learning, texture analysis, transfer learning, convolutional neural
+networks.
+
+TABLE I
+G ROWTH STAGES ANALYZED IN THIS PAPER
+Stage
+V4
+V6
+R1
+
+Deﬁnition of productive potential
+Growth of stem diameter, and deﬁnition of the
+number of rows of grains in the spike.
+Beginning of productivity conﬁrmation.
+
+Important notations and deﬁnitions are placed in the following subsections.
+
+I. I NTRODUCTION
+
+A. Convolutional Neural Networks
+
+Efﬁcient crop production is nowadays a big issue. As
+reported in [1], in the next few decades, the demand for food
+will double. Similarly, [2] estimated in 2008 that by the year
+of 2050, it will be necessary to duplicate the world agriculture
+area in order to attend the food demands of the population.
+In this sense, several research works, such as [3], are being
+published offering solutions to minimize the effects of this
+problem. As indicated in [4], the nutritional assessment of
+plants is a critical task for efﬁcient crop production. This
+is the case of maize crops where a correct fertilization of
+macronutrients, such as nitrogen and potassium, is essential
+during all stages of the maize cultivation (see Refs. [5], [6]).
+According to [7], there are two main categories of maize
+growth stages: vegetative and reproductive. Vegetative stages
+are identiﬁed by Vj , where j is the number of maize leaves
+that are completely expanded. On the other hand, reproductive
+0-7695-6357-0/17/$31.00 ©2017 IEEE
+DOI 10.1109/WVC.2017.00009
+
+Characteristics
+
+A convolutional neural network (cnn) is a kind of neural
+network which was at ﬁrst used for handwritten digit recognition [8]. As mentioned in [9], a deep cnn is composed of
+several stages of convolutional and pooling layers followed
+by one or more fully connected layers. In Fig. 1 is shown an
+example of a simple cnn. The input of every layer in a deep
+cnn is a feature map of units, which is represented as a ndimensional tensor. Then, each layer yields a feature map as
+well. A convolutional layer exploits two key concepts: local
+connections and shared weights, which means that the same set
+of trainable weights, later referred as ﬁlter bank, is connected
+to all rectangular neighborhoods of units in the feature map
+computed by the previous layer. In this sense, by means of
+a process called convolution, a well-trained ﬁlter bank will
+be able to detect similar patterns at different locations from a
+7
+
+Input
+image
+
+FM
+CNN1
+FM
+MaxP1
+
+FM
+CNN2
+
+FM
+FC1
+FM
+MaxP2
+
+FM
+FC2
+
+models like GoogleNet and ResNet on this dataset. However,
+it is not always the case when a suitable dataset – with lots
+of examples for each class – is available for training deep cnn
+models in a very speciﬁc domain. As collecting new data for
+a speciﬁc domain is usually expensive, a possible solution is
+to use transfer learning.
+In this paper, we propose a simple transfer learning approach to ﬁnd a proper predictive function fT (·) for the target
+task of nitrogen deﬁciency detection. In this sense, the source
+domain data DS is composed of all training samples in the
+ImageNet dataset, the source predictive function fS (·) is given
+by the trained cnn model, and the target domain data DT consists of the maize leaf images of the 120Linhao dataset. This
+dataset is fully described in Sec. IV. In the experiments, three
+trained cnn models are evaluated: VGG-19, G OOG L ENET
+I NCEPTION -V3 and R ES N ET-50. Therefore, the main purpose
+of this paper is to compare the proposed transfer learning approach with the traditional texture descriptors in the 120Linhao
+dataset.
+The outline of this paper is as follows: Sec. II presents
+the related work. Sec. III shows the general image analysis
+procedure followed by this paper and explains the details
+of the proposed approach. Sec. IV presents the experimental
+procedure and analysis of results. Finally, the conclusions and
+future works are shown in Sec. V.
+
+SoftMax
+FC3
+
+Fig. 1. L ENET-5 architecture: Two convolutional layers (CNN1 and CNN2)
+followed by three fully connected layers (FC1, FC2 and FC3). MaxP1 and
+MaxP2 are the max pooling layers. The output of each cnn layer is a feature
+map (FM).
+
+given feature map. On the other hand, pooling layers usually
+apply a single mathematical operation over all rectangular
+neighborhoods of units, that operation typically being the
+maximum value (max pooling). Usually, the resultant feature
+map is reduced by a factor of two. According to [10], pooling
+layers achieve local invariance to small translations, which is
+useful in applications where it is more important to ﬁnd a
+pattern rather than its exact location. Fig. 1 shows a simple
+cnn architecture named L ENET-5 which was proposed in [8].
+L ENET-5 consists on two convolutional layers and two max
+pooling layers followed by three fully connected layers. Over
+the years, deeper and clever cnn models were proposed, such
+as VGG-19 [11], G OOG L E N ET [12] and Microsoft R ES N ET
+[13], leading to a huge advance in computer vision tasks such
+as object detection and classiﬁcation.
+
+II. R ELATED W ORK
+Plant disease identiﬁcation by image analysis of its leaves
+has been a hot topic in recent years. Therefore, a wide range
+of different approaches have been used for this task. Most of
+these approaches are listed in [15]. In this sense, [16] and [17]
+propose the application of visual texture analysis for detection
+and quantiﬁcation of nitrogen deﬁciency in maize leaf images.
+On the other hand, very recent works apply deep learning
+methods for similar problems. For example, in [18] a simple
+L ENET model is trained to classify two banana leaf diseases.
+A more complex approach is shown in [19], which uses the
+A LEX N ET and G OOG L ENET cnn models for the identiﬁcation
+of several diseases from green-house leaf images of different
+species. Both references obtain good results in their corresponding datasets. However, as shown in [20], there are many
+limitations and challenges for real-world applications, ranging
+from the acquisition of images in different light conditions to
+the difﬁculty of distinguishing diseases that generate visually
+similar images. Furthermore, without controlled conditions,
+plants can be affected by numerous diseases at the same time,
+creating even more complex patterns to be analyzed.
+About transfer learning in computer vision, the ImageNet
+dataset is nowadays the main source data DS for applying
+transfer learning. As a consequence, several papers are being
+published using this idea. For example, in [21], the convolutional and the ﬁrst two fully-connected layers of the AlexNet
+model [22] are used to improve the classiﬁcation results in the
+Pascal VOC dataset. Similarly, for the task of object detection,
+increasingly better papers, such as [23], [24], use transfer
+learning at the core of their proposals. Also, other areas such
+
+Transfer Learning Deﬁnition
+Following the notation in [14], a source domain data is
+deﬁned as DS = {(xS1 , yS1 ), . . . , (xSnS , ySnS )}, where,
+xSi ∈ XS and ySi ∈ YS . The terms XS and YS are
+correspondingly the feature space and the label space in the
+source domain. In other words, DS is composed of nS training
+samples, each sample i being represented by a feature vector
+xSi and its corresponding class label ySi . A task in the source
+domain is represented by TS = {YS , fS (·)}, where fS (·)
+is the source predictive function which is generally learned
+from DS . In this sense, fS (·) can be used to predict the class
+label of a new test sample. Similarly, a target domain data
+and a task in the target domain are respectively deﬁned as
+DT = {(xT1 , yT1 ), . . . , (xTnT , yTnT )} and TT = {YT , fT (·)}.
+In general 0 ≤ nT  nS , which means that the source domain
+data has many more samples than the target domain data.
+In this setting, transfer learning aims to improve the target
+predictive function fT (·) using the knowledge learned from
+DS and TS . Note that DS = DT and TS = TT .
+Most successful deep cnn architectures are usually trained
+using datasets with a large number of labeled data, such as
+the Imagenet dataset (1.2 million training samples divided into
+1000 class labels). Currently, outstanding results are given by
+
+8
+
+as medicine has been beneﬁted from this idea, examples are
+found in [25] and [26], where medical images are the target
+domain data DT . In general, most transfer learning papers
+in computer vision use pre-trained cnn models to obtain an
+automatic feature representation for a given input image. Some
+questions arise from this approach such as:
+•
+
+•
+
+From a cnn model with k layers: Reusing all layers is
+always the best choice? Or is there an optimal number
+of layers for a speciﬁc TT ?. If yes, how many layers are
+needed?.
+From state-of-the-art cnn models: Is always the cnn
+model that perform better in a particular DS the best
+choice for a speciﬁc DT ?.
+
+For the target task of texture analysis, the Ref. [27] partially
+answers the above questions by showing that in most pretrained cnn models, a better feature representation is obtained
+when applying an orderless pooling encoder over the feature
+map of a convolutional layer, instead of using the feature representation given by the fully-connected layers. This suggests
+that the spatial information provided by the fully-connected
+layers is of little importance for texture analysis. Therefore,
+recent research works are increasingly using orderless pooling
+encoders for this task (see [27], [28], [29]).
+
+Fig. 2. General image analysis procedure. Step1: the input image is divided
+into non-overlapping square regions, then some regions are extracted randomly. Step2: Some of those regions are discarded using a global mean vs
+local mean criteria. Step 4: Feature vectors are created by processing the
+remaining regions with traditional texture methods or deep learning methods.
+
+III. P ROPOSED METHOD
+We use the same image analysis procedure [16] and [17].
+In this sense, as depicted in Fig. 2, the procedure steps for
+each maize leaf is explained as follows:
+•
+•
+
+•
+
+•
+
+•
+
+Input Image: It is the scanned maize leaf. We perform
+experiments over images from the 120Linhao dataset.
+Step 1: Random Sampling: Since the 120Linhao dataset
+contains several high resolution images. Square regions
+of interest (RoI) of ﬁxed size sroi are randomly extracted
+from the input image.
+Step 2: Window selection: A global mean value is computed from the regions of interest obtained in the previous
+step. Then, the local mean value of each RoI is computed
+as well. This step selects the nroi regions whose local
+mean values are closer to the global.
+Step 3: Feature Vector Creation: A feature vector is computed for each selected RoI. In this step, any traditional
+or deep learning method can be used.
+
+•
+
+•
+
+The deep learning feature extraction approach is depicted
+in Fig. 3. Transfer learning is used as follows:
+
+We apply the above procedure to every image in the 120Linhao dataset. This paper is especially focused in the creation
+of feature vectors (step 3). In this regard, nine texture methods were chosen for step 3, those being: Fourier, CFourier,
+Gabor, CGabor. LBP, CLBP, Fractal3D, C1Fractal3D and
+C2Fractal3D. A brief description of each traditional texture
+method is presented in the next lines:
+•
+
+is assembled. When Fourier is applied to each channel
+of a RGB image, it is called CFourier.
+Gabor Filter descriptors: In the gray-level approach (Gabor), the RoI is convoluted with Ngab Gabor ﬁlters
+of different scales and orientations. Then, the energy
+measure is applied to each convoluted image. Therefore,
+a feature vector of Ngab values is assembled. CGabor
+results from applying Gabor to each individual channel
+of a RGB image.
+Local Binary Patterns descriptors: We refer the reader
+to [30] to know the details of the gray-level version of
+this approach (LBP). In general, this method is an improvement of the classical rotation invariant local binary
+pattern. In this paper, the color version of this approach
+(CLBP) is the result of computing LBP for each channel
+of a RGB image.
+Fractal descriptors: We use the three versions (Fractal3D,
+C1Fractal3D and C2Fractal3D) that are proposed in [17].
+
+•
+•
+•
+
+Fourier descriptors: In the gray-level version of this
+approach (Fourier), a total of Nf ou circular samples are
+extracted from the 2D Fourier spectrum of the RoI being
+analyzed. For each circular sample, the energy measure
+is calculated. Therefore, a feature vector of Nf ou values
+
+•
+
+9
+
+The source domain data DS is the ImageNet dataset,
+meaning that the source task TS is object classiﬁcation.
+The predictive function in the source domain fS (·) is
+given by the trained cnn model.
+The target domain data DT are the images in the 120Linhao dataset, whose target task TT is nitrogen deﬁciency
+detection.
+Since orderless pooling encoders (ope) are being used in
+successful transfer learning approaches of texture recognition (see Sec. II), in this paper, the target predictive
+function fT (·) is obtained by using another ope, that
+
+being the entropy measure, to create a feature vector from
+the resultant feature map of a given convolutional layer.
+Formally, a feature map F (k) at the k-th convolutional
+layer is deﬁned as a tensor of size Hk × Wk × Nk . In this
+sense, the i-th channel of F (k) (1 ≤ i ≤ Nk ) is denoted
+(k)
+(k)
+as Fi . Then, the entropy measure ei is computed for
+(k)
+each channel Fi . This procedure yields a feature vector
+of size Nk as depicted in Fig. 3.
+In this transfer learning approach, there is only one parameter to be adjusted, which is the index k of the feature
+map where the entropy measurements are to be taken. In the
+experiment section, we are going to report the transfer learning
+results from the VGG-19, G OOG L ENET- INCEPTION V3 and
+R ES N ET-50 cnn models
+k-th cnn Feature
+Map
+
+(H k × Wk × N k)
+
+T3 and T4. After V4, most maize plots received new doses of
+N and K2 O, which led to each treatment having a different
+concentration of nutrients in growth stages V6 and R1. A total
+of 1152 maize leaf images are in this dataset.
+TABLE II
+F ERTILIZATION LEVELS OF N AND K2 O PER TREATMENT IN THE
+120Linhao DATASET. I N THIS PAPER , THE FERTILIZATION LEVELS OF K2 O
+WERE IGNORED . U NITS : KILOGRAM PER HECTARE ( KG / HA )
+
+Treatment
+T1
+T2
+T3
+T4
+T5
+T6
+T7
+T8
+T9
+T10
+T11
+T12
+T13
+T14
+T15
+T16
+
+Entropy
+Features
+(k)
+
+e1
+
+(k)
+
+e2
+
+Hk
+
+Previous
+Feature Maps
+
+(k)
+
+e3
+
+(k)
+
+Filter bank
+convolution
+
+FNk
+
+(k)
+
+eN
+
+k
+
+Concentrations Before V4
+Nitrogen
+K2 O
+0
+0
+0
+55
+0
+50
+0
+50
+30
+0
+30
+55
+30
+50
+30
+50
+30
+0
+30
+55
+30
+50
+30
+50
+30
+0
+30
+55
+30
+50
+30
+50
+
+Concentrations
+Nitrogen
+0
+0
+0
+0
+75
+75
+75
+75
+150
+150
+150
+150
+300
+300
+300
+300
+
+After V4
+K2 O
+0
+55
+110
+220
+0
+55
+110
+220
+0
+55
+110
+220
+0
+55
+110
+220
+
+Wk
+
+B. Experiments description
+
+Fig. 3. Transfer learning approach for feature extraction from a trained cnn
+model.
+
+Since the scope of this article is to only analyze nitrogen concentrations, all experiments in the 120Linhao dataset
+ignore the fertilization levels of K2 O in every treatment.
+Therefore, treatments were grouped into classes considering
+only the nitrogen level information. In this sense, we perform
+ﬁve experiments. They are described as follows:
+• Experiment V4-N-2C: For the set of images collected in
+V4, treatments from T1-T4 were merged into class C1 ,
+and the rest were merged into the class C2 .
+• Experiment V6-N-2C: We apply the same criteria as in
+experiment V4-N-2C for the stage of growth V6.
+• Experiment V6-N-4C: For the set of images in stage
+V6, treatments from T1-T4 were merged into the class
+C1 , T5-T8 into C2 , T9-T12 into C3 and T13-T16 into
+C4 .
+• Experiment R1-N-2C: We apply the same criteria as in
+experiments V4-N-2C and V6-N-2C for the set of images
+in the stage R1.
+• Experiment R1-N-4C: We apply the same criteria as in
+the experiment V6-N-4C for the set R1.
+To perform a fair comparison between classical texture
+methods and deep learning descriptors, the settings of steps 1
+and 2 in the image analysis procedure are the same throughout
+the experiments 2 . In this sense, nroi = 7 regions of interest
+of size sroi = 200 × 200 were selected for each leaf image.
+About step 3, we use the parameter settings proposed in [17]
+for each traditional texture method. On the other hand, for the
+
+IV. E XPERIMENTS AND RESULTS
+This section is divided into three parts. We begin by explaining the methodology followed to create the 120Linhao dataset.
+Then, it is shown a brief description of each experiment
+to be performed. Finally, the results and discussion of the
+experiments are presented.
+A. 120Linhao dataset description
+This dataset was created in an area belonging to the Faculty
+of Animal Science and Food Engineering (FZEA/USP) at the
+Pirassununga-SP-Brazil campus, following a randomized block
+design. This design consisted of four replication blocks and
+16 treatments (T1-T16). The complete set of treatments was
+randomly distributed within each block. Therefore, there were
+a total of 64 ﬁeld plots. Each plot consisted of 10 planting
+rows and it occupied an area of 50 m2 . Furthermore, three
+stages of growth were considered, those being: V4, V6 and
+R1 1 . At each stage of growth, six maize leaves were collected
+for each plot. The leaves were digitalized using a scanner. In
+this sense, there are 24 leaf images for each treatment at a
+speciﬁc stage of growth. In general, a treatment consists of
+a particular combination of N and K2 O nutrients. Table II
+shows that ﬁeld plots were given initial concentrations of N
+and K2 O before the stage V4. As a consequence, the set of
+images collected in V4 contains redundant treatments such as
+1 Brief
+
+2 The
+
+descriptions of V4, V6 and R1 growth stages are in Table I
+
+10
+
+image analysis procedure is presented in Sec. III
+
+transfer learning approaches, we performed tests in each cnn
+model considering the following feature maps:
+• VGG-19: It contains 19 layers divided into 16 convolutional layers and 3 fully connected layers. Only
+feature maps resulting from the convolutional layers were
+considered in this paper.
+• R ES N ET-50: It contains 50 layers, grouped in 16 building
+blocks. We only considered the feature maps produced by
+each building block.
+• G OOG L ENET (I NCEPTION -V3): It consists of more than
+100 layers grouped into 10 inception modules. The feature maps produced by the inception modules are the ones
+considered in this paper.
+We used the K ERAS deep learning library [31] to implement
+the transfer learning approaches.
+
+•
+
+Evaluation scheme
+For each experiment, we use an external validation scheme.
+In this regard, the 120Linhao dataset is divided into four
+non-overlapping folds. There is a one to one correspondence
+between each fold and each replication block 3 . Therefore,
+different folds can not contain leaf images that came from
+the same ﬁeld plot. The external validation for each feature
+extraction method in each experiment proceeds as follows: a
+combination of three folds is used to train a Support Vector
+Machine (SVM) classiﬁer and the remaining fold is used to
+compute the ACCURACY metric by testing the trained model.
+Then, the same evaluation is repeated in different combinations
+of three folds, until no more combinations are possible. The
+kernel RBF and cost C = 1 were used in the SVM classiﬁer.
+
+V. C ONCLUSIONS
+In this paper, we compare classical texture methods with
+deep learning based descriptors in the task of nitrogen deﬁciency identiﬁcation over maize leaf images. In this sense, we
+proposed a simple transfer learning approach that reuse the
+layers of a pre-trained cnn model. In general, good results
+are obtained in experiments that only evaluate the presence
+or absence of nitrogen fertilization in maize plants, especially
+in the R1 growth stage. However, due to the nature of the
+120Linhao dataset, most results in experiments that evaluate
+different levels of nitrogen fertilization are still not satisfactory.
+On the other hand, from the three cnn models evaluated in
+this paper, the R ES N ET-50 model obtained the best results,
+outperforming all traditional texture methods in the whole
+set of experiments. The results from the other cnn models
+also surpass those from texture methods in most experiments,
+supporting the idea that deep learning based features are
+increasingly beating most hand-crafted features in a wide
+range of tasks. Future works include exploring more pooling
+techniques in other cnn architectures and perform a multi-layer
+analysis.
+
+C. Results
+Table III shows the accuracies for each feature extraction
+method in the ﬁve proposed experiments. The comments and
+discussion of the results is given in the following lines.
+• About the performance of traditional texture methods: In general, texture methods that analyze color
+information outperforms their gray-level versions. In
+this sense, the best methods of this category are:
+C1Fractal3D, CFourier and CLBP, which in turn give
+very close results in most experiments.
+• About the performance of deep learning descriptors:
+The R ES N ET-50 model gives the best performance in
+all experiments. We expected these results, since among
+the cnn models studied in this paper, R ESNET-50 also
+achieves the best results for the task of object classiﬁcation. On the contrary, given the simplicity of VGG-19
+in comparison to the other cnn models, VGG-19 was
+not expected to outperform the G OOG L ENET model in
+all experiments. Finally, except for the experiment V4N-2C, deep learning descriptors generally achieve better
+results than traditional texture methods.
+• About the experiments R1-N-2C, V6-N-2C and V4N-2C: These experiments only evaluate the presence
+3 Replications
+
+or absence of treatments with some levels of nitrogen
+fertilization. Regardless of the feature extraction method,
+the accuracies achieved in experiment R1-N-2C were
+considerably better than the results in experiment V6-N2C. The fact that the maize plants from the R1 growth
+stage are more mature than the ones from V6, could
+explain the gap in these results. This possible explanation
+is further supported by the gap in the results between
+the experiments V6-N-2C and V4-N-2C. In addition, the
+almost random results in the experiment V4-N-2C could
+also be explained by the few levels of nitrogen fertilization given to the maize plant before the V4 growth stage
+(see Table II), which makes it a more difﬁcult problem
+to deal with.
+About the experiments R1-N-4C and V6-N-4C: These
+experiments evaluate whether a method is capable of
+measuring the different nitrogen concentrations in leaf
+images. In this sense, the results obtained in R1-N-4C are
+generally much better than the results in V6-N-4C. This
+gap in the results can be explained in a similar fashion
+as in the previous item. In addition, two leaf images with
+the same levels of nitrogen but with different levels of
+another nutrient such as potassium, may present different
+visual textures. In the case of the experiments R1-N-4C
+and V6-N-4C, 16 treatments were grouped into 4 classes
+(i.e. class C1 contains leaf images from treatments T1T4), which might explain the results in Table III.
+
+ACKNOWLEDGMENTS
+Rayner would like to thank Cienciactiva, an initiative of
+the National Council of Science, Technology and Technological Innovation-CONCYTEC (Peru) for the ﬁnancial research
+support and scholarship.
+
+blocks are explained in subsection IV-A
+
+11
+
+TABLE III
+R ESULTS IN THE 120Linhao DATASET. B EST ACCURACIES FOR EACH EXPERIMENT ARE IN BOLD FONT
+
+Feature extraction method
+Gabor
+CGabor
+Fractal3D
+C1Fractal3D
+C2Fractal3D
+LBP
+CLBP
+Fourier
+CFourier
+R ES N ET-50
+G OOG L ENET (I NCEPTION -V3)
+VGG-19
+
+V4-N-2C
+45.9 ± 3.6
+50.5 ± 4.5
+48.8 ± 3.5
+56.1 ± 4.5
+51.1 ± 2.4
+51.3 ± 3.4
+52.5 ± 2.6
+52.8 ± 2.9
+55.5 ± 3.1
+56.3 ± 4.8
+53.6 ± 2.5
+55.6 ± 6.2
+
+V6-N-2C
+54.4 ± 4.3
+59.1 ± 2.4
+54.8 ± 4.1
+58.4 ± 2.7
+54.0 ± 4.2
+51.9 ± 1.9
+62.3 ± 4.8
+53.6 ± 5.1
+61.2 ± 6.7
+70.0 ± 7.4
+68.0 ± 5.2
+68.6 ± 6.7
+
+R EFERENCES
+
+Experiments
+V6-N-4C
+26.1 ± 1.7
+28.4 ± 1.9
+28.0 ± 4.1
+29.3 ± 4.9
+26.6 ± 2.4
+25.7 ± 0.9
+27.6 ± 3.5
+23.8 ± 2.7
+29.1 ± 3.4
+34.1 ± 4.5
+31.5 ± 3.7
+33.2 ± 5.3
+
+R1-N-2C
+74.0 ± 3.9
+89.8 ± 1.9
+57.4 ± 3.3
+88.2 ± 1.8
+60.4 ± 4.0
+70.0 ± 3.2
+89.8 ± 1.0
+83.1 ± 3.2
+89.9 ± 0.5
+93.5 ± 0.9
+92.0 ± 1.2
+92.1 ± 1.7
+
+R1-N-4C
+36.6 ± 3.0
+46.3 ± 1.9
+32.0 ± 0.6
+46.3 ± 3.4
+31.5 ± 1.4
+38.3 ± 3.2
+49.7 ± 2.8
+45.2 ± 2.1
+50.0 ± 3.1
+55.2 ± 1.5
+53.4 ± 1.7
+54.6 ± 1.1
+
+[17] M. W. d. S. Oliveira, “Texture analysis on leaf images for early
+nutritional diagnosis in maize culture,” Ph.D. dissertation, Universidade
+de São Paulo, 2016.
+[18] J. Amara, B. Bouaziz, and A. Algergawy, “A deep learning-based
+approach for banana leaf diseases classiﬁcation.” in BTW (Workshops),
+2017, pp. 79–88.
+[19] S. P. Mohanty, D. P. Hughes, and M. Salath, “Using deep learning for
+image-based plant disease detection,” Frontiers in Plant Science, vol. 7,
+p. 1419, 2016.
+[20] J. G. A. Barbedo, “A review on the main challenges in automatic
+plant disease identiﬁcation based on visible range images,” Biosystems
+Engineering, vol. 144, pp. 52 – 60, 2016.
+[21] M. Oquab, L. Bottou, I. Laptev, and J. Sivic, “Learning and transferring
+mid-level image representations using convolutional neural networks,”
+in 2014 IEEE Conference on Computer Vision and Pattern Recognition,
+June 2014, pp. 1717–1724.
+[22] A. Krizhevsky, I. Sutskever, and G. E. Hinton, “Imagenet classiﬁcation
+with deep convolutional neural networks,” in Proceedings of the 25th
+International Conference on Neural Information Processing Systems, ser.
+NIPS’12. USA: Curran Associates Inc., 2012, pp. 1097–1105.
+[23] R. Girshick, J. Donahue, T. Darrell, and J. Malik, “Region-based convolutional networks for accurate object detection and segmentation,” IEEE
+Transactions on Pattern Analysis and Machine Intelligence, vol. 38,
+no. 1, pp. 142–158, Jan 2016.
+[24] j. dai, Y. Li, K. He, and J. Sun, “R-fcn: Object detection via regionbased fully convolutional networks,” in Advances in Neural Information
+Processing Systems 29, D. D. Lee, M. Sugiyama, U. V. Luxburg,
+I. Guyon, and R. Garnett, Eds. Curran Associates, Inc., 2016, pp.
+379–387.
+[25] B. Saha, S. Gupta, D. Phung, and S. Venkatesh, “Multiple task transfer
+learning with small sample sizes,” Knowledge and Information Systems,
+vol. 46, no. 2, pp. 315–342, Feb 2016.
+[26] H. C. Shin, H. R. Roth, M. Gao, L. Lu, Z. Xu, I. Nogues, J. Yao,
+D. Mollura, and R. M. Summers, “Deep convolutional neural networks
+for computer-aided detection: Cnn architectures, dataset characteristics
+and transfer learning,” IEEE Transactions on Medical Imaging, vol. 35,
+no. 5, pp. 1285–1298, May 2016.
+[27] M. Cimpoi, S. Maji, I. Kokkinos, and A. Vedaldi, “Deep ﬁlter banks
+for texture recognition, description, and segmentation,” International
+Journal of Computer Vision, vol. 118, no. 1, pp. 65–94, May 2016.
+[28] V. Andrearczyk and P. F. Whelan, “Using ﬁlter banks in convolutional
+neural networks for texture classiﬁcation,” Pattern Recognition Letters,
+vol. 84, pp. 63 – 69, 2016.
+[29] X. Qi, C.-G. Li, G. Zhao, X. Hong, and M. Pietikinen, “Dynamic
+texture and scene classiﬁcation by transferring deep image features,”
+Neurocomputing, vol. 171, pp. 1230 – 1241, 2016.
+[30] Z. Guo, L. Zhang, and D. Zhang, “Rotation invariant texture classiﬁcation using lbp variance (lbpv) with global matching,” Pattern
+Recognition, vol. 43, no. 3, pp. 706 – 719, 2010.
+[31] F. Chollet et al., “Keras,” https://github.com/fchollet/keras, 2015.
+
+[1] J. A. Foley, N. Ramankutty, K. A. Brauman, E. S. Cassidy, J. S.
+Gerber, M. Johnston, N. D. Mueller, C. O/’Connell, D. K. Ray, P. C.
+West, C. Balzer, E. M. Bennett, S. R. Carpenter, J. Hill, C. Monfreda,
+S. Polasky, J. Rockstrom, J. Sheehan, S. Siebert, D. Tilman, and D. P. M.
+Zaks, “Solutions for a cultivated planet,” Nature, vol. 478, no. 7369, pp.
+337–342, oct 2011.
+[2] C. B. Field, J. E. Campbell, and D. B. Lobell, “Biomass energy: the
+scale of the potential resource,” Trends in Ecology & Evolution, vol. 23,
+no. 2, pp. 65 – 72, 2008.
+[3] W. B. Henry and L. J. Krutz, “Water in agriculture: Improving corn
+production practices to minimize climate risk and optimize proﬁtability,”
+Current Climate Change Reports, vol. 2, no. 2, pp. 49–54, Jun 2016.
+[4] A. V. Barker and D. J. Pilbeam, Handbook of plant nutrition. CRC
+press, 2015.
+[5] A. M. Coelho, B. N. Ribeiro, F. A. Resende, and G. K. Teixeira,
+“Eﬁciência agronômica do cloreto de amônio bicarbonato de amônio
+como fontes de nitrogênio para a cultura do milho.” Embrapa Milho e
+Sorgo-Comunicado Técnico (INFOTECA-E), 2006.
+[6] G. Sousa, C. Lacerda, L. Cavalcante, F. Guimarães, M. Bezerra, and
+G. Silva, “Nutrição mineral e extração de nutrientes de planta de milho
+irrigada com água salina,” Revista Brasileira de Engenharia Agrı́cola e
+Ambiental, vol. 14, no. 11, pp. 1143–1151, 2010.
+[7] A. Fancelli, “Plantas alimentı́cias: guia para aula, estudos e discussão,”
+Piracicaba: Centro Acadêmico Luiz de Queiroz, 1986.
+[8] Y. Lecun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning
+applied to document recognition,” Proceedings of the IEEE, vol. 86,
+no. 11, pp. 2278–2324, Nov 1998.
+[9] Y. LeCun, Y. Bengio, and G. Hinton, “Deep learning,” Nature, vol. 521,
+no. 7553, pp. 436–444, 05 2015.
+[10] A. C. Ian Goodfellow, Yoshua Bengio, Deep Learning, draft of august
+10, 2016 ed. MIT Press, 2016.
+[11] K. Simonyan and A. Zisserman, “Very deep convolutional networks for
+large-scale image recognition,” in International Conference on Learning
+Representations (ICLR), 2014.
+[12] C. Szegedy, W. Liu, Y. Jia, P. Sermanet, S. Reed, D. Anguelov, D. Erhan,
+V. Vanhoucke, and A. Rabinovich, “Going deeper with convolutions,”
+in 2015 IEEE Conference on Computer Vision and Pattern Recognition
+(CVPR), June 2015, pp. 1–9.
+[13] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image
+recognition,” in 2016 IEEE Conference on Computer Vision and Pattern
+Recognition (CVPR), June 2016, pp. 770–778.
+[14] K. Weiss, T. M. Khoshgoftaar, and D. Wang, “A survey of transfer
+learning,” Journal of Big Data, vol. 3, no. 1, p. 9, May 2016.
+[15] J. G. Arnal Barbedo, “Digital image processing techniques for detecting,
+quantifying and classifying plant diseases,” SpringerPlus, vol. 2, no. 1,
+p. 660, Dec 2013.
+[16] L. Romualdo, P. Luz, F. Devechio, M. Marin, A. Ziga, O. Bruno,
+and V. Herling, “Use of artiﬁcial vision techniques for diagnostic of
+nitrogen nutritional status in maize plants,” Computers and Electronics
+in Agriculture, vol. 104, pp. 63 – 70, 2014.
+
+12
+
+

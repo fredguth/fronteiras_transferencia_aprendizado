@@ -1,0 +1,26 @@
+Transfer Learning for Visual
+Categorization: A Survey
+
+Regular machine learning and data mining techniques study the training data for future inferences under a
+major assumption that the future data are within the same
+feature space or have the same distribution as the training
+data. However, due to the limited availability of human labeled
+training data, training data that stay in the same feature space
+or have the same distribution as the future data cannot be
+guaranteed to be sufficient enough to avoid the over-fitting
+problem. In real-world applications, apart from data in the
+target domain, related data in a different domain can also be
+included to expand the availability of our prior knowledge about
+the target future data. Transfer learning addresses such crossdomain learning problems by extracting useful information from
+data in a related domain and transferring them for being used
+in target tasks. In recent years, with transfer learning being
+applied to visual categorization, some typical problems, e.g., view
+divergence in action recognition tasks and concept drifting in
+image classification tasks, can be efficiently solved. In this paper,
+we survey state-of-the-art transfer learning algorithms in visual
+categorization applications, such as object recognition, image
+classification, and human action recognition.
+Index Terms— Action recognition, image classification,
+machine learning, object recognition, survey, transfer learning,
+visual categorization.
+

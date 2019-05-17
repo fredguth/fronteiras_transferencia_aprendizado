@@ -1,0 +1,100 @@
+	id	label	ano		source	doi	cluster	weight<Links>	weight<Total link strength>	weight<Citations>					
+ando rk (2005) - project data into low-dimension space to make domains more similar - SVD----- cluster:1	709	ando rk	2005		 j mach learn res,  v6		1	68	44	44	project data into low-dimension space to make domains more similar - SVD			auxiliary classifiers to domain adaptation	
+	872	argyriou a	2008		 mach learn,  v73	 10.1007/s10994-007-5040-8	1	49	20	21					
+	1607	belkin m	2006		 j mach learn res,  v7		2	67	36	39					
+ben-david s (2010) - distribution similarity----- cluster:2	1673	ben-david s	2010		 mach learn,  v79	 10.1007/s10994-009-5152-4	2	63	22	22	distribution similarity				
+	1697	ben-david shai	2007		 adv neural inform pr,  p137	 10.1007/s10994-009-5152-4	2	65	27	27					
+bengio y (2009) - curriculum learning -> simple to complex representations----- cluster:3	1735	bengio y	2009		 found trends mach le,  v2	 10.1561/2200000006	3	52	30	31	curriculum learning -> simple to complex representations				
+bengio y (2013) - review representation learning----- cluster:3	1739	bengio y	2013		 ieee t pattern anal,  v35	 10.1109/tpami.2013.50	3	69	29	29	review representation learning				
+	2084	bishop cm.	2006		 pattern recognition, 		1	52	20	23					
+blitzer j. (2006) - wightning ->domain adaptation----- cluster:1	2179	blitzer j.	2006		 p 2006 c emp meth na,  p120		1	75	75	76	wightning ->domain adaptation			auxiliary classifiers to domain adaptation	
+	2227	blum a.	1998		 proceedings of the eleventh annual conference on computational learning theory,  p92	 10.1145/279943.279962	1	57	25	26					
+	2363	borgwardt km	2006		 bioinformatics,  v22	 10.1093/bioinformatics/btl242	2	66	27	29					
+	2590	breiman l	2001		 mach learn,  v45	 10.1023/a:1010933404324	1	71	25	25					
+bruzzone l (2010) - DA SVM -> accuracy assessment for validating learning when no labels of target domain----- cluster:2	2723	bruzzone l	2010		 ieee t pattern anal,  v32	 10.1109/tpami.2009.57	2	65	48	48	DA SVM -> accuracy assessment for validating learning when no labels of target domain				
+caruana r (1997) - MTL introduces an inductive bias provided by the auxiliary tasks ->chapter on multitask learning - hard parameter sharing----- cluster:1	3156	caruana r	1997		 mach learn,  v28	 10.1023/a:1007379606734	1	76	82	90	MTL introduces an inductive bias provided by the auxiliary tasks ->chapter on multitask learning - hard parameter sharing				
+chang cc (2011) - LIBSVM: A library for support vector machines----- cluster:1	3348	chang cc	2011		 acm t intel syst tec,  v2	 10.1145/1961189.1961199	1	83	55	58	LIBSVM: A library for support vector machines				
+chapelle o. (2006) - semi-supervised learning -> overview----- cluster:1	3409	chapelle o.	2006		 semisupervised learn, 		1	38	20	21	semi-supervised learning -> overview				
+	4351	cortes c	1995		 mach learn,  v20	 10.1023/a:1022627411411	1	73	33	33					
+	4619	dai w	2008		 p 25 int c mach lear,  p200	 10.1145/1390156.1390182	1	46	23	23					
+dai w. (2007) - boosting -> domain adaptation ----- cluster:1	4641	dai w.	2007		 p 24 int c mach lear,  p193	 10.1145/1273496.1273521	1	83	110	116	boosting -> domain adaptation 				
+	4673	dai wy	2007		 kdd-2007 proceedings of the thirteenth acm sigkdd international conference on knowledge discovery and data mining,  p210		1	48	27	27					
+dalal n (2005) - human detection----- cluster:3	4685	dalal n	2005		 proc cvpr ieee,  p886	 10.1109/cvpr.2005.177	3	62	27	30	human detection				
+daume h (2006) - DA for statistica lassifiers ----- cluster:1	4787	daume h	2006		 j artif intell res,  v26	 10.1613/jair.1872	1	66	43	44	DA for statistica lassifiers 				
+deng j (2009) - Imagenet----- cluster:3	5070	deng j	2009		 proc cvpr ieee,  p248	 10.1109/cvprw.2009.5206848	3	56	32	32	Imagenet				
+	5069	deng j	2009		 proc cvpr ieee,  p248	 10.1109/cvpr.2009.5206848	3	46	25	27					
+donahue j. (2014) - parametros aprendidos servem como representacoes universais que permitem aprender com poucos exemplos na tarefa alvo.----- cluster:3	5520	donahue j.	2014		 p 31 int c mach lear,  p647		3	80	43	43	parametros aprendidos servem como representacoes universais que permitem aprender com poucos exemplos na tarefa alvo.				
+duan lx (2012) - SVM classifiers DA - cross domain learning----- cluster:2	5735	duan lx	2012		 ieee t pattern anal,  v34	 10.1109/tpami.2011.114	2	79	49	50	SVM classifiers DA - cross domain learning				
+	5733	duan lx	2012		 ieee t neur net lear,  v23	 10.1109/tnnls.2011.2178556	2	58	33	33					
+	5730	duan lx	2009		 proc cvpr ieee,  p1375	 10.1109/cvprw.2009.5206747 10.1109/cvpr.2009.5206747	2	62	30	32					
+everingham m (2010) - Pascal VOC----- cluster:3	6142	everingham m	2010		 int j comput vision,  v88	 10.1007/s11263-009-0275-4	3	59	30	30	Pascal VOC				
+evgeniou t. (2004) - regularized multi task learning----- cluster:1	6174	evgeniou t.	2004		 p 10 acm sigkdd int,  p109	 10.1145/1014052.1014067	1	61	36	37	regularized multi task learning				
+	6251	fan re	2008		 j mach learn res,  v9		3	68	29	32					
+felzenszwalb pf (2010) - Object Detection----- cluster:3	6445	felzenszwalb pf	2010		 ieee t pattern anal,  v32	 10.1109/tpami.2009.167	3	43	20	21	Object Detection				
+fernando b (2013) - unsupervised domain adaptation----- cluster:2	6537	fernando b	2013		 ieee i conf comp vis,  p2960	 10.1109/iccv.2013.368	2	76	34	34	unsupervised domain adaptation				
+	6831	freund y	1997		 j comput syst sci,  v55	 10.1006/jcss.1997.1504	1	55	26	28					
+	7118	gao j	2008		 kdd,  p283	 10.1145/1401890.1401928	1	53	27	27					
+girshick r (2014) - RCNN - object detection----- cluster:3	7518	girshick r	2014		 proc cvpr ieee,  p580	 10.1109/cvpr.2014.81	3	67	37	37	RCNN - object detection				
+glorot x. (2011) - proposed first approach that applied a deep neural netwok to learn a common representaiton for domain adaptation  SDA----- cluster:3	7604	glorot x.	2011		 p 28 int c mach lear,  p513		3	72	24	25	proposed first approach that applied a deep neural netwok to learn a common representaiton for domain adaptation  SDA				
+gong bq (2012) - unsupervised domain adaptation----- cluster:2	7732	gong bq	2012		 proc cvpr ieee,  p2066	 10.1109/cvpr.2012.6247911	2	82	72	72	unsupervised domain adaptation				
+	7818	gopalan r	2011		 ieee i conf comp vis,  p999	 10.1109/iccv.2011.6126344	2	79	37	38					
+he km (2016) - He, 2017 = object detection----- cluster:3	8818	he km	2016		 proc cvpr ieee,  p770	 10.1109/cvpr.2016.90	3	64	67.75	72	He, 2017 = object detection				
+	9096	hinton ge	2006		 neural comput,  v18	 10.1162/neco.2006.18.7.1527	3	65	31	32					
+hinton ge (2006) - deep learning----- cluster:3	9098	hinton ge	2006		 science,  v313	 10.1126/science.1127647	3	53	22	27	deep learning				
+	9145	hochreiter s	1997		 neural comput,  v9	 10.1162/neco.1997.9.8.1735	3	32	24	25					
+	9552	huang j.	2006		 adv neural inform pr,  v19		2	70	25	25					
+	10120	jhuo ih	2012		 proc cvpr ieee,  p2168	 10.1109/cvpr.2012.6247924	2	61	26	26					
+jia y. (2014) - Caffe framework----- cluster:3	10166	jia y.	2014		 p 22 acm int c mult,  p675	 10.1145/2647868.2654889	3	62	43	43	Caffe framework				
+jia y. (2014) - Adam----- cluster:3	10162	jia y.	2014		 arxiv14085093, 		3	41	30	31	Adam				
+kingma d. (2014) - alexnet----- cluster:3	11139	kingma d.	2014		 14126980 arxiv, 	 10.1145/1830483.1830503	3	42	21	23	alexnet				
+krizhevsky a (2012) - alexnet----- cluster:3	11642	krizhevsky a	2012		 adv neural inform pr,  v25	 10.1145/3065386	3	87	133	138	alexnet				
+	11650	krizhevsky a.	2012		 adv neur inform proc,  p1097	 10.1145/3065386	3	68	38	40					
+	11741	kulis b	2011		 proc cvpr ieee,  p1785	 10.1109/cvpr.2011.5995702	2	68	28	28					
+	12255	lecun y	1998		 p ieee,  v86	 10.1109/5.726791	3	85	74	78					
+lecun y (2015) - deep learning----- cluster:3	12260	lecun y	2015		 nature,  v521	 10.1038/nature14539	3	60	57	58	deep learning				
+	12249	lecun y	1989		 neural comput,  v1	 10.1162/neco.1989.1.4.541	3	55	22	23					
+	12666	li ff	2006		 ieee t pattern anal,  v28	 10.1109/tpami.2006.79	1	62	34	37					
+	12883	li w	2014		 ieee t pattern anal,  v36	 10.1109/tpami.2013.167	2	53	22	24					
+	13105	liao x.	2005		 p 22 int c mach lear,  v119	 10.1145/1102351.1102415	1	48	21	23					
+long j (2015) - FCN for semantic segmentation----- cluster:3	13756	long j	2015		 proc cvpr ieee,  p3431	 10.1109/cvpr.2015.7298965	3	44	30	30	FCN for semantic segmentation				
+	13793	long m.	2015		 int c mach learn,  p97		3	65	23	23					
+long ms (2014) - adaptaion regularization - adaptive classifier----- cluster:2	13810	long ms	2014		 ieee t knowl data en,  v26	 10.1109/tkde.2013.111	2	54	37	37	adaptaion regularization - adaptive classifier				
+long ms (2013) - adaptive classifier----- cluster:2	13808	long ms	2013		 ieee i conf comp vis,  p2200	 10.1109/iccv.2013.274	2	63	34	34	adaptive classifier				
+	13812	long ms	2014		 proc cvpr ieee,  p1410	 10.1109/cvpr.2014.183	2	56	21	21					
+	13895	lowe dg	2004		 int j comput vision,  v60	 10.1023/b:visi.0000029664.99615.94	3	84	59	67					
+	13939	lu j	2015		 knowl-based syst,  v80	 10.1016/j.knosys.2015.01.010	2	60	37	40					
+	15616	nair v	2010		 icml,  v27	 10.0rg/papers/432.pdf	3	47	20	22					
+oquab m (2014) - Transfer learning -> sequential learning -> fine tunning----- cluster:3	16277	oquab m	2014		 proc cvpr ieee,  p1717	 10.1109/cvpr.2014.222	3	74	50	51	Transfer learning -> sequential learning -> fine tunning				
+	16509	pan s.	2008		 aaai,  p677		2	69	44	45					
+pan sj (2010) - surey----- cluster:1	16552	pan sj	2010		 ieee t knowl data en,  v22	 10.1109/tkde.2009.191	1	98	427	509	surey			Latent Feature Learning	
+	16549	pan sj	2009		 21st international joint conference on artificial intelligence (ijcai-09),  proceedings		1	48	21	21					
+pan sj (2011) - DA with TCA -> feature represenation ----- cluster:2	16554	pan sj	2011		 ieee t neural networ,  v22	 10.1109/tnn.2010.2091281	2	95	117	120	DA with TCA -> feature represenation 				
+	16798	patel vm	2015		 ieee signal proc mag,  v32	 10.1109/msp.2014.2347059	2	70	25	26					
+	17703	raina r	2007		 p 24 int c mach lear,  p759	 10.1145/1273496.1273592	1	37	24	24					
+raina r. (2007) - self-thaught learning----- cluster:1	17716	raina r.	2007		 learning,  p759	 10.1145/1273496.1273592	1	82	56	59	self-thaught learning				
+	17948	razavian as	2014		 ieee comput soc conf,  p512	 10.1109/cvprw.2014.131	3	55	39	40					
+	18072	ren sq	2017		 ieee t pattern anal,  v39	 10.1109/tpami.2016.2577031	3	55	23	23		2014			
+russakovsky o (2015) - Imagenet----- cluster:3	18613	russakovsky o	2015		 int j comput vision,  v115	 10.1007/s11263-015-0816-y	3	74	80	82	Imagenet	2014			
+	18697	saenko k	2010		 lect notes comput sc,  v6314	 10.1007/978-3-642-15561-1_16	2	85	39	40					
+	19504	shao l	2015		 ieee t neur net lear,  v26	 10.1109/tnnls.2014.2330900	2	70	27	28					
+	19510	shao m	2014		 int j comput vision,  v109	 10.1007/s11263-014-0696-6	2	53	22	22					
+	19748	shimodaira h	2000		 j stat plan infer,  v90	 10.1016/s0378-3758(00)00115-4	1	55	28	31					
+	19757	shin hc	2016		 ieee t med imaging,  v35	 10.1109/tmi.2016.2528162	3	41	23	24					
+si s (2010) - minimize divergence -> domain adaptation----- cluster:2	19827	si s	2010		 ieee t knowl data en,  v22	 10.1109/tkde.2009.126	2	70	46	46	minimize divergence -> domain adaptation				
+simonyan k. (2014) - Human tracking using CNN----- cluster:3	19961	simonyan k.	2014		 14091556 arxiv, 	 10.1109/tnn.2010.2066286	3	69	89	94	Human tracking using CNN				
+	20447	srivastava n	2014		 j mach learn res,  v15		3	68	42	44					
+	20919	sutton r. s.	1998		 reinforcement learni, 		1	14	23	33					
+	20994	szegedy c	2015		 proc cvpr ieee,  p1	 10.1109/cvpr.2015.7298594	3	68	71	73					
+	20997	szegedy c	2016		 proc cvpr ieee,  p2818	 10.1109/cvpr.2016.308	3	43	21	21					
+taylor me (2009) - survey TL in RL----- cluster:1	21408	taylor me	2009		 j mach learn res,  v10		1	47	50	71	survey TL in RL				
+thrun s (1996) - lifelong learning ----- cluster:1	21537	thrun s	1996		 adv neur in,  v8		1	44	23	24	lifelong learning 				
+	22172	van der maaten l	2008		 j mach learn res,  v9		3	59	32	32					
+vapnik v. n. (1998) - Learning Theory = livro----- cluster:1	22271	vapnik v. n.	1998		 stat learning theory, 		1	63	26	27	Learning Theory = livro				
+	22451	vincent p	2010		 j mach learn res,  v11		3	62	25	27					
+	23185	wang z	2008		 lect notes artif int,  v5212	 10.1007/978-3-540-87481-2_36	1	48	22	23					
+	23349	weiss karl	2016		 journal of big data,  v3	 10.1186/s40537-016-0043-6	2	63	29	29					
+	23650	wright j	2009		 ieee t pattern anal,  v31	 10.1109/tpami.2008.79	1	55	16	21					Distribution Similarity
+yang j. (2007) - DA for video using adaptive SVMs----- cluster:2	24375	yang j.	2007		 p 15 int c mult,  p188	 10.1145/1291233.1291276	2	69	41	43	DA for video using adaptive SVMs				
+yao y (2010) - boosting -> domain adaptation ----- cluster:1	24595	yao y	2010		 proc cvpr ieee,  p1855	 10.1109/cvpr.2010.5539857	1	62	39	39	boosting -> domain adaptation 				
+	24764	yosinski j.	2014		 adv neural inform pr,  v27		3	83	75	78					
+	25063	zeiler md	2014		 lect notes comput sc,  v8689	 10.1007/978-3-319-10590-1_53	3	39	19	21					

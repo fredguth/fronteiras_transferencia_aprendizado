@@ -1,0 +1,1614 @@
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+1177
+
+LSDT: Latent Sparse Domain Transfer Learning
+for Visual Adaptation
+Lei Zhang, Member, IEEE, Wangmeng Zuo, Senior Member, IEEE, and David Zhang, Fellow, IEEE
+
+Abstract— We propose a novel reconstruction-based transfer
+learning method called latent sparse domain transfer (LSDT)
+for domain adaptation and visual categorization of heterogeneous data. For handling cross-domain distribution mismatch,
+we advocate reconstructing the target domain data with the
+combined source and target domain data points based on
+1 -norm sparse coding. Furthermore, we propose a joint learning
+model for simultaneous optimization of the sparse coding and
+the optimal subspace representation. In addition, we generalize
+the proposed LSDT model into a kernel-based linear/nonlinear
+basis transformation learning framework for tackling nonlinear subspace shifts in reproduced kernel Hilbert space. The
+proposed methods have three advantages: 1) the latent space
+and the reconstruction are jointly learned for pursuit of an
+optimal subspace transfer; 2) with the theory of sparse subspace
+clustering, a few valuable source and target data points are
+formulated to reconstruct the target data with noise (outliers)
+from source domain removed during domain adaptation, such
+that the robustness is guaranteed; and 3) a nonlinear projection
+of some latent space with kernel is easily generalized for dealing
+with highly nonlinear domain shift (e.g., face poses). Extensive
+experiments on several benchmark vision data sets demonstrate
+that the proposed approaches outperform other state-of-the-art
+representation-based domain adaptation methods.
+Index Terms— Transfer learning, domain adaptation, visual
+categorization, heterogeneous data.
+
+I. I NTRODUCTION
+
+V
+
+ISUAL big data bring many challenges to machine
+learning and computer vision, e.g. the dilemma of insufficient labeled data. One interesting topic is to enrich the
+limited labeled data with relevant data from web or other
+sources and exploit the unlabeled data by semi-supervised
+learning (SSL) [31], [32]. However, the enriched data from
+target domain is violated from the training data in source
+
+Manuscript received August 14, 2015; revised December 9, 2015; accepted
+January 4, 2016. Date of publication January 12, 2016; date of current version
+January 26, 2016. This work was supported in part by the National Natural
+Science Foundation of China under Grant 61401048, Grant 61271093, and
+Grant 61401125, and in part by the Fundamental Research Fund Research
+fund for the Central Universities. The associate editor coordinating the review
+of this manuscript and approving it for publication was Prof. Xiaochun Cao.
+L. Zhang is with the College of Communication Engineering, Chongqing
+University, Chongqing 400044, China, and also with the Department of
+Computing, The Hong Kong Polytechnic University, Hong Kong (e-mail:
+leizhang@cqu.edu.cn).
+W. Zuo is with the School of Computer Science and Technology, Harbin Institute of Technology, Harbin 150001, China (e-mail:
+cswmzuo@gmail.com).
+D. Zhang is with the Department of Computing, The Hong Kong
+Polytechnic University, Hong Kong (e-mail: csdzhang@comp.polyu.edu.hk).
+Color versions of one or more of the figures in this paper are available
+online at http://ieeexplore.ieee.org.
+Digital Object Identifier 10.1109/TIP.2016.2516952
+
+domain [33], which leads to significant performance degradation in classification [7]. Domain adaptation, that has the
+same goal as transfer learning, aims at transferring knowledge across different but related domains, i.e. P (X S |Y S ) =
+P (XT |YT ) [34], [35], where (X S , Y S ) denote the source
+data matrix and the corresponding label matrix, (XT , YT )
+represent the target data matrix and label matrix. Physically,
+such subspace mismatch or domain shift/bias is common in
+vision problems. It often results from a variety of visual
+cues or abrupt feature changes, such as camera viewpoint,
+resolution, illumination, color, poses, and background, etc.
+To this end, various domain adaptation methods have been
+developed to adapt a model from source to target domain,
+including representation-based and classifier-based ones. The
+former tends to achieve domain alignment by learning a transformation [8], [14], [15], [19]. The latter advocates learning a
+robust classifier with X S and XT by introducing some ad-hoc
+regularization [11], [16], [17], [40]. The common practice is
+to train a classifier on source data and find an optimal decision
+boundary on both domains.
+In this paper, we focus on reconstruction based domain
+adaptation via latent subspace learning and sparse representation. Recently, a low-rank representation (LRR) based domain
+adaptation framework has been proposed for knowledge transfer, i.e. RDALR [2] and LTSL [1]. The basic idea of RDALR
+is illustrated in Fig. 1(a). A rotation W is used to transform
+the source data X S , then do alignment by reconstructing
+the rotated source data via LRR. However, finding such an
+alignment between WX S and XT may not transfer knowledge
+directly and it is unclear if a test sample is from the source
+domain or the target. Fig. 1(b) illustrates the basic idea
+of LTSL, where the subspace projection W is pre-learned
+by using PCA, LDA, etc. Then, the projected source data
+WX S is used to reconstruct the projected target data WXT
+via LRR. Both methods are inadequate in knowledge transfer
+and subspace alignment, with three reasons as follows.
+First, in LTSL the subspace is pre-learned and is independent with the reconstruction process, which limits the
+domain adaptation performance. Therefore, we propose a joint
+learning method for the pursuit of the latent subspace P and
+reconstruction Z. The joint learning of P and Z makes our
+method distinctly different with RDALR [2] and LTSL [1] in
+both model and algorithm. Experiments on face and object
+datasets show that joint learning improves the recognition
+accuracy by 3% and 17%, respectively.
+Second, in both RDALR and LTSL, the data in target
+domain are reconstructed with the data in source domain only
+
+1057-7149 © 2016 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications_standards/publications/rights/index.html for more information.
+
+1178
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+Fig. 1. Overview of the existing reconstruction guided knowledge transfer methods and our method. (a) Idea of RDALR. (b) Idea of LTSL. (c) Idea of
+our method.
+
+by using LRR [4]. Two noteworthy things include: (i) LRR
+was suggested to get the block diagonal solution for subspace
+segmentation. However, trivial solution will be obtained when
+handling the disjoint subspace and insufficient data. Moreover,
+LRR based domain adaptation is with a strong independent
+subspace assumption. Different from LRR, sparse subspace
+clustering (SSC) [3], [21], [37] is for data points that lie in a
+union of low-dimensional subspaces, where a sparse matrix Z
+is learned by minimizing X − XZF . Compared with LRR,
+SSC can be scalable [43] and multi-view [45], and well
+supported by both theoretical analysis [37] and experimental
+results [3] in handling the data points near the intersections of
+subspaces. Therefore, in light of the multi-source data lying
+in different space, we are inspired to reconstruct the target
+data XT with the source data X S by learning a sparse Z.
+With face and object datasets, an increment of 2% and 6.4%
+recognition accuracy is achieved by using SSC-based reconstruction. (ii) For RDALR and LTSL, the target data XT are
+reconstructed by solely using the source data X S . When only
+very few source data is available, better reconstruction
+can
+
+be obtained by grouping the target data i.e. X = X S,XT
+as “dictionary”. Fortunately, with the SSC theory [37], we
+can use both X S and XT for reconstructing the target data
+and avoid the trivial solution. The experiments on face and
+object datasets demonstrate that 4.7% and 9.7% increments of
+recognition accuracy are achieved by comparing with that of
+using source data only.
+Third, the existing methods work as a linear framework,
+and cannot tackle the nonlinear shifts in real-world vision
+problems. Therefore, it is valuable to develop a nonlinear
+reconstruction guided subspace transfer framework. In this
+work, we generalize our model to tackle nonlinear shifts
+in Reproduced Kernel Hilbert Space. The experiments on
+face and object datasets demonstrate that our method is
+7.7% and 6.3% higher than linear ones in recognition accuracy,
+respectively.
+In this paper, following the subspace reconstruction guided
+domain adaptation framework, we propose a sparse reconstruction method in the learned latent space between the source
+
+data X S and the target data XT . It tries to account for noise
+in data corruption and removes outliers, with their intrinsic
+relatedness preserved. More formally, we name the proposed
+method as latent sparse domain transfer (LSDT), which aims
+to learn a sparse reconstruction coefficient matrix between
+domains in some latent space for domain adaptation. The
+basic idea of LSDT is illustrated in Fig. 1(c). Compared with
+RDALR and LTSL, our LSDT can jointly learn the latent space
+P and the SSC-based reconstruction Z, and the target data
+XT is reconstructed with the group data of X S and XT , such
+that the source and target data lie in a shared latent space with
+domain shift/bias removed.
+In summary, the key contributions of this work are threefold.
+- The latent space projection P and the sparse reconstruction coefficient matrix Z are simultaneously learnt via a
+joint learning mechanism, which can achieve an optimal
+subspace representation. The sparse property implies that
+only a few data points from source domain are selected
+for subspace transfer and overcomes the overfitting
+problem.
+- The sparse subspace clustering (SSC) is introduced for
+reconstruction guided domain adaptation. The combined
+source and target data are used to reconstruct the target
+domain, which can better span the entire feature space
+than the under-complete source data only. In particular,
+the trivial solution can be avoided by using SSC instead
+of LRR.
+- Induced by Mercer kernel theorem, the proposed method
+is generalized as a nonlinear method, in which the domain
+adaptation is employed in a reproduced kernel Hilbert
+space (RKHS) for handling nonlinear domain shift.
+A. Paper Organization
+This paper is organized as follows. In Section 2, we give
+a brief overview of the related work in domain adaptation.
+The proposed latent sparse domain transfer method is
+illustrated in Section 3. The proposed nonlinear LSDT is
+presented in Section 4. The experimental results for several
+domain adaptation based vision tasks are shown in Section 5.
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+1179
+
+The in-depth discussion of the proposed methods is illustrated
+in Section 6. Section 7 concludes the paper.
+II. R ELATED W ORKS
+Domain adaptation can be performed in either representation level or classifier level [9], [10], [12], [14]–[17], [36].
+In classifier based adaptation, Yang et al. [12] proposed an
+adaptive SVM (ASVM) where the source classifier f S (x)
+was adapted to the target classifier f T (x) by learning a
+perturbation  f (x), such that f T (x) = f S (x) +  f (x).
+Similarly, Duan et al. [16] proposed an adaptive multiple
+kernel learning (AMKL) for consumer video event recognition
+from annotated web videos. Zhang and Zhang [36] proposed
+a DA framework with two error terms based on 2 -norm
+regularization. However, for classifier-based methods, the label
+information of source and target domains should be used for
+learning a target classifier.
+To learn a better data representation for adaptation without
+labels used, Gong et al. [10] proposed an unsupervised domain
+adaptation method (GFK), in which geodesic flow kernel is
+used to model the domain shift by integrating an infinite
+number of subspaces where the changes in geometric and
+statistical properties are characterized. Gopalan et al. [8] also
+proposed an unsupervised method (SGF) for low dimensional
+subspace transfer. The idea behind SGF is that it samples a
+group of subspaces along the geodesic between source and
+target data, and project the source data into the subspaces for
+discriminative classifier learning. Shekhar et al. [6] proposed
+a shared domain dictionary learning (SDDL), which assumes
+that the knowledge of two domains can be integrated into one
+dictionary D. However, the label information of source and
+target data is still required, while the proposed method does
+not need the label information during cross-domain learning.
+In [44], Lin et al. proposed a dynamic spatio-temporal subspace i.e. STDM, for background subtraction, where incremental subspace learning and analytical linear reconstruction
+are used to maintain the dynamic space.
+In reconstruction based adaptation, RDALR and LTSL that
+are most structurally relevant with this paper were proposed
+by Jhuo et al. [2] and Shao et al. [1], respectively, in which
+low rank representation (LRR) is used for subspace transfer.
+A brief overview of RDALR and LTSL is introduced as
+follows.
+A. Robust Domain Adaptation via Low Rank (RDALR) [2]
+RDALR shown in Fig. 1(a) addresses the domain adaptation
+problem by minimizing the following objective function
+min r ank (Z) + α E2,1
+
+W,Z,E
+
+s.t. WX S = XT Z + E, WWT = I
+
+(1)
+
+where rank(·) represents the rank of a matrix, E2,1 denotes
+2,1 -norm, and α is the regularization coefficient. The constraint WWT = I is introduced to learn an orthogonal
+transformation matrix. The term E2,1 is used to encourage
+the error columns of E to be 0, such that noise or outliers in source domain can be removed during adaptation.
+
+While minimization of rank(Z) tends to find a reconstruction
+coefficient matrix with the lowest rank structure. In optimization, due to the discrete nature of rank function, nuclear norm
+or trace norm (i.e. the sum of singular values of the matrix)
+is generally adopted as a proper surrogate of the rank. Then,
+inexact Augmented Lagrange Multiplier (ALM) [22] can be
+used for solving problem (1).
+B. Low-Rank Transfer Subspace Learning (LTSL) [1]
+Similarly but different in nature from RADLR, LTSL shown
+in Fig. 1(b) addresses the subspace transfer problem by
+minimizing the following objective function
+min F (W, X S ) + λ1r ank (Z) + λ2 E2,1
+
+W,Z,E
+
+s.t. WT XT = WT X S Z + E, WT U2 W = I
+
+(2)
+
+where F (W, X S ) is a generalized
+subspace
+learning function
+
+
+which can be written as T r WT U1 W , U1 and U2 are selected
+based on the conventional subspace learning model, such as
+PCA, LDA, etc. Given fixed W, inexact ALM under convex
+surrogate of rank function can be used to solve problem (2),
+which is similar to (1). There are three main differences
+between LTSL and RDALR:
+• RDALR tends to reconstruct the rotated source data X S
+by using target data XT . While LTSL attempts to reconstruct the target data using the source data in the learned
+subspace.
+• RDALR first use W to rotate the source data, and perform
+the data alignment in the original space of target data.
+While LTSL aims to find a subspace alignment between
+X S and XT .
+• A subspace learning function is embedded into LTSL for
+learning a transformation W with discriminative property.
+In summary, both RDALR and LTSL perform the domain
+adaptation using LRR. The former presents to data alignment
+by leveraging LRR and provides some valuable insight for
+domain adaptation. LTSL performs adaptation in some prelearned subspace, and presents a more complete theoretical and
+subspace analysis for knowledge adaptation. As mentioned,
+Liu et al. [4] and Elhamifar and Vidal [21] proved that LRR
+performs well when the subspaces are independent and the
+data sampling is sufficient.
+However, this assumption is difficult to hold in crossdomain vision problems (i.e. data distribution mismatch).
+Following the representation based adaptation, our proposed
+method attempts to use SSC based sparse reconstruction
+for subspace transfer while avoiding such strong low-rank
+assumption. More advantageously, the proposed method can
+simultaneously learn a linear/nonlinear basis transformation
+for subspace projection and a sparse reconstruction matrix
+with stronger robustness. It can prohibit the noise or outliers
+in source domain from transferring to target domain and also
+avoid overfiting in reconstruction, especially when the number
+of source data and target data is not sufficient. The proposed
+method is different from LTSL in three aspects. (i) The joint
+learning of subspace and reconstruction. (ii) Sparse reconstruction based on SSC using combined source and target data.
+
+1180
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+Fig. 2.
+
+Flowchart of the training and testing phase of the proposed LSDT method for visual categorization.
+
+(iii) Kernel based nonlinear domain adaptation. Fig. 2 illustrates the flowchart of the proposed method for heterogeneous
+image classification.
+
+By combining (3) and (4) together, the final formulation of
+the proposed LSDT method is represented as follows
+min Z1 + λ1 PXT − P [X S , XT ] Z2F
+Z,P
+2
+
+
+
++ λ2 [X S , XT ] − PT P [X S , XT ]
+
+III. L ATENT S PARSE D OMAIN T RANSFER L EARNING
+
+F
+
+A. Notations
+In this paper, the source and target domain are defined
+by subscript “S” and “T ,” respectively. The training data
+of source and target domain is denoted as X S ∈ R D×N S
+and XT ∈ R D×NT , respectively, where D is the number of
+dimensions, N S and NT are the number of training samples
+in both domains. XT l ∈ R D×NT l and XT u ∈ R D×NT u denote
+the few labeled and most unlabeled data of target domain.
+Let P ∈ Rd×D represents a basis transformation. The sparse
+reconstruction matrix between X S and XT is denoted as Z.
+1n denotes a full-one column vector with length of
+n and I denotes an identity matrix. ·0 counts the number
+of nonzero elements of a vector, · p ( p = 0, 1 or 2)
+denotes  p -norm, and ·F denote Frobenius norm of a matrix.
+[X]i denotes the i -th column of X. Note that matrix and vector
+is in capital and lower bold face, and variable is in italics.
+B. Problem Formulation
+As illustrated in Fig. 1, we aim to learn a reconstruction
+coefficient matrix Z for representing target data XT by using
+itself and source data X S together in some latent space
+projected by a pre-defined basis transformation P. Therefore,
+the optimization problem can be formulated as
+min PXT − P [X S , XT ] Z2F ,
+Z
+
+s.t. Z0 ≤ T0
+
+(3)
+
+where Z ∈ (N S +NT )×NT , T0 is the sparsity level. Due to
+that 0 -norm based optimization is non-convex, in this paper,
+1 -norm is used in the proposed model.
+For learning such a basis transformation P which can ensure
+that the projection does not distort the data and can remain too
+much available information, the following term is integrated,
+2
+
+
+
+min [X S , XT ] − PT P [X S , XT ]
+(4)
+P
+
+F
+
+s.t. PPT = I, 1TN S +NT Z = 1TNT , Z N S +i,i = 0,
+∀i = 1, · · · , NT
+
+(5)
+
+where the rows of P are required to be orthogonal and
+normalized to unit norm for preventing the solution degenerate
+into zero by enforcing PPT = I. Additionally, we also impose
+1TN S +NT Z = 1TNT for addressing the problem that source and
+target data lie in a union of affine subspaces instead of linear
+subspaces. λ1 and λ2 denote the tradeoff parameters.
+For simplification, we let X = [X S , XT ] ∈  D×N then the
+objective function of problem (5) can be written as
+J1 (P, Z, XT , X) = Z1 + λ1 PXT − PXZ2F
+2
+
+
+
++ λ2 X − PT PX
+F
+
+(6)
+
+One proposition on the basis transformation P is as follows.
+Proposition 1: There exists an optimal solution P∗ that can
+be intuitively represented as a linear combination of raw source
+and target data X for some  ∈ R N×d in the following form
+P ∗ = T X T
+
+(7)
+
+Note that Proposition 1 has also been used in subspace clustering and dictionary learning [6], [13]. With Proposition 1,
+by substituting (7) into (6), the objective function is written as
+2
+
+
+
+J2 (, Z, XT , X) = Z1 + λ1 T XT XT − T XT XZ
+F
+2
+
+
+T T 
++ λ2 X − X X X
+(8)
+F
+
+Let KT = XT XT , K = XT X, then the proposed method (5)
+can be illustrated as follows
+
+
+2
+2
+
+
+
+
+min Z1 + λ1 T KT − T KZ + λ2 X − XT K
+Z,
+
+s.t.  K = I,
+T
+
+1TN S +NT Z
+
+=
+
+F
+T
+1 NT ,
+
+Z N S +i,i = 0 ∀i = 1, · · · , NT
+
+F
+
+(9)
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+1181
+
+Algorithm 1 Solving Problem (10) by ADMM
+
+Algorithm 2 Solving Problem (11) by Proposition 2
+
+2) Update Φ: For solving , the minimization problem (9)
+after fixing Z can be written as
+2
+2
+
+
+
+
+
+
+min λ1 T KT − T KZ + λ2 X − XT K
+
+
+F
+
+s.t.  K = I
+T
+
+F
+
+(11)
+
+We have the following proposition for solving  in (11).
+Proposition 2: When Z is fixed, the optimal solution of (11)
+is computed as
+∗ = VS− 2 ∗
+1
+
+where V and S are from the eigen-decomposition of
+K = VSVT , and ∗ is the optimal solution of the following
+problem
+
+
+∗ = arg min T r T  , s.t. T  = I
+
+
+From (9), it is observed that a nonlinear framework of LSDT
+can be deducted by using a nonlinear mapping function ϕ. The
+details can be referred as Section IV.
+For our LSDT model in Eq. (5), when fixed P, the subproblem on Z shares similar formulation with SSC [3] and
+RSC [37]. Based on the theoretical results in [37], our LSDT
+model is also feasible in recovering the underlying subspace
+structures. However, the model in Eq. (5) is non-convex,
+making it difficult to extend the theoretical results [37] to the
+full LSDT model.
+C. Optimization
+It can be seen from problem (9) that two variables are
+involved. To solve this minimization, alternative optimization
+strategy that solve one variable while fixing the other one is
+considered. Therefore, two main steps are included.
+1) Update Z: For solving Z, one can fix , then the
+minimization problem (9) with respect to Z becomes
+2
+
+
+
+min Z1 + λ1 T KT − T KZ
+Z
+
+F
+
+s.t. 1TN S +NT Z = 1TNT , Z N S +i,i = 0, ∀i = 1, · · · , NT
+
+(10)
+
+This is a typical sparse Lasso optimization problem with
+linear equality constraints, and can be efficiently solved by
+using alternative direction multiplier method (ADMM) in [3].
+A full description of ADMM can be referred as [26] for
+interested readers. The solving process of problem (10) by
+using ADMM is outlined in Algorithm 1. The deduction for
+solving Z can be found in Appendix A.
+
+The optimization of problem (11) is outlined in Algorithm 2.
+The deduction of the proposition 2 can be found
+in Appendix B.
+In summary, with the two updating steps for Z and  based
+on Algorithm 1 and Algorithm 2, the complete optimization
+of the proposed LSDT method is illustrated in Algorithm 3.
+D. Remarks on the Convergence
+From the viewpoint of optimization, the proposed LSDT is
+non-convex w.r.t. Z and , but the global solution of each
+when fixing the other can be solved. The local optimum of
+the model can be guaranteed using the proposed optimization
+method. The convergence is shown in the Discussion part
+(please see Fig. 8c). After 5 iterations, a local optimum can
+be achieved for two datasets, as an example.
+From the level of approach, by comparing to LTSL [1], it
+pre-learns a transformation P using PCA or LDA, then solves
+the Z by using low-rank constraint, such that the performance
+must be sub-optimal with the pre-learned P as a warm start
+without update. To overcome the flaw of such a suboptimal P,
+The proposed method aims at learning P and Z simultaneously
+by using an alternating optimization strategy, such that better
+performance can be expected.
+E. Computational Complexity
+Algorithm 3 includes two steps: update Z (Algorithm 1)
+and update  (Algorithm 2). For Algorithm 1 (i.e. ADMM),
+suppose that the number of iterations is T1 , the complexity
+of computing L is O(T1 N 3 ) and the complexity of computing Z is O(T1 N 2 ). Therefore, the computational complexity
+
+1182
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+Algorithm 3 The Proposed LSDT
+
+Algorithm 4 The Proposed NLSDT
+
+of Algorithm 1 is O(T1 N 3 ) + O(T1 N 2 ). For Algorithm 2, the
+eigen-decomposition and matrix multiplication are involved,
+with the computational complexity of O(N 3 ). Suppose that
+the number of iterations in Algorithm 3 is T , then the
+total computational complexity of LSDT can be expressed
+as O(TT 1 N 3 ) + O(TT 1 N 2 ) + O(TN 3 ).
+
+NLSDT can be written as
+2
+
+
+
+min Z1 + λ1 T KT − T KZ
+F
+Z,
+
+
+T
++ λ2 T r I − T K K I − T K
+
+IV. N ONLINEAR D OMAIN T RANSFER L EARNING
+A. Formulation of NLSDT
+
+s.t. T K = I, 1TN S +NT Z = 1TNT ,
+Z N S +i,i = 0 ∀i = 1, · · · , NT .
+
+(14)
+
+B. Optimization Algorithm
+
+In LSDT, a linear transformation P is exploited for latent
+subspace learning. Naturally, NLSDT is a nonlinear extension
+of LSDT by mapping the data from original space R D
+to the reproducing kernel Hilbert space (RKHS) H, that
+is defined as ϕ : R D → H, induced by Mercer kernel.
+In RKHS, a nonlinear transformation P is learned to handle
+nonlinear domain bias, such as rotation of poses in face
+recognition.
+For introducing the framework of NLSDT, we first define
+the kernel gram matrix, which
+is denoted as the matrix
+K,
+
+
+
+and [K]i, j = ϕ (xi ), ϕ x j H = ϕ (xi )T ϕ x j = κ xi , x j ,
+where κ is a kernel function. Similar to LSDT, the objective
+function of NLSDT can be formulated as
+J (P, Z, XT , X) = Z1 + λ1 Pϕ (XT ) − Pϕ (X) Z2F
+2
+
+
+
++ λ2 ϕ (X) − PT Pϕ (X)
+(12)
+F
+
+Based on Proposition 1, the optimal mapping P∗ can be
+represented as P∗ = T ϕ (X)T . The objection (12) becomes
+
+The optimization algorithm of NLSDT is similar with
+LSDT shown in Algorithm 1, in terms of Proposition 1 and
+Proposition 2. From the models (9) and (14), we can observe
+that LSDT is in fact a special case of NLSDT when a linear
+kernel function is used to compute KT and K. In NLSDT,
+Gaussian RBF function, sigmoid function, etc. can be used as
+kernel function. The NLSDT is illustrated in Algorithm 4.
+C. Classification
+With the case of NLSDT, the classification scheme in this
+paper consists of the following steps:
+• Compute the latent subspace embedding M S of source
+data X S using the projection P∗ , as M S = P∗ ϕ (X S ).
+• Compute the latent subspace embedding MT l of the
+labeled target training data XT l using the learned
+projection P∗ and sparse reconstruction Z, as
+MT l = P∗ ϕ (X) Z.
+• Compute the latent subspace embedding MT u of these
+unlabeled target test data XT u as MT u = P∗ ϕ (XT u ).
+• Train a classifier W using 2 -norm regularized least
+square method on the labeled training data [M S , MT l ]
+T
+and label matrix Y = YTS , YTT l , where [Y]i, j = 1 if the
+class j is assigned to the i -th sample, and −1 otherwise.
+• The decision labels of unlabeled target test data are
+obtained by computing MTT u W.
+
+J (P, Z, XT , X)
+2
+
+
+
+= Z1 + λ1 T ϕ (X)T ϕ (XT ) − T ϕ (X)T ϕ (X) Z
+F
+2
+
+
+
++ λ2 ϕ (X) − ϕ (X) T ϕ (X)T ϕ (X)
+F
+2
+
+
+ T
+T
+= Z1 + λ1  KT −  KZ
+F
+
+2
+
+T 
++ λ2 ϕ (X) − ϕ (X)  K
+(13)
+
+A. Synthetic Data
+
+where KT = ϕ (X)T ϕ (XT ) and K = ϕ (X)T ϕ (X) denote the
+kernel Gram matrix. Therefore, the minimization problem of
+
+In this section, we use the generated toy data for latent
+subspace alignment by our method. The 3-dimensional source,
+few labeled target data and unlabeled target data with two
+
+F
+
+V. E XPERIMENTS
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+1183
+
+TABLE I
+3DA AND 4DA B ENCHMARK D ATASETS FOR V ISUAL
+D OMAIN A DAPTATION IN E XPERIMENTS
+
+Fig. 3. The 3D illustration of synthetic data (left) and 2D illustration after
+subspace alignment (right).
+
+classes generated by Gaussian distributions of different means
+and covariance matrices are shown in Fig. 3 (left). Each class
+in source domain contains 50 samples and it is easy to find
+a decision boundary of the two classes in source domain.
+In target domain, there are 5 labeled samples and 50 unlabeled
+samples for each class. From the figure, it is clearly observed
+that: 1) the data points of the same class between source and
+target domain have very different distribution; 2) the classification hyper-plane of source domain does not fit the decision
+boundary of target domain. Therefore, how to determine one
+robust decision boundary becomes very challenging.
+The proposed LSDT aims to find a latent space with domain
+adaptation, such that both domains can have similar distribution and better separable ability in the latent space. By using
+the proposed LSDT method, the source data and target data
+in the 2D subspace after projection and reconstruction can
+be seen in Fig. 3 (right). We can observe that the subspace
+mismatch between source data and target data is reduced after
+LSDT, and the decision boundary between the two classes
+is clear and easily to find with a general classifier. The toy
+data primarily demonstrates the effectiveness of our method in
+latent subspace alignment for representation based adaptation.
+B. Object Recognition
+In this section, cross-domain object recognition is discussed.
+1) Experimental Setup: In experiments, we test our methods
+in two visual benchmark datasets: 3DA and 4DA of objects,
+which are widely used for domain adaptation. Besides, the
+deep features of 4DA datasets based on convolutional neural
+network (CNN) [38] are also exploited for object recognition.
+Specifically, the 3DA, 4DA and 4DA-CNN datasets and
+features are illustrated as follows.
+a) 3DA (Amazon, DSLR and Webcam domain adaptation [9]): In the 3DA dataset, each domain contains 31 object
+classes, such as back-pack, keyboard, earphone, etc. By following the setting in [9], if Amazon is experimented as source
+domain, 20 samples per class are selected for training, and
+8 samples are selected if DSLR or Webcam is source domain.
+For target domain, 3 training samples per class are selected
+and the rest data in the target domain is used for testing. The
+detail of 3DA dataset is summarized in Table I.
+b) 4DA (Amazon, DSLR, Webcam and Caltech 256 [10]):
+For 4DA dataset, four domains are included, where each
+domain contains 10 common object classes rather than
+31 selected from 3DA dataset and an extra Caltech 256
+
+dataset [11]. In experiments, we follow the configuration
+in [10] where 20 samples per class are selected from Amazon,
+and 8 samples per class are randomly selected from DSLR,
+Webcam and Caltech if they are source domains, while
+3 samples per category are selected if they are target domains,
+and the rest data in target domain is used for testing. The
+detail of 4DA dataset is also summarized in Table I. Note
+that, the 800-bin SURF features provided in [9] and [10] for
+each domain are used.
+c) 4DA-CNN (Amazon, DSLR, Webcam and Caltech 256
+domain adaptation [10], [39]): For the 4DA-CNN setting,
+8 layers with 5 convolutional layers and 3 fully connected
+layers of CNN were trained on ImageNet in [38]. The welltrained CNN structure and parameters are used by taking the
+4DA dataset as input of CNN [39]. The outputs of the 6th and
+7th layer (i.e. DeCAF) are used. The feature dimension after
+CNN is 4096. More details of the architecture and training
+protocol can be referred to [38] and [39].
+d) Parameter setting: For LSDT method, the tradeoff coefficients λ1 and λ2 are fixed to be 1 in exper
+iments.
+the Gaussian function κ xi , x j =
+ For NLSDT,
+2
+exp − xi − x j  /2σ 2 is used, and the kernel parameter σ
+is tuned for the best result. The 2 -norm regularized least
+square method is used for classifier training.
+2) 3DA Experiment: We strictly follow the experimental
+configuration by Saenko et al. [9]. 20 random splits of
+training data in source and target domain are implemented
+and the mean accuracies over 31 categories are reported.
+The experiments are employed in single source domain and
+multiple source domains adaptation, respectively. In this experiment, we compare with five methods including ASVM [12],
+GFK [10], SGF [8], SA [41], RDALR [2], LTSL-PCA [1] and
+LTSL-LDA [1]. The experimental results of single source
+domain and multiple source domains adaptation are shown
+in Table II.
+From the results, we can observe that LSDT with nonlinear
+kernel function performs much better results than other methods for single source domain adaptation. For multiple source
+domain adaptation, both LSDT and NLSDT outperform other
+methods. However, NLSDT is a little weak compared to the
+linear method. Note that partial results of other methods are
+quoted from [1] and [2].
+Additionally, in Table II, the LTSL-PCA is better than
+LTSL-LDA a. Note that LTSL outperforms RDALR method
+with a large margin which shows that the subspace learning
+
+1184
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+TABLE II
+R ECOGNITION A CCURACY (%) OF S INGLE -S OURCE AND M ULTI -S OURCE D OMAIN A DAPTATION IN 3DA S ETTING
+
+TABLE III
+R ECOGNITION A CCURACY (%) OF D IFFERENT D OMAIN A DAPTATION OVER 10 O BJECT C ATEGORIES IN 4DA S ETTING
+
+is beneficial to domain transfer. Therefore, in the subsequent
+experiments, LTSL as low-rank based subspace adaptation is
+compared, instead of RDALR.
+3) 4DA Experiment: In this experiment, we strictly follow
+the experimental setting by Gong et al. [10]. There are four
+domains, and therefore 12 combinations of each two domains
+are discussed. 20 random splits of training data in source
+and target domain are used for all methods, and the mean
+classification accuracies over 10 object categories are reported
+in Table III. Note that A: Amazon, D: DSLR, W: Webcam,
+C: Caltech 256. We have compared to existing methods
+including NaïveComb, ARC-t [15], sampling geodesic
+flow (SGF) [8], geodesic flow kernel (GFK) [10], domain
+adaptation machine (DAM) [18], max-margin domain transforms (MMDT) [14], Symm [19], SA [41], DIP [42] and
+LTSL [1]. From the results, we can observe that NLSDT
+performs much better than state-of-the-art LTSL results and
+is also superior to other methods. Particularly, the average performance over 12 different tasks of our NLSDT is
+about 5% improvement compared to LTSL. We can also see
+that for LTSL, LDA is better than PCA for subspace learning.
+Additionally, the results also demonstrate that nonlinear
+method is effective for domain adaptation, since nonlinear shift
+may occur in data acquisition.
+4) 4DA-CNN Experiment: The experimental setting is the
+same as 4DA setting, but with CNN features. The comparison results with state-of-the-art representation based domain
+adaptation methods such as SGF [8], GFK [10], SA [41],
+LTSL-PCA [1] and LTSL-LDA [1], are reported in Table IV.
+Note that SourceOnly denotes the results trained by SVM
+on the source data, NaïveComb denotes the baseline method
+
+learned by SVM on the combined source and target training
+data. From Table IV, we observe that: 1) the total classification
+performance is well improved by using deep feature representation, for example, the classification accuracy increases from
+83.5% to 98.7% for “D→W” setting by using our NLSDT
+method, which show that the deep feature representation can
+effectively remove the domain shift or bias; 2) LSDT and
+NLSDT have similar performance on deep features, which
+implies the linearly separable ability of the high-level deep
+representation; 3) the proposed methods still outperform other
+methods; 4) the output features of the 6th and 7th layer have
+comparative performance in object recognition.
+C. Consumer & YouTube Video Event Recognition
+In this experiment, the dataset used for video event recognition is the YouTube videos & Consumer videos developed
+in [16], in which part of consumer videos were from Kodak
+Consumer video benchmark dataset [27] and part from real
+users. Considering that in real applications the labeled samples of consumer videos are usually fewer than the labeled
+web videos, the web videos of low-resolution from YouTube
+website are used as source data, while the consumer videos of
+high-resolution are used as target data in experiments.
+By following [16], six visual events including “birthday,”
+“picnic,” “parade,” “show,” “sports,” and “wedding” are
+included. The total number of YouTube videos and Consumer
+videos is 906 and 195, respectively. For source domain, all
+906 YouTube web videos are used as labeled source data. For
+target domain, we randomly selected m (m = 1, 3, 5, 7, 10)
+consumer videos per event as the labeled target training data,
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+1185
+
+TABLE IV
+R ECOGNITION A CCURACY (%) OVER 10 O BJECT C ATEGORIES IN 4DA-CNN S ETTING W ITH D EEP F EATURE R EPRESENTATION
+
+TABLE V
+C LASSIFICATION A CCURACY (%) OVER 6 V ISUAL E VENTS W ITH D IFFERENT N UMBER OF L ABELED TARGET V IDEOS PER E VENT
+
+and the remaining consumer videos are used as unlabeled data
+for evaluation. We sample the labeled target training videos
+5 times, the means and standard deviations of classification
+accuracies are reported.
+As described in [16], two types of features, ST feature [28]
+and SIFT feature [29] are used. For ST feature, 72D HOG
+and 90D HOF features are concatenated as a 162D vector.
+For each frame (65 frames per video), 128D SIFT features
+are extracted from salient regions detected by DoG interest point detector [30]. Finally, the visual vocabularies via
+k-means are built for feature clustering. The features can be
+obtained from [16].
+In experiment, we have compared our proposed method
+with two classifier based transfer learning methods such as
+A-MKL [16] and DTSVM (DTMKL) [17] which report the
+state-of-the-art results on this dataset, and three representation
+based domain adaptation methods such as GFK [10],
+SGF [8] and LTSL [1] coupled with PCA and LDA. The
+basic idea of A-MKL method is to learn the target classifier
+P
+S
+f T (x) with the optimal combination
+p=1 β p f p (x)
+of P source classifiers plus a learned perturbation
+M
+ f (x) =
+m=1 dm wm ϕm (x) + b based on multiple
+
+kernels. The basic idea of DTSVM (DTMKL) tends to learn
+M
+target decision function f T (x) =
+m=1 dm wm ϕm (x) + b
+without considering the optimal combination of pre-learned
+source classifiers involved in A-MKL. We also compared the
+baseline method (i.e. NaïveComb) trained by SVM.
+We have studied the recognition performance by leveraging
+different number m (m = 1, 3, 5, 7, 10) of labeled videos per
+event from consumer videos (target domain). The recognition
+accuracies over 6 visual events based on three types of lowlevel features are reported in Table V. From the results, we
+can find that the proposed LSDT method with nonlinear
+Gaussian kernel outperforms other methods. Fig. 4 describes
+the recognition accuracy of all methods with the increasing
+number m of labeled videos per event. From the plots with
+different features, we can observe that the proposed LSDT
+and NLSDT methods still perform the best results.
+D. CMU Multi-PIE Data
+The CMU Multi-PIE face dataset [23] is a comprehensive
+face dataset of 337 subjects, in which the images are captured across 15 poses, 20 illuminations, 6 expressions and
+4 different sessions. For our purpose, we select the first
+
+1186
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+Fig. 4. Recognition accuracy with different number of labeled videos per-event selected from target domain. (a) SIFT feature. (b) ST feature. (c) SIFT+ST
+features.
+
+Fig. 5. Example images of one subject. Session 1 (the 1st row with neutral
+expression) and Session 2 (the 2nd row with smile expression).
+
+Fig. 7. Examples of the learned basis transformation P by NLSDT under
+Session 2. Each subplot represents a row of P.
+
+Fig. 6.
+
+Pose alignment of Session 2 by the proposed NLSDT method.
+
+60 subjects from session 1 and session 2 in experiments.
+Session 1 contains 7 images per subject with 7 poses under
+neutral expression, while session 2 was prepared with the same
+poses as session 1 but under smile expression. The example
+images of one subject in session 1 and session 2 are illustrated
+in Fig. 5. In this experiment, four experimental configurations
+are as follows.
+- Session 1: one frontal face in red Rectangle and one
+60° posed face in blue per subject are used as source and
+target training data, respectively. The remaining faces are
+probe faces.
+- Session 2: the same configuration as session 1 is
+conducted.
+- Session 1 + 2: Two frontal faces and two faces with
+extreme 60° pose from both sessions are used as training
+data. The remaining faces are used as probe faces.
+- Cross Session: The faces per subject in session 1 with
+neural expression are taken as source domain, while the
+faces per subject in session 2 with smile expression are
+taken as target domain. This is to adapt the change of
+expression.
+Pose alignment is challenging due to the highly non-linear
+changes induced by 3D rotation of a face. Fig. 6 illustrates the
+pose alignment process under Session 2 with smile expression
+by the proposed NLSDT, where the frontal faces per subject
+in red Rectangle are used as source data, and the faces with
+60° poses in the blue Rectangle are used as target data for
+each session. From Fig. 6, we can observe that the target face
+under pose is well aligned with residual (noise) removed.
+
+The best face recognition rates under the four experimental configurations by using different methods are shown
+in Table VI. From the results, we can see that the proposed NLSDT significantly outperforms other state-of-the-art
+methods. This demonstrates that linear subspace transfer may
+not work for nonlinear rotation. Fig. 7 shows the learned
+basis P on Session 2. Each subplot corresponds to a row of P.
+The first 60 subplots denote the frontal source faces and the
+last 60 subplots show the target faces with 60° pose, from
+which we can observe that the target faces across poses can
+be aligned.
+E. Handwritten Digits Data
+In this section, three handwritten digits datasets including MNIST [24], USPS [25] and SEMEION [25] are used
+for cross-domain learning experiments, and the classification
+accuracies over 10 classes from digit 0 to digit 9 are reported
+for different tasks. The MNIST handwritten digits dataset
+has 70,000 instances with each image size of 28 × 28, the
+USPS dataset contains 9298 examples with each image size
+of 16 × 16, and 2593 images of size 16 × 16 are included
+in SEMEION dataset. For dimension consistency, the size of
+MNIST digit images is manually resized into 16 × 16.
+In experiment, cross-domain tests are explored. Specifically,
+each dataset will be recognized to be source and target domain
+alternatively. Therefore, 6 combinations of cross-domain task
+are experimented. For the purpose of our experiments, we
+randomly select 100 samples per class from source domain
+for training and 10 samples per class from target domain for
+testing. 5 random splits are used and the mean accuracies
+via nearest neighbor classifier with the best parameter tuning
+are reported in Table VII, in which A-SVM [12], SGF [8],
+GFK [10], SA [41] and LTSL [1] are compared with our
+proposed NLSDT method with Gaussian kernel function
+used.
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+1187
+
+TABLE VI
+C OMPARISON W ITH O THER M ETHODS FOR FACE R ECOGNITION A CROSS P OSES
+
+TABLE VII
+H ANDWRITTEN D IGITS R ECOGNITION P ERFORMANCE A CROSS D OMAINS
+
+converge to one minimum value after 3 iterations, which
+demonstrates the efficiency of optimization.
+B. Parameter Sensitivity Analysis of LSDT
+
+Fig. 8. Performance with subspace dimension d (a), kernel parameter σ (b),
+and objective function with iteration t (c) on CMU Multi-PIE (a1 , b1 and c1 )
+and Handwritten digits (a2 , b2 and c2 ). The stair curve in each subplot
+corresponds to the green curve.
+
+From the results, we can see that the proposed method
+outperforms other methods. The average improvement in accuracy is about 10% and 5% compared to the two methods,
+respectively. This demonstrates that the proposed NLSDT
+succeeds in dealing with highly nonlinear domain shift/bias.
+VI. D ISCUSSION
+A. Subspace Dimension, Kernel Parameter, and Convergence
+This paper aims to learn a latent low dimensional subspace
+for representation based adaptation. For showing the performance with subspace dimension variation, we conduct the
+experiments on multi-PIE face data with Session 1 as source
+and Session 2 as target and handwritten digit data with USPS
+digits as source and SEMEION digits as target. Fig. 8 illustrates the performance of our method with increasing number
+of subspace dimension d, kernel parameter σ and iteration
+number t. From Fig. 8, it is clear that the proposed method can
+effectively learn a low-dimensional latent space and reduce the
+computational demand of sparse coding. Additionally, from
+the convergence curves of objective function, the model can
+
+In the proposed LSDT model, there are two trade-off
+parameters λ1 and λ2 involved for model tuning. For insight of
+their sensitivity to the performance, we tune the two parameters from {1, 10, 100, 1000, 10000}, respectively, and report
+the accuracy on several datasets. Fig. 9 denotes the results w.r.t.
+different parameter values of λ1 and λ2 . We see that the two
+parameters show relatively stable performance, except that for
+3DA (a) and 4DA (b), the performance has a large variation
+when a large λ1 is given. It is easy to obtain a relatively good
+performance by slightly tuning the model parameters.
+C. Parameter Settings of Baseline Methods
+Throughout the paper, we have compared 13 methods
+including 4 adaptive classifier based methods such as ASVM,
+DAM, AMKL and DTSVM, 5 feature transformation based
+methods such as DIP, MMDT, Symm, ARC-t, and RDALR„
+and 4 closely related methods such as GFK, SGF, SA and
+LTSL. We present the parameter discussion from three aspects:
+• In the classifier based methods, SVM is an important
+tool in the models, such as ASVM and DAM. Therefore,
+the kernel parameter and penalty coefficient are the
+main parameters. For AMKL and DTSVM (also called
+DTMKL), multiple kernels are integrated for improving
+the domain transfer performance by minimizing the structural risk and the maximum mean discrepancy (MMD)
+between source and target domains. Therefore, the
+number of base kernels and kernel parameters play
+a key role in the optimal kernel function learning.
+In YouTube&Consumer video experiments, we have used
+the default parameters in the released codes and their
+reported results for comparisons.
+
+1188
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+Fig. 9. Parameter sensitivity analysis on the considered datasets. (a) 3DA data (Dslr->Webcam). (b) 4DA data (D->W). (c) YouTube&Consumer Videos data.
+(d) Handwritten digit data (Semeion->USPS). (e) CMU PIE data (session 1).
+
+TABLE VIII
+C OMPARISON TO PCA A ND LDA
+
+•
+
+•
+
+In the feature transformation based methods, DIP,
+MMDT, Symm and ARC-t tend to learn a transformation
+such that some similarity metric can be achieved with the
+maximized similarity or the minimized distance between
+the distribution of the transformed source and target
+data. RDALR tends to reconstruct the target data with
+source data by learning a low-rank matrix. Therefore, in
+these methods, one or two regularization parameters are
+referred during learning the transformation matrix. In the
+experiments, we have copied the accuracy result reported
+in their publications for comparisons.
+In the closely related methods, GFK, SGF, SA and LTSL
+methods have a common characteristic that the unsupervised subspace transfer is explored. Specifically, principal
+component analysis (PCA) is used for pre-learning the
+low-dimensional subspace, where the domain adaptation
+is implemented with different strategies. Therefore, the
+subspace dimension d is one key parameter for tuning
+in these subspace alignment based domain learning
+methods. Additionally, SGF associates with the number
+of PLS factors and LTSL refers to the trade-off parameter
+λ2 /λ1 in (2). In this paper, the subspace dimension and
+trade-off parameters in these methods have been tuned,
+and the best results are reported for comparisons.
+
+D. Pre-Learn P Using PCA and LDA in LSDT
+Following the pre-learning of subspace in LTSL, in this
+section, we discuss the joint learning of P and reconstruction Z, by comparing to PCA and LDA. The comparison results on multi-PIE and 3DA datasets are reported
+in Table VIII. The increments of recognition accuracy demonstrate the contribution of learning P simultaneously with Z
+in LSDT.
+E. Low-Rank Constraint on Z in LSDT
+In LTSL, low-rank representation based reconstruction is
+used for subspace transfer. For demonstrating the effectiveness
+
+TABLE IX
+R ECONSTRUCT THE TARGET D ATA W ITH S OURCE D ATA O NLY (S)
+AND C OMBINED S OURCE AND TARGET D ATA (ST)
+
+of LSDT based on SSC theory, we discuss the performance
+of LRR in LSDT in Table IX (LSDT-LRR vs. LSDT). The
+results demonstrate that LSDT based on SSC is significantly
+better than that of LRR-based.
+F. Reconstruct XT Using X S Only in LSDT
+We have also discussed the performance comparison by
+reconstructing XT using X=[X S ,XT ] (ST) and X S (S), respectively. The results in Table IX denote that the performance
+can be well improved by reconstructing the target data using
+both source and target data in domain transfer. Generally,
+in reconstruction based domain adaptation, when only a few
+number of source data is available, the target data can be
+leveraged for robust subspace transfer. It is worth noting that
+sparse coding requires sufficient data for obtaining an overcomplete dictionary (i.e. X S ). For domain adaptation, when the
+source data are insufficient, the assumption on over-complete
+dictionary may not hold. In this work, we adopt two strategies
+to avoid this issue. First, we consider the [X S ,XT ] as the
+dictionary for reconstruction to enlarge the dictionary size.
+Second, by introducing the low-dimensional projection P, we
+consider the reconstruction of PXT by using the dictionary
+P[X S ,XT ]. Therefore, even the dictionary X S is not overcomplete for coding XT , the dictionary P[X S ,XT ] will be overcomplete for coding PXT .
+G. Justification of Motivations
+The proposed LSDT is motivated by SSC theory, and aims
+at realizing unsupervised domain adaptation by exploiting
+sparse reconstruction between different domains in the latent
+subspace. The in-depth approach motivation of LSDT is as
+follows.
+1) In general, the data from different domains lie in a union
+of multiple subspaces. For knowledge “transfer” but not
+naïve “transformation,” the low-dimensional latent space
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+2)
+
+3)
+
+4)
+
+5)
+
+of data should be found. Then, the “transfer” task can
+be effectively explored without overfitting. For finding
+such a latent space, we propose to learn a subspace
+projection P. In LTSL [1], the PCA or LDA is used
+to compute the P for subspace pursuit.
+After obtaining the latent space via the P, the knowledge “transfer” is then implemented. In this paper, the
+“transfer” is realized via a reconstruction Z. In general, a
+good reconstruction is very important for robust domain
+adaptation. First, the outliers (noise) from source domain
+would be removed in transferring to the target domain;
+Second, fewer data from source domain should be used
+for reconstruction. For this reason, we propose to impose
+a sparse constraint on Z. The superiority is shown
+in Table IX.
+From the above motivation 1) and 2), the reason why
+we learn P and Z is clear. Although the P can be
+pre-computed by existing subspace learning methods,
+it is sub-optimal and leads to the local optimum of Z.
+Therefore, we propose to learn the P and Z simultaneously by using an alternative strategy, such that a much
+better solution with stronger domain adaptability can be
+achieved. The performance comparison is demonstrated
+in Table VIII.
+We aim to reconstruct the target data PXT by using
+P[X S ,XT ]. The X S part is used for knowledge adaptation
+and the XT part is exploited for self-representation and
+outlier removing from the target data. When only a
+few source data is available, the the robustness can be
+improved by leveraging the target data in reconstruction.
+Note that the trivial solution of Z is avoided based on
+the SSC theory instead of LRR. The performance can
+be observed in Table IX.
+The proposed NLSDT is an extension of LSDT, which is
+motivated by the highly nonlinear domain shift. By simply introducing kernel function into LSDT, the performance is greatly improved throughout the experiments.
+VII. C ONCLUSION
+
+This paper proposes a new reconstruction based domain
+adaptation method for robust visual knowledge transfer. The
+method tends to reconstruct the target data with a few source
+data points by using a sparse coefficient matrix in some
+low-dimensional latent space. The method learns the sparse
+reconstruction coefficient matrix and the low-dimensional
+latent space projection simultaneously, such that an optimal subspace transfer solution can be obtained. Additionally,
+a kernel framework is generalized into this method, which
+aims at learning a nonlinear basis transformation and sparse
+reconstruction in the reproduced kernel Hilbert space induced
+by Mercer theorem, to deal with highly nonlinear domain
+shifts such as 3D rotation of faces that cannot be tackled
+by linear techniques. Extensive experiments on synthetic data,
+two benchmark object datasets, Consumer & YouTube Videos
+datasets, CMU multi-PIE face dataset, and three handwritten
+digit datasets demonstrate the effectiveness of the proposed
+methods in different cross domain transfer tasks.
+
+1189
+
+A PPENDIX A
+O PTIMIZATION OF (10)
+With an auxiliary variable L and U, the problem (10) can
+be reformulated as
+2
+
+
+
+min Z1 + λ1 T KT − T KL
+F
+
+Z,L
+
+s.t. L = Z, 1TN S +NT L = 1TNT , Z N S +i,i = Ui , Ui = 0 (15)
+The augmented Lagrange function of (15) can be represented as
+2
+μ1 
+ T
+
+J3 (Z, L, U) = Z1 +
+ KT − T KL + Y A , L − Z
+F
+2
++ Y B , 1TN S +NT L − 1TNT
+
+
+
++
+YCi Z N S +i,i − Ui + Y D , U
+i
+
+μ2
++
+2
+
+
+
+
+2
+
+
+L − Z2F + 1TN S +NT L − 1TNT 
+2
+
++
+
+
+
+Z N S +i,i − Ui
+
+2
+
+
++ U22
+
+i
+
+(16)
+where Y A , Y B , YC and Y D denote the Lag-multipliers,
+λ1 = μ1 /2.
+(1) Updating L: By fixing Z and U, one can set the partial
+derivative
+
+∂ J3 (Z,L,U)
+∂L
+
+= 0 of (16) as 0, and obtain L as
+
+
+−1
+L = μ1 KT T K + μ2 I + μ2 1 N S +NT 1TN S +NT
+
+× μ1 KT T KT − Y A − 1 N S +NT Y B + μ2 Z
++ μ2 1 N S +NT 1TNT
+(2) Updating U: By fixing L and Z, let
+have
+Ui =
+
+(17)
+∂ J3 (Z,L,U)
+∂Ui
+
+= 0, we
+
+μ2 Z N S +i,i + YCi − Y Di
+2μ2
+
+(18)
+
+(3) Updating Z: BY fixing L and U, Z can be solved as
+follows
+i) for Z N S +i,i , ∀i = 1, . . . , NT , we have
+
+ μ2 
+2
+min  Z N S +i,i  +
+Z N S +i,i − L N S +i,i
+2
+N S +i,i
+− YA
+· Z N S +i,i
+2
+μ2 
++
+Z N S +i,i − Ui + YCi · Z N S +i,i
+2
+
+
+⇔ min  Z N S +i,i 
+
+
+L N S +i,i + Ui
++ μ2 Z N S +i,i −
+2
+
+Y AN S +i,i + YCi
++
+2μ2
+
+(19)
+
+1190
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 25, NO. 3, MARCH 2016
+
+ii) for Z other than Z N S +i,i , ∀i = 1, . . . , NT , we have
+μ2
+L − Z2F + Y A , L − Z
+min Z1 +
+Z
+2
+2
+
+
+
+μ2 
+Z − L + Y A  . (20)
+⇔ min Z1 +
+
+Z
+2
+μ 
+2
+
+F
+
+A PPENDIX B
+P ROOF OF P ROPOSITION 2
+The objective function of (11) can be expanded as follows
+
+ 
+2
+2
+
+
+
+
+
+λ1 T K K−1 KT − Z  + λ2 X I − T K 
+F
+F
+ 
+
+T
+−1
+−1
+T T
+= T r λ1 K KT − Z K KT − Z K Q K
+ 
++ T r λ2 K − 2KT QT K + KT QT KQK
+(21)
+where Q = T ∈ R N×N .
+By following (21), with T K = I, there is T KT =
+QKQT = T = Q, then the objective (21) can be
+simplified as
+ 
+
+T
+T r λ1 K−1 KT − Z K−1 KT − Z − λ2 I KT QT K
+(22)
+According to the Eigenvalue decomposition of K = VSV [5],
+1
+T S 12 VT , where  = S 12 VT .
+we obtain KT QT K = VS 2
+Then the objective function (22) can be rewritten as
+
+ 
+
+T
+1
+T r T S 2 VT λ1 K−1 KT − Z K−1 KT − Z − λ2 I
+T
+
+
+1
+× VS 2  = T r T 
+
+(23)
+
+ 
+
+T
+1
+where  = S 2 VT λ1 K−1 KT − Z K−1 KT − Z − λ2 I
+1
+
+VS 2 and T  = T VSVT  = T K = I.
+Finally, the original optimization problem (11) becomes
+
+∗ = arg min T r T  , s.t. T  = I
+(24)
+
+
+∗
+
+The optimal  is obtained by l eigenvectors with respect
+to the first l smallest Eigenvalues of . Once ∗ is solved by
+1
+ = S 2 VT  and VVT = I, the optimal ∗ can be solved as
+1
+
+∗ = VS− 2 ∗ .
+
+(25)
+
+ACKNOWLEDGMENT
+The authors are grateful to the AE and anonymous reviewers
+for their valuable comments on our work.
+R EFERENCES
+[1] M. Shao, D. Kit, and Y. Fu, “Generalized transfer subspace learning
+through low-rank constraint,” Int. J. Comput. Vis., vol. 109, no. 1,
+pp. 74–93, 2014.
+[2] I. H. Jhuo, D. Liu, D. T. Lee, and S.-F. Chang, “Robust visual domain
+adaptation with low-rank reconstruction,” in Proc. IEEE Conf. CVPR,
+Jun. 2012, pp. 2168–2175.
+[3] E. Elhamifar and R. Vidal, “Sparse subspace clustering: Algorithm,
+theory, and applications,” IEEE Trans. Pattern Anal. Mach. Intell.,
+vol. 35, no. 11, pp. 2765–2781, Nov. 2013.
+
+[4] G. Liu, Z. Lin, and Y. Yu, “Robust subspace segmentation by low-rank
+representation,” in Proc. ICML, 2010, pp. 663–670.
+[5] A. H. Sameh and J. A. Wisniewski, “A trace minimization algorithm
+for the generalized eigenvalue problem,” SIAM J. Numer. Anal., vol. 19,
+no. 6, pp. 1243–1259, 1982.
+[6] S. Shekhar, V. M. Patel, H. V. Nguyen, and R. Chellappa, “Generalized
+domain-adaptive dictionaries,” in Proc. IEEE Conf. CVPR, Jun. 2013,
+pp. 361–368.
+[7] H. Daumé, III, A. Kumar, and A. Saha, “Frustratingly
+easy semi-supervised domain adaptation,” in Proc. Workshop Domain Adaptation Natural Language Process., 2010,
+pp. 53–59.
+[8] R. Gopalan, R. Li, and R. Chellappa, “Domain adaptation for
+object recognition: An unsupervised approach,” in Proc. IEEE ICCV,
+Nov. 2011, pp. 999–1006.
+[9] K. Saenko, B. Kulis, M. Fritz, and T. Darrell, “Adapting visual category
+models to new domains,” in Proc. ECCV, 2010, pp. 213–226.
+[10] B. Gong, Y. Shi, F. Sha, and K. Grauman, “Geodesic flow kernel for
+unsupervised domain adaptation,” in Proc. IEEE Conf. CVPR, Jun. 2012,
+pp. 2066–2073.
+[11] G. Griffin, A. Holub, and P. Perona, “Caltech-256 object category dataset,” California Inst. Technol., Pasadena, CA, USA,
+Tech. Rep. CNS-TR-2007-001, 2007.
+[12] J. Yang, R. Yan, and A. G. Hauptmann, “Cross-domain video concept
+detection using adaptive SVMs,” in Proc. 15th ACM Int. Conf. MM,
+2007, pp. 188–197.
+[13] V. M. Patel, H. Van Nguyen, and R. Vidal, “Latent space sparse subspace
+clustering,” in Proc. IEEE ICCV, Dec. 2013, pp. 225–232.
+[14] J. Hoffman, E. Rodner, J. Donahue, K. Saenko, and T. Darrell, “Efficient
+learning of domain invariant image representations,” in Proc. ICLR,
+2013, pp. 1–42.
+[15] B. Kulis, K. Saenko, and T. Darrell, “What you saw is not what you get:
+Domain adaptation using asymmetric kernel transforms,” in Proc. IEEE
+Int. Conf. Comput. Vis. Pattern Recognit., Jun. 2011, pp. 1785–1792.
+[16] L. Duan, D. Xu, I. W.-H. Tsang, and J. Luo, “Visual event recognition
+in videos by learning from Web data,” IEEE Trans. Pattern Anal. Mach.
+Intell., vol. 34, no. 9, pp. 1667–1680, Sep. 2012.
+[17] L. Duan, I. W. Tsang, and D. Xu, “Domain transfer multiple kernel
+learning,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 34, no. 3,
+pp. 465–479, Mar. 2012.
+[18] L. Duan, D. Xu, and I. W. Tsang, “Domain adaptation from multiple
+sources: A domain-dependent regularization approach,” IEEE Trans.
+Neural Netw. Learn. Syst., vol. 23, no. 3, pp. 504–518, Mar. 2012.
+[19] J. Hoffman, E. Rodner, J. Donahue, B. Kulis, and K. Saenko, “Asymmetric and category invariant feature transformations for domain adaptation,” Int. J. Comput. Vis., vol. 109, no. 1, pp. 28–41, 2014.
+[20] G. Liu, Z. Lin, S. Yan, J. Sun, Y. Yu, and Y. Ma, “Robust recovery
+of subspace structures by low-rank representation,” IEEE Trans. Pattern
+Anal. Mach. Intell., vol. 35, no. 1, pp. 171–184, Jan. 2013.
+[21] E. Elhamifar and R. Vidal, “Sparse subspace clustering,” in Proc. IEEE
+Conf. CVPR, Jun. 2009, pp. 2790–2797.
+[22] Z. Lin, M. Chen, L. Wu, and Y. Ma, “The augmented Lagrange multiplier method for exact recovery of corrupted low-rank matrices,” Univ.
+Illinois Urbana-Champaign, Champaign, IL, USA, Tech. Rep. UILUENG-09-2215, 2009.
+[23] R. Gross, I. Matthews, J. Cohn, T. Kanade, and S. Baker, “Multi-PIE,”
+Image Vis. Comput., vol. 28, no. 5, pp. 807–813, 2010.
+[24] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based
+learning applied to document recognition,” Proc. IEEE, vol. 86, no. 11,
+pp. 2278–2324, Nov. 1998.
+[25] A. Frank and A. Asuncion. (2010). UCI Machine Learning Repository.
+[Online]. Available: http://archive.ics.uci.edu/ml
+[26] S. Boyd, N. Parikh, E. Chu, B. Peleato, and J. Eckstein, “Distributed
+optimization and statistical learning via the alternating direction method
+of multipliers,” Found. Trends Mach. Learn., vol. 3, no. 1, pp. 1–122,
+2010.
+[27] A. Loui et al., “Kodak’s consumer video benchmark data set: Concept
+definition and annotation,” in Proc. Int. Workshop Multimedia Inf. Retr.,
+2007, pp. 245–254.
+[28] I. Laptev, M. Marszalek, C. Schmid, and B. Rozenfeld, “Learning
+realistic human actions from movies,” in Proc. IEEE Conf. CVPR,
+Jun. 2008, pp. 1–8.
+[29] D. G. Lowe, “Object recognition from local scale-invariant features,” in
+Proc. 7th IEEE ICCV, 1999, pp. 1150–1157.
+[30] D. G. Lowe, “Distinctive image features from scale-invariant keypoints,”
+Int. J. Comput. Vis., vol. 60, no. 2, pp. 91–110, 2004.
+
+ZHANG et al.: LSDT LEARNING FOR VISUAL ADAPTATION
+
+[31] M. Belkin and P. Niyogi, “Semi-supervised learning on manifolds,” in
+Proc. NIPS, 2002, pp. 1–23.
+[32] A. Blum and S. Chawla, “Learning from labeled and unlabeled data
+using graph mincuts,” in Proc. ICML, 2001, pp. 19–26.
+[33] S. J. Pan, I. W. Tsang, J. T. Kwok, and Q. Yang, “Domain adaptation
+via transfer component analysis,” IEEE Trans. Neural Netw., vol. 22,
+no. 2, pp. 199–210, Feb. 2011.
+[34] S. J. Pan and Q. Yang, “A survey on transfer learning,” IEEE Trans.
+Knowl. Data Eng., vol. 22, no. 10, pp. 1345–1359, Oct. 2010.
+[35] J. Ghosn and Y. Bengio, “Bias learning, knowledge sharing,” IEEE
+Trans. Neural Netw., vol. 14, no. 4, pp. 748–765, Jul. 2003.
+[36] L. Zhang and D. Zhang, “Domain adaptation extreme learning machines
+for drift compensation in E-nose systems,” IEEE Trans. Instrum. Meas.,
+vol. 64, no. 7, pp. 1790–1801, Jul. 2015.
+[37] M. Soltanolkotabi, E. Elhamifar, and E. J. Candès, “Robust subspace
+clustering,” Ann. Statist., vol. 42, no. 2, pp. 669–699, 2014.
+[38] A. Krizhevsky, I. Sutskever, and G. E. Hinton, “ImageNet classification with deep convolutional neural networks,” in Proc. NIPS, 2012,
+pp. 1097–1105.
+[39] J. Donahue et al., “DeCAF: A deep convolutional activation feature for
+generic visual recognition,” in Proc. ICML, 2014, pp. 1–17.
+[40] L. Zhang and D. Zhang. (2015). “Robust visual knowledge transfer via
+EDA.” [Online]. Available: http://arxiv.org/abs/1505.04382
+[41] B. Fernando, A. Habrard, M. Sebban, and T. Tuytelaars, “Unsupervised
+visual domain adaptation using subspace alignment,” in Proc. IEEE
+ICCV, Dec. 2013, pp. 2960–2967.
+[42] M. Baktashmotlagh, M. T. Harandi, B. C. Lovell, and M. Salzmann,
+“Unsupervised domain adaptation by domain invariant projection,” in
+Proc. IEEE ICCV, Dec. 2013, pp. 769–776.
+[43] X. Peng, L. Zhang, and Z. Yi, “Scalable sparse subspace clustering,” in
+Proc. IEEE Conf. CVPR, Jun. 2013, pp. 430–437.
+[44] L. Lin, Y. Xu, X. Liang, and J. Lai, “Complex background subtraction by
+pursuing dynamic spatio-temporal models,” IEEE Trans. Image Process.,
+vol. 23, no. 7, pp. 3191–3202, Jul. 2014.
+[45] X. Cao, C. Zhang, H. Fu, S. Liu, and H. Zhang, “Diversity-induced
+multi-view subspace clustering,” in Proc. IEEE Conf. CVPR, Jun. 2015,
+pp. 586–594.
+
+Lei Zhang (M’14) received the Ph.D. degree in circuits and systems from the College of Communication Engineering, Chongqing University, Chongqing,
+China, in 2013. He was selected as a Hong Kong
+Scholar of China in 2013. From 2013 to 2015, he
+was a Post-Doctoral Fellow with The Hong Kong
+Polytechnic University, Hong Kong. He is currently
+a Distinguished Research Fellow with Chongqing
+University. He has authored over 40 scientific papers
+in machine olfaction, pattern recognition, machine
+learning, and computer vision. His current research
+interests include machine learning, pattern recognition, and computer vision.
+He was a recipient of the Outstanding Doctoral Dissertation Award in
+Chongqing, in 2015, the Hong Kong Scholar Award in 2014, the Academy
+Award for Youth Innovation of Chongqing University in 2013, and the
+New Academic Researcher Award for Doctoral Candidates from the Ministry
+of Education, China, in 2012.
+
+1191
+
+Wangmeng Zuo (M’09–SM’14) received the Ph.D.
+degree in computer application technology from
+the Harbin Institute of Technology, Harbin, China,
+in 2007. In 2004, from 2005 to 2006, and
+from 2007 to 2008, he was a Research Assistant with the Department of Computing, The
+Hong Kong Polytechnic University, Hong Kong.
+From 2009 to 2010, he was a Visiting Professor with Microsoft Research Asia. He is currently an Associate Professor with the School
+of Computer Science and Technology, Harbin
+Institute of Technology. He has authored over 60 papers in top
+tier academic journals and conferences. His current research interests
+include image modeling and blind restoration, discriminative learning,
+biometrics, and 3-D vision. He is an Associate Editor of the IET Biometrics.
+
+David Zhang (M’90–SM’95–F’09) received the
+degree from Peking University, in 1974, and the
+M.Sc. and Ph.D. degrees from the Harbin Institute of Technology (HIT), in 1982 and 1985,
+respectively, all in computer science, and the
+Ph.D. degree in electrical and computer engineering from the University of Waterloo, ON, Canada,
+in 1994. From 1986 to 1988, he was a PostDoctoral Fellow with Tsinghua University and
+then an Associate Professor with Academia Sinica,
+Beijing. He has been a Chair Professor with The
+Hong Kong Polytechnic University since 2005, where he is the Founding Director of the Biometrics Research Centre (UGC/CRC) supported
+by the Hong Kong SAR Government in 1998. He serves as a Visiting
+Chair Professor with Tsinghua University, and an Adjunct Professor with
+Peking University, Shanghai Jiao Tong University, HIT, and the University of Waterloo. He is the Founder and Editor-in-Chief of the International Journal of Image and Graphics, a Book Editor of International
+Series on Biometrics (Springer), an Organizer of the International Conference on Biometrics Authentication, and an Associate Editor of more
+than ten international journals, including the IEEE T RANSACTIONS. He has
+authored over ten books, over 300 international journal papers, and holds
+30 patents from USA/Japan/HK/China. He is a Croucher Senior Research
+Fellow, a Distinguished Speaker of the IEEE Computer Society, and a fellow
+of IAPR.
+
+

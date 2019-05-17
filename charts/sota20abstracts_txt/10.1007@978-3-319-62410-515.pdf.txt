@@ -1,0 +1,13 @@
+Deep neural networks and transfer learning applied to
+multimedia web mining
+
+ The growth in the amount of multimedia content available online
+supposes a challenge for search and recommender systems. This information in
+the form of visual elements is of great value to a variety of web mining tasks;
+however, the mining of these resources is a difficult task due to the complexity
+and variability of the images. In this paper, we propose applying a deep learning
+model to the problem of web categorization. In addition, we make use of a technique known as transfer or inductive learning to drastically reduce the computational cost of the training phase. Finally, we report experimental results on the
+effectiveness of the proposed method using different classification methods and
+features from various depths of the deep model.
+
+Web mining, deep learning, transfer learning

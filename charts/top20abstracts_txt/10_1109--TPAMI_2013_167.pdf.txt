@@ -1,0 +1,15 @@
+Learning with Augmented Features for
+Supervised and Semi-Supervised
+Heterogeneous Domain Adaptation
+In this paper, we study the heterogeneous domain adaptation (HDA) problem, in which the data from the source domain
+and the target domain are represented by heterogeneous features with different dimensions. By introducing two different projection
+matrices, we first transform the data from two domains into a common subspace such that the similarity between samples across
+different domains can be measured. We then propose a new feature mapping function for each domain, which augments the
+transformed samples with their original features and zeros. Existing supervised learning methods (e.g., SVM and SVR) can be readily
+employed by incorporating our newly proposed augmented feature representations for supervised HDA. As a showcase, we propose
+a novel method called Heterogeneous Feature Augmentation (HFA) based on SVM. We show that the proposed formulation can be
+equivalently derived as a standard Multiple Kernel Learning (MKL) problem, which is convex and thus the global solution can be
+guaranteed. To additionally utilize the unlabeled data in the target domain, we further propose the semi-supervised HFA (SHFA)
+which can simultaneously learn the target classifier as well as infer the labels of unlabeled target samples. Comprehensive
+experiments on three different applications clearly demonstrate that our SHFA and HFA outperform the existing HDA methods.
+Heterogeneous domain adaptation, domain adaptation, transfer learning, augmented features

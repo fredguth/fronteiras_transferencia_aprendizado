@@ -1,0 +1,24 @@
+
+
+Comparison between traditional texture methods
+and deep learning descriptors for detection of
+nitrogen deficiency in maize crops
+Every year, efficient maize production is very important to the economy of many countries. Since nutritional
+deficiencies in maize plants are directly reﬂected in their grains
+productivity, early detection is needed to maximize the chances
+of proper recovery of these plants. Traditional texture methods
+recently showed interesting results in the identification of nutritional deficiencies. On the other hand, deep learning techniques
+are increasingly outperforming hand-crafted features on many
+tasks. In this paper, we propose a simple transfer learning
+approach from pre-trained cnn models and compare their results
+with those from traditional texture methods in the task of
+nitrogen deficiency identification. We perform experiments in
+a real-world dataset that contains digitalized images of maize
+leaves at different growth stages and with different levels of
+nitrogen fertilization. The results show that deep learning based
+descriptors achieve better success rates than traditional texture
+methods.
+Nutritional assessment, maize leaf analysis, deep
+learning, texture analysis, transfer learning, convolutional neural
+networks.
+

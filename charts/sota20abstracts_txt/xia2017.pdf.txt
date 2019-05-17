@@ -1,0 +1,14 @@
+Detecting Smiles of Young Children via Deep Transfer Learning
+Smile detection is an interesting topic in computer vision
+and has received increasing attention in recent years. However, the challenge caused by age variations has not been
+sufﬁciently focused on before. In this paper, we ﬁrst highlight
+the impact of the discrepancy between infants and adults in
+a quantitative way on a newly collected database. We then
+formulate this issue as an unsupervised domain adaptation
+problem and present the solution of deep transfer learning,
+which applies the state of the art transfer learning methods, namely Deep Adaptation Networks (DAN) and Joint
+Adaptation Network (JAN), to two baseline deep models, i.e.
+AlexNet and ResNet. Thanks to DAN and JAN, the knowledge learned by deep models from adults can be transferred
+to infants, where very limited labeled data are available for
+training. Cross-dataset experiments are conducted and the
+results evidently demonstrate the effectiveness of the proposed approach to smile detection across such an age gap.

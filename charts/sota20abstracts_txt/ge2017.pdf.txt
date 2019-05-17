@@ -1,0 +1,35 @@
+Borrowing Treasures from the Wealthy: Deep Transfer Learning through
+Selective Joint Fine-Tuning
+
+Large-scale image datasets, such as the ImageNet ILSVRC
+dataset [36], Places [50], and MS COCO [23], have led to
+a series of breakthroughs in visual recognition, including
+image classification [24], object detection [10], and semantic segmentation [25]. Many other related visual tasks have
+benefited from these breakthroughs.
+Nonetheless, researchers face a dilemma when using
+deep convolutional neural networks to perform visual tasks
+that do not have sufficient training data. Training a deep
+network with insufficient data might even give rise to inferior performance in comparison to traditional classifiers fed
+with handcrafted features. Fine-grained classification problems, such as Oxford Flowers 102 [29] and Stanford Dogs
+120 [19], are such examples. The number of training samples in these datasets is far from being enough for training
+large-scale deep neural networks, and the networks would
+become overfit quickly.
+Solving the overfitting problem for deep convolutional
+neural networks on learning tasks without sufficient training data is challenging [39]. Transfer learning techniques
+that apply knowledge learnt from one task to other related
+tasks have been proven helpful [30]. In the context of deep
+learning, fine-tuning a deep network pre-trained on the ImageNet or Places dataset is a common strategy to learn taskspecific deep features.This strategy is considered a simple
+transfer learning technique for deep learning. However,
+since the ratio between the number of learnable parameters
+and the number of training samples still remains the same,
+fine-tuning needs to be terminated after a relatively small
+number of iterations; otherwise, overfitting still occurs.
+In this paper, we attempt to tackle the problem of training
+deep neural networks for learning tasks that have insufficient training data. We adopt the source-target joint training
+methodology [45] when fine-tuning deep neural networks.
+The original learning task without sufficient training data
+is called the target learning task, T t . To boost its performance, the target learning task is teamed up with another
+learning task with rich training data. The latter is called
+the source learning task, T s . Suppose the source learning
+task has a large-scale training set D s , and the target learning task has a small-scale training set D t . Since the target
+
